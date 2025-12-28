@@ -3,10 +3,10 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   metadataBase: new URL('https://masterlyapp.in'),
   title: {
-    default: 'Masterly AI - Free AI Flashcard & Quiz Maker for Students | Study Smarter',
+    default: 'Masterly AI - Free AI Flashcard & Quiz Maker for Students',
     template: '%s | Masterly AI'
   },
-  description: 'Free AI study app trusted by 10,000+ students. Instantly create flashcards, quizzes & summaries from PDFs, notes & lectures. Features spaced repetition, active recall & AI study coach. Better than Anki & Quizlet.',
+  description: 'Free AI study app trusted by 10,000+ students. Create flashcards, quizzes & summaries from PDFs. Features spaced repetition & AI coach.',
   keywords: [
     // Primary brand keywords
     'Masterly AI',
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-        url: '/icon.png',
+        url: 'https://masterlyapp.in/icon.png',
         width: 1200,
         height: 630,
         alt: 'Masterly AI - AI-Powered Study App for Flashcards, Quizzes & Exam Prep',
@@ -94,7 +94,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Masterly AI - Free AI Flashcard & Quiz Maker for Students',
     description: '🎓 Create flashcards & quizzes instantly from PDFs, notes & lectures. AI-powered spaced repetition. Free for students. Better than Anki & Quizlet.',
-    images: ['/icon.png'],
+    images: ['https://masterlyapp.in/icon.png'],
     creator: '@masterlyai',
     site: '@masterlyai',
   },
