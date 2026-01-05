@@ -3,12 +3,19 @@
 import { Mail, Heart } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 export const Footer = () => {
   const { user } = useAuth();
 
   return (
-    <footer className="bg-duolingo-green text-white py-16 relative overflow-hidden">
+    <motion.footer 
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+      className="bg-duolingo-green text-white py-16 relative overflow-hidden"
+    >
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid md:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
@@ -124,7 +131,7 @@ export const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
+    </motion.footer>
   );
 };
 

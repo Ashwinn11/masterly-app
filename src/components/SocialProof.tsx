@@ -1,4 +1,6 @@
-import { cn } from "@/lib/utils";
+"use client";
+
+import { motion } from "framer-motion";
 
 const universities = [
   "Stanford", "MIT", "Harvard", "Berkeley", "UCLA", "NYU", "Oxford", "Cambridge", "Yale", "Princeton"
@@ -14,44 +16,26 @@ export const SocialProof = () => {
       </div>
       
       <div className="relative flex overflow-x-hidden group mask-linear-fade">
-        <div className="animate-marquee whitespace-nowrap flex gap-12 items-center">
-          {universities.map((uni, i) => (
+        <motion.div 
+          className="flex gap-12 items-center whitespace-nowrap"
+          animate={{ x: ["0%", "-25%"] }}
+          transition={{ 
+            repeat: Infinity, 
+            ease: "linear", 
+            duration: 20, 
+            repeatType: "loop" 
+          }}
+        >
+           {/* We need enough content to loop smoothly. */}
+           {[...universities, ...universities, ...universities, ...universities].map((uni, i) => (
             <span 
               key={i} 
-              className="text-2xl font-black text-gray-300 hover:text-duolingo-green transition-colors duration-300 cursor-default select-none"
+              className="text-2xl font-black text-gray-300 hover:text-duolingo-green transition-colors duration-300 cursor-default select-none mx-6"
             >
               {uni}
             </span>
           ))}
-          {/* Duplicate for seamless loop */}
-          {universities.map((uni, i) => (
-            <span 
-              key={`dup-${i}`} 
-              className="text-2xl font-black text-gray-300 hover:text-duolingo-green transition-colors duration-300 cursor-default select-none"
-            >
-              {uni}
-            </span>
-          ))}
-        </div>
-
-        <div className="absolute top-0 animate-marquee2 whitespace-nowrap flex gap-12 items-center ml-12">
-          {universities.map((uni, i) => (
-            <span 
-              key={`dup2-${i}`} 
-              className="text-2xl font-black text-gray-300 hover:text-duolingo-green transition-colors duration-300 cursor-default select-none"
-            >
-              {uni}
-            </span>
-          ))}
-          {universities.map((uni, i) => (
-            <span 
-              key={`dup3-${i}`} 
-              className="text-2xl font-black text-gray-300 hover:text-duolingo-green transition-colors duration-300 cursor-default select-none"
-            >
-              {uni}
-            </span>
-          ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

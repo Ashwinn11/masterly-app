@@ -1,45 +1,36 @@
-# Masterly AI robots.txt
-# https://masterlyapp.in
+# Masterly AI - Robots.txt
+# Allow search engines to crawl public marketing pages
+# Block protected app routes that require authentication
 
-# Google
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 1
-
-# Bing
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 1
-
-# Twitter/X
-User-agent: Twitterbot
-Allow: /
-
-# Facebook
-User-agent: facebookexternalhit
-Allow: /
-
-# LinkedIn
-User-agent: LinkedInBot
-Allow: /
-
-# All other bots
 User-agent: *
-Allow: /
-Disallow: /api/
-Disallow: /_next/
-Disallow: /monitoring
 
-# Landing Pages - Explicitly allow for SEO
+# Allow all public pages
+Allow: /
+Allow: /login
 Allow: /ai-flashcard-maker
 Allow: /pdf-to-flashcards
+Allow: /spaced-repetition
 Allow: /anki-alternative
 Allow: /quizlet-alternative
-Allow: /spaced-repetition
+Allow: /help
+Allow: /privacy
+Allow: /terms
+
+# Disallow protected app routes (require authentication)
+Disallow: /dashboard
+Disallow: /upload
+Disallow: /seeds
+Disallow: /exams
+Disallow: /flashcards
+Disallow: /quiz
+Disallow: /profile
+Disallow: /onboarding
+
+# Disallow API routes
+Disallow: /api/
+
+# Disallow auth routes
+Disallow: /auth/
 
 # Sitemap location
 Sitemap: https://masterlyapp.in/sitemap.xml
-
-# Host
-Host: https://masterlyapp.in
-

@@ -1,5 +1,8 @@
+'use client';
+
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 const reviews = [
   {
@@ -32,24 +35,53 @@ const reviews = [
   },
 ];
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 }
+};
+
 export const Testimonials = () => {
   return (
     <section id="testimonials" className="py-24 bg-muted/50 border-t border-border/50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-balance tracking-tight">
             Loved by Students Everywhere
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Join thousands of students who are crushing their exams with Masterly AI.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <motion.div 
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
           {reviews.map((review, i) => (
-            <div 
+            <motion.div 
               key={i} 
-              className="p-8 rounded-2xl-custom bg-white/5 backdrop-blur-sm border-2 border-white/10 shadow-card hover:-translate-y-2 transition-transform duration-300"
+              variants={item}
+              whileHover={{ y: -5 }}
+              className="p-8 rounded-2xl-custom bg-white/5 backdrop-blur-sm border-2 border-white/10 shadow-card transition-colors duration-300"
             >
               <div className="flex items-center gap-4 mb-6">
                 <div className={cn("w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl", review.color)}>
@@ -70,9 +102,9 @@ export const Testimonials = () => {
               <p className="text-foreground/80 leading-relaxed font-medium">
                 "{review.content}"
               </p>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
