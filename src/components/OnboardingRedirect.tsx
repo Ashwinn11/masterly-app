@@ -29,7 +29,14 @@ export function OnboardingRedirect({ children }: { children: React.ReactNode }) 
                        pathname.startsWith('/terms') ||
                        pathname.startsWith('/auth') ||
                        pathname === '/onboarding' ||
-                       pathname === '/login';
+                       pathname === '/login' ||
+                       // SEO Marketing Pages - must be publicly accessible
+                       pathname.startsWith('/ai-flashcard-maker') ||
+                       pathname.startsWith('/pdf-to-flashcards') ||
+                       pathname.startsWith('/spaced-repetition') ||
+                       pathname.startsWith('/anki-alternative') ||
+                       pathname.startsWith('/quizlet-alternative') ||
+                       pathname.startsWith('/help');
 
   useEffect(() => {
     // Only do redirect logic if NOT on a public page
