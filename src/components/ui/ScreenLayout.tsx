@@ -11,7 +11,7 @@ import {
 
 const DoodleBackground = () => {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-10">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
       <Star className="absolute top-[10%] left-[5%] w-10 h-10 text-accent rotate-12" />
       <PenTool className="absolute top-[30%] right-[10%] w-12 h-12 text-info -rotate-12" />
       <Palette className="absolute bottom-[20%] right-[5%] w-16 h-16 text-secondary rotate-45" />
@@ -42,7 +42,7 @@ export function ScreenLayout({
     <div className="relative min-h-[85vh] flex flex-col items-center py-4 px-2 sm:px-4">
       <DoodleBackground />
       
-      <div className="w-full max-w-[1700px] bg-card border-[3px] border-foreground rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] flex flex-row overflow-hidden min-h-[700px] animate-fade-in relative">
+      <div className="w-full max-w-[1700px] bg-background/80 backdrop-blur-sm border-[3px] border-foreground rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] flex flex-row overflow-hidden min-h-[700px] animate-fade-in relative">
         
         {/* Navigation / Binder Column */}
         {!hideSidebar ? (

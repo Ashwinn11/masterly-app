@@ -15,6 +15,19 @@ export interface SEOStep {
     description: string;
 }
 
+export interface ComparisonRow {
+    feature: string;
+    masterly: string;
+    competitor: string;
+}
+
+export interface Testimonial {
+    name: string;
+    role: string;
+    content: string;
+    rating: number;
+}
+
 export interface SEOPageData {
     slug: string;
     title: string;
@@ -27,6 +40,10 @@ export interface SEOPageData {
     faqs: FAQ[];
     ctaTitle: string;
     ctaSubtitle: string;
+    keywords: string[];
+    comparisonTable?: ComparisonRow[];
+    testimonials?: Testimonial[];
+    relatedPages?: string[]; // slugs of related pages
 }
 
 export const seoPages: SEOPageData[] = [
@@ -87,7 +104,8 @@ export const seoPages: SEOPageData[] = [
             }
         ],
         ctaTitle: 'Ready to Create Smarter Flashcards?',
-        ctaSubtitle: 'Join thousands of students using AI to study more effectively.'
+        ctaSubtitle: 'Join thousands of students using AI to study more effectively.',
+        keywords: ['ai flashcard maker', 'automatic flashcards', 'smart flashcards', 'study ai', 'flashcard generator']
     },
     {
         slug: 'pdf-to-flashcards',
@@ -146,7 +164,8 @@ export const seoPages: SEOPageData[] = [
             }
         ],
         ctaTitle: 'Turn Your PDFs into Grades',
-        ctaSubtitle: 'Upload your first document now and see the magic.'
+        ctaSubtitle: 'Upload your first document now and see the magic.',
+        keywords: ['pdf to flashcards', 'pdf flashcard converter', 'convert pdf', 'study from pdf', 'textbook flashcards']
     },
     {
         slug: 'anki-alternative',
@@ -205,7 +224,8 @@ export const seoPages: SEOPageData[] = [
             }
         ],
         ctaTitle: 'Upgrade Your Study Game',
-        ctaSubtitle: 'Switch to a modern learning platform today.'
+        ctaSubtitle: 'Switch to a modern learning platform today.',
+        keywords: ['anki alternative', 'better than anki', 'anki replacement', 'spaced repetition app', 'modern flashcard app']
     },
     {
         slug: 'quizlet-alternative',
@@ -264,7 +284,8 @@ export const seoPages: SEOPageData[] = [
             }
         ],
         ctaTitle: 'Stop Paying More for Less',
-        ctaSubtitle: 'Join the thousands switching from Quizlet to Masterly AI.'
+        ctaSubtitle: 'Join the thousands switching from Quizlet to Masterly AI.',
+        keywords: ['quizlet alternative', 'better than quizlet', 'quizlet replacement', 'free study app', 'study without ads']
     },
     {
         slug: 'spaced-repetition',
@@ -323,7 +344,8 @@ export const seoPages: SEOPageData[] = [
             }
         ],
         ctaTitle: 'Never Forget What You Learn',
-        ctaSubtitle: 'Start using the world&apos;s most effective study method today.'
+        ctaSubtitle: 'Start using the world&apos;s most effective study method today.',
+        keywords: ['spaced repetition', 'memory technique', 'fsrs algorithm', 'long term memory', 'study schedule']
     },
     {
         slug: 'active-recall',
@@ -382,7 +404,8 @@ export const seoPages: SEOPageData[] = [
             }
         ],
         ctaTitle: 'Start Using Active Recall Today',
-        ctaSubtitle: 'Transform how you study with science-backed techniques.'
+        ctaSubtitle: 'Transform how you study with science-backed techniques.',
+        keywords: ['active recall', 'testing effect', 'study technique', 'memory retention', 'evidence based learning']
     },
     {
         slug: 'medical-school-study-app',
@@ -441,7 +464,8 @@ export const seoPages: SEOPageData[] = [
             }
         ],
         ctaTitle: 'Join Thousands of Med Students',
-        ctaSubtitle: 'Start studying smarter for your medical exams today.'
+        ctaSubtitle: 'Start studying smarter for your medical exams today.',
+        keywords: ['medical school study app', 'med school flashcards', 'usmle prep', 'medical student app', 'anatomy flashcards']
     },
     {
         slug: 'law-school-study-app',
@@ -500,7 +524,8 @@ export const seoPages: SEOPageData[] = [
             }
         ],
         ctaTitle: 'Ace Law School & The Bar',
-        ctaSubtitle: 'Join law students studying smarter with AI.'
+        ctaSubtitle: 'Join law students studying smarter with AI.',
+        keywords: ['law school study app', 'bar exam prep', 'law student flashcards', 'case law study', 'legal study tools']
     },
     {
         slug: 'exam-preparation-app',
@@ -559,7 +584,8 @@ export const seoPages: SEOPageData[] = [
             }
         ],
         ctaTitle: 'Start Your Exam Prep Journey',
-        ctaSubtitle: 'Join students who improved their grades by 20%+.'
+        ctaSubtitle: 'Join students who improved their grades by 20%+.',
+        keywords: ['exam preparation app', 'test prep', 'study for exams', 'exam flashcards', 'test study tool']
     },
     {
         slug: 'notes-to-flashcards',
@@ -618,7 +644,8 @@ export const seoPages: SEOPageData[] = [
             }
         ],
         ctaTitle: 'Transform Your Notes Today',
-        ctaSubtitle: 'Stop wasting time on manual flashcard creation.'
+        ctaSubtitle: 'Stop wasting time on manual flashcard creation.',
+        keywords: ['notes to flashcards', 'convert notes', 'study from notes', 'notes flashcards', 'handwritten notes']
     },
     {
         slug: 'ai-quiz-generator',
@@ -677,6 +704,7 @@ export const seoPages: SEOPageData[] = [
             }
         ],
         ctaTitle: 'Start Creating Quizzes Now',
-        ctaSubtitle: 'Test yourself with unlimited AI-generated practice questions.'
+        ctaSubtitle: 'Test yourself with unlimited AI-generated practice questions.',
+        keywords: ['ai quiz generator', 'quiz maker', 'practice questions', 'test generator', 'study quiz']
     }
 ];

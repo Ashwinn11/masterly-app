@@ -24,9 +24,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         
         {/* Font loading with display=swap for better performance */}
-        <link 
-          href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@400;500;600;700&display=swap" 
-          rel="stylesheet" 
+        <link
+          href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap"
+          rel="stylesheet"
         />
         
         {/* Favicon and app icons */}

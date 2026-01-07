@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Navigation from '@/components/Navigation';
+import { DecorativeBackground } from '@/components/DecorativeBackground';
 
 export const metadata: Metadata = {
   title: 'Masterly AI - Free AI Flashcard & Quiz Maker for Students | Study Smarter',
@@ -13,8 +14,11 @@ export const metadata: Metadata = {
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <DecorativeBackground />
       <Navigation />
-      {children}
+      <div className="relative z-10">
+        {children}
+      </div>
     </>
   );
 }

@@ -81,7 +81,7 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Patrick Hand', 'Caveat', 'Chalkboard SE', 'Comic Sans MS', cursive, sans-serif;
+    font-family: 'Chalkboard SE', 'Patrick Hand', 'Comic Sans MS', cursive, sans-serif;
   }
 
   h1,
@@ -91,7 +91,7 @@ All colors MUST be HSL.
   h5,
   h6 {
     @apply font-bold tracking-tight;
-    font-family: 'Caveat', 'Patrick Hand', 'Chalkboard SE', 'Comic Sans MS', cursive, sans-serif;
+    font-family: 'Chalkboard SE', 'Patrick Hand', 'Comic Sans MS', cursive, sans-serif;
   }
 }
 
