@@ -258,13 +258,13 @@ function QuestionFeedPageContent() {
           "animate-in zoom-in duration-300"
         )}>
           <div className={cn(
-            "p-6 rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] border-[3px] border-foreground transition-all transform",
+            "p-4 sm:p-8 rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] border-[3px] border-foreground transition-all transform",
             isCorrect ? "bg-green-500 rotate-3" : "bg-red-500 -rotate-3"
           )}>
             {isCorrect ? (
-              <CheckCircle2 className="w-16 h-16 text-white" />
+              <CheckCircle2 className="w-12 h-12 sm:w-20 sm:h-20 text-white" />
             ) : (
-              <XCircle className="w-16 h-16 text-white" />
+              <XCircle className="w-12 h-12 sm:w-20 sm:h-20 text-white" />
             )}
           </div>
         </div>
