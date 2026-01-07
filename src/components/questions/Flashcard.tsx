@@ -39,16 +39,16 @@ export function Flashcard({ question, onComplete }: FlashcardProps) {
           <div className={cn(
             "absolute w-full h-full backface-hidden",
             "bg-card border-[3px] border-foreground rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)]",
-            "flex flex-col items-center p-8 pt-12 pb-16 font-handwritten"
+            "flex flex-col items-center p-6 pt-10 pb-14 font-handwritten"
           )}>
-            <div className="flex-1 w-full overflow-y-auto scrollbar-hide flex items-center justify-center">
-              <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-center leading-relaxed">
+            <div className="flex-1 w-full overflow-y-auto flex items-center justify-center px-2">
+              <p className="text-xl md:text-2xl lg:text-3xl font-bold text-center leading-tight">
                 {question.question}
               </p>
             </div>
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 opacity-50 whitespace-nowrap">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 opacity-50 whitespace-nowrap">
               <Hand className="w-5 h-5" />
-              <span className="text-sm">Tap to flip</span>
+              <span className="text-sm font-bold">Tap to flip</span>
             </div>
           </div>
 
@@ -56,10 +56,10 @@ export function Flashcard({ question, onComplete }: FlashcardProps) {
           <div className={cn(
             "absolute w-full h-full backface-hidden rotate-y-180",
             "bg-card border-[3px] border-foreground rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)]",
-            "flex flex-col items-center p-8 py-12 font-handwritten"
+            "flex flex-col items-center p-6 py-10 font-handwritten"
           )}>
-            <div className="flex-1 w-full overflow-y-auto scrollbar-hide flex items-center justify-center">
-              <p className="text-3xl md:text-4xl lg:text-5xl font-black text-center text-primary leading-relaxed">
+            <div className="flex-1 w-full overflow-y-auto flex items-center justify-center px-2">
+              <p className="text-2xl md:text-3xl lg:text-4xl font-black text-center text-primary leading-tight">
                 {question.answer}
               </p>
             </div>

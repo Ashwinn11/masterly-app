@@ -14,12 +14,13 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export function SideNav() {
+export function SideNav({ onItemClick }: { onItemClick?: () => void }) {
   const pathname = usePathname();
   const { signOut } = useAuth();
   const { openConfirmation } = useConfirmationStore();
 
   const handleSignOut = () => {
+    if (onItemClick) onItemClick();
     openConfirmation({
       title: 'Sign Out?',
       message: 'Are you sure you want to leave? Your progress is saved!',
@@ -39,12 +40,12 @@ export function SideNav() {
     <div className="flex flex-col gap-4 py-8 h-full">
       {/* Logo */}
       <div className="px-6 mb-8 relative">
-        <Link href="/dashboard" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform text-primary">
-            <Sparkles className="w-6 h-6" />
+        <Link href="/dashboard" onClick={onItemClick} className="flex items-center gap-2 group">
+          <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-110 transition-transform">
+            <img src="/icon.png" alt="Masterly AI" className="w-full h-full object-cover" />
           </div>
-          <span className="text-2xl font-black text-primary font-handwritten tracking-tight text-foreground">
-            Masterly
+          <span className="text-2xl font-black text-primary font-handwritten tracking-tight text-foreground whitespace-nowrap">
+            Masterly AI
           </span>
         </Link>
         <div className="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-card border-2 border-foreground/10 shadow-inner z-30" />
@@ -57,6 +58,7 @@ export function SideNav() {
             <div key={item.name} className="relative group">
               <Link
                 href={item.href}
+                onClick={onItemClick}
                 className={cn(
                   "relative flex items-center gap-3 px-4 py-3 font-handwritten text-xl font-bold transition-all",
                   "border-y-[2px] border-r-[3px] border-l-[8px] rounded-r-xl",

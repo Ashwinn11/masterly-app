@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${page.title} | Masterly AI`,
     description: page.heroSubtitle,
     path: `/${page.slug}`,
-    keywords: [page.title, 'AI study tool', 'flashcards', 'quiz maker'],
+    keywords: page.keywords,
   });
 }
 

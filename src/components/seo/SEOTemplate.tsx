@@ -30,14 +30,34 @@ interface SEOTemplateProps {
   data: SEOPageData;
 }
 
+import { Breadcrumbs } from './Breadcrumbs';
+import { Star } from 'lucide-react';
+
 const SEOTemplate = ({ data }: SEOTemplateProps) => {
-  const otherPages = seoPages
-    .filter(p => p.slug !== data.slug)
+  // Logic to find relevant related pages
+  const relevantPageSlugs = data.relatedPages || [];
+  const relatedPagesBySlug = seoPages
+    .filter(p => relevantPageSlugs.includes(p.slug))
     .map(p => ({
       href: `/${p.slug}`,
       label: p.title,
       description: p.description
     }));
+
+  // fallback to some generic other pages if none specified
+  const otherPages = relatedPagesBySlug.length > 0 ? relatedPagesBySlug : seoPages
+    .filter(p => p.slug !== data.slug)
+    .slice(0, 5)
+    .map(p => ({
+      href: `/${p.slug}`,
+      label: p.title,
+      description: p.description
+    }));
+
+  const breadcrumbItems = [
+    { name: 'Home', href: '/' },
+    { name: data.title, href: `/${data.slug}` }
+  ];
 
   return (
     <>
@@ -53,12 +73,17 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
             description: data.description,
             steps: data.steps.map(s => ({ name: s.title, text: s.description })),
           }),
+          schemas.breadcrumb(breadcrumbItems.map(item => ({ name: item.name, url: item.href }))),
         ]}
       />
 
       <main className="min-h-screen bg-background selection:bg-primary/20 selection:text-primary pt-20">
+        <div className="container mx-auto px-4 pt-6">
+          <Breadcrumbs items={breadcrumbItems} className="mb-8" />
+        </div>
+
         {/* Hero Section */}
-        <section className="relative py-16 lg:py-24 overflow-hidden flex items-center justify-center">
+        <section className="relative py-8 lg:py-16 overflow-hidden flex items-center justify-center">
           <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-30 pointer-events-none" />
           
           <div className="container mx-auto px-4 relative z-10">
@@ -119,6 +144,41 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
           </div>
         </section>
 
+        {/* Comparison Table Section */}
+        {data.comparisonTable && (
+          <section className="py-16 lg:py-32 bg-background">
+            <div className="container mx-auto px-4 max-w-4xl">
+              <div className="text-center mb-16 font-handwritten">
+                <h2 className="text-4xl md:text-6xl font-black text-foreground mb-4">
+                  How we compare
+                </h2>
+                <p className="text-2xl text-foreground/70 italic">Modern tools for modern students.</p>
+              </div>
+
+              <div className="overflow-hidden rounded-[32px] border-[3px] border-foreground bg-card shadow-[12px_12px_0px_0px_rgba(0,0,0,0.1)]">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-primary/5 border-b-[3px] border-foreground">
+                      <th className="p-6 text-xl font-black font-handwritten">Feature</th>
+                      <th className="p-6 text-xl font-black font-handwritten text-primary">Masterly AI</th>
+                      <th className="p-6 text-xl font-black font-handwritten text-foreground/50">Others</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.comparisonTable.map((row, i) => (
+                      <tr key={i} className={i !== data.comparisonTable!.length - 1 ? "border-b-[2px] border-foreground/10" : ""}>
+                        <td className="p-6 text-lg font-bold font-handwritten">{row.feature}</td>
+                        <td className="p-6 text-lg font-black text-primary font-handwritten bg-primary/5">{row.masterly}</td>
+                        <td className="p-6 text-lg font-medium text-foreground/70 font-handwritten italic">{row.competitor}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Features Section */}
         <section className="py-16 lg:py-32 bg-primary/5">
           <div className="container mx-auto px-4">
@@ -157,9 +217,40 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
           </div>
         </section>
 
+        {/* Testimonials Section */}
+        {data.testimonials && data.testimonials.length > 0 && (
+          <section className="py-16 lg:py-32 bg-background">
+            <div className="container mx-auto px-4">
+              <div className="text-center mb-16 font-handwritten">
+                <h2 className="text-4xl md:text-6xl font-black text-foreground mb-4">
+                  What students say
+                </h2>
+                <p className="text-2xl text-foreground/70 italic">Join 10,000+ students acing their exams.</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                {data.testimonials.map((t, i) => (
+                  <div key={i} className="p-8 rounded-[32px] border-[3px] border-foreground bg-card shadow-[12px_12px_0px_0px_rgba(0,0,0,0.1)] font-handwritten">
+                    <div className="flex gap-1 mb-4">
+                      {[...Array(t.rating)].map((_, i) => (
+                        <Star key={i} className="h-5 w-5 fill-accent text-accent" />
+                      ))}
+                    </div>
+                    <p className="text-2xl text-foreground leading-tight italic mb-6">"{t.content}"</p>
+                    <div>
+                      <h4 className="text-xl font-black">{t.name}</h4>
+                      <p className="text-lg text-foreground/60">{t.role}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Steps Section */}
         <section className="py-16 lg:py-32 bg-background">
-          <div className="container mx-auto px-4">
+          <div className="container mx-auto px-4 border-t-[3px] border-foreground pt-16 lg:pt-32">
             <div className="text-center mb-16 font-handwritten">
               <h2 className="text-4xl md:text-6xl font-black text-foreground mb-4">
                 How it works
@@ -189,7 +280,7 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-16 lg:py-32 bg-info/5">
+        <section className="py-16 lg:py-32 bg-primary/5">
           <div className="container mx-auto px-4">
             <h2 className="text-4xl md:text-6xl font-black text-center mb-16 font-handwritten">
               Common Questions
@@ -202,12 +293,12 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  className="p-8 rounded-[32px] bg-background border-[3px] border-foreground shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)]"
+                  className="p-8 rounded-[32px] bg-background border-[3px] border-foreground shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
                 >
                   <h3 className="text-2xl font-black text-foreground mb-4 font-handwritten">
                     {faq.question}
                   </h3>
-                  <p className="text-xl text-foreground/70 font-handwritten italic">
+                  <p className="text-xl text-foreground/70 font-handwritten italic leading-snug">
                     {faq.answer}
                   </p>
                 </motion.div>
@@ -221,7 +312,7 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
           <div className="container mx-auto px-4">
             <RelatedLinks 
               links={otherPages} 
-              title="Explore More Study Tools" 
+              title="More Study Tools" 
               className="font-handwritten"
               variant="card"
             />

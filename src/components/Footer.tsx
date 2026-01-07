@@ -22,8 +22,8 @@ export const Footer = () => {
           <div className="md:col-span-2 space-y-6">
             <Link href="/" className="block group">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Sparkles className="w-8 h-8 text-white" />
+                <div className="w-12 h-12 rounded-2xl overflow-hidden flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <img src="/icon.png" alt="Masterly AI" className="w-full h-full object-cover" />
                 </div>
                 <h3 className="text-4xl font-black tracking-tight">Masterly AI</h3>
               </div>

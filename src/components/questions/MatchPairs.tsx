@@ -172,12 +172,12 @@ export function MatchPairs({ question, onComplete }: MatchPairsProps) {
                   hasError ? (
                     <X className="w-5 h-5 text-foreground" />
                   ) : (
-                    <Check className="w-5 h-5 text-white" />
+                    <Check className="w-5 h-5 text-foreground" />
                   )
                 )}
                 <span className={cn(
                   "text-center leading-tight",
-                  isMatched && !hasError && "text-white font-bold"
+                  isMatched && !hasError && "text-foreground font-bold"
                 )}>
                   {item.text}
                 </span>
@@ -215,12 +215,12 @@ export function MatchPairs({ question, onComplete }: MatchPairsProps) {
                   hasError ? (
                     <X className="w-5 h-5 text-foreground" />
                   ) : (
-                    <Check className="w-5 h-5 text-white" />
+                    <Check className="w-5 h-5 text-foreground" />
                   )
                 )}
                 <span className={cn(
                   "text-center leading-tight",
-                  isMatched && !hasError && "text-white font-bold"
+                  isMatched && !hasError && "text-foreground font-bold"
                 )}>
                   {item.text}
                 </span>

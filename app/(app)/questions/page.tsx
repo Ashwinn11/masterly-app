@@ -98,7 +98,7 @@ function QuestionFeedPageContent() {
       }
     }
 
-    setTimeout(handleNext, 1200);
+    setTimeout(handleNext, 400);
   };
 
   const handleNext = () => {
@@ -258,13 +258,13 @@ function QuestionFeedPageContent() {
           "animate-in zoom-in duration-300"
         )}>
           <div className={cn(
-            "p-12 rounded-full shadow-[12px_12px_0px_0px_rgba(0,0,0,0.2)] border-[4px] border-foreground transition-all transform",
-            isCorrect ? "bg-green-500 rotate-6" : "bg-red-500 -rotate-6"
+            "p-6 rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] border-[3px] border-foreground transition-all transform",
+            isCorrect ? "bg-green-500 rotate-3" : "bg-red-500 -rotate-3"
           )}>
             {isCorrect ? (
-              <CheckCircle2 className="w-24 h-24 text-white" />
+              <CheckCircle2 className="w-16 h-16 text-white" />
             ) : (
-              <XCircle className="w-24 h-24 text-white" />
+              <XCircle className="w-16 h-16 text-white" />
             )}
           </div>
         </div>

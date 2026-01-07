@@ -45,7 +45,7 @@ const Navigation: React.FC<NavigationProps> = ({ className }) => {
 
 
 
-  // Logo Component - uses transparent background.png with app name
+  // Logo Component - uses app icon.png with app name
   const Logo: React.FC<{ className?: string; showText?: boolean }> = ({ 
     className = "",
     showText = true
@@ -53,9 +53,9 @@ const Navigation: React.FC<NavigationProps> = ({ className }) => {
     return (
       <div className="flex items-center gap-2">
         <img 
-          src={backgroundImage}
+          src="/icon.png"
           alt="Masterly AI"
-          className={cn("w-12 h-12 object-contain transition-all duration-300 hover:scale-105", className)}
+          className={cn("w-10 h-10 object-contain transition-all duration-300 hover:scale-105 rounded-xl", className)}
         />
         {showText && (
           <span className="text-xl font-bold text-foreground tracking-tight">Masterly AI</span>

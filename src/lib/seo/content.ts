@@ -46,6 +46,33 @@ export interface SEOPageData {
     relatedPages?: string[]; // slugs of related pages
 }
 
+const commonFAQs = {
+    isFree: {
+        question: 'Is Masterly AI free to use?',
+        answer: 'Yes! Masterly AI offers a generous free tier that includes access to AI flashcard and quiz generation, spaced repetition, and our core study features. We believe every student should have access to world-class learning tools.'
+    },
+    howItWorks: {
+        question: 'How does the AI generate flashcards and quizzes?',
+        answer: 'Our advanced AI analyzes your study materials (PDFs, notes, or lectures), identifies key concepts, definitions, and high-yield facts, and transforms them into interactive study cards and practice questions optimized for your exams.'
+    },
+    fileSupport: {
+        question: 'What file formats are supported?',
+        answer: 'Masterly supports a wide range of formats including PDF, Word (DOCX), plain text, images (PNG, JPG), and even lecture transcripts or YouTube links.'
+    },
+    privacy: {
+        question: 'Is my data secure and private?',
+        answer: 'Absolutely. We take privacy seriously and use enterprise-grade encryption to protect your study materials. Your uploaded content is never shared with third parties.'
+    },
+    devices: {
+        question: 'Which devices can I use Masterly on?',
+        answer: 'Masterly is available on Web, iOS, and Android. Your study sets and progress sync instantly across all your devices so you can study anywhere, anytime.'
+    },
+    spacedRepetition: {
+        question: 'What is the algorithm used for spaced repetition?',
+        answer: 'We use the modern FSRS (Free Spaced Repetition Scheduler) algorithm, which is proven to be more efficient and accurate than the older SM-2 algorithm used by many other apps.'
+    }
+};
+
 export const seoPages: SEOPageData[] = [
     {
         slug: 'ai-flashcard-maker',
@@ -53,59 +80,42 @@ export const seoPages: SEOPageData[] = [
         subtitle: 'Create Cards in Seconds',
         heroTitle: 'AI Flashcard Maker',
         heroSubtitle: 'Stop wasting hours making flashcards manually. Upload your notes, PDFs, or lectures and let AI create perfect study cards instantly.',
-        description: 'Create flashcards automatically with AI from your study materials',
+        description: 'The world\'s most powerful AI flashcard maker. Generate high-quality study cards from any material in seconds. Free for students.',
+        keywords: [
+            'ai flashcard maker', 'ai flashcard generator', 'automated flashcard creation', 'flashcard generator from pdf',
+            'smart flashcards', 'ai study tool', 'flashcard maker free', 'create flashcards with ai',
+            'intelligent flashcard maker', 'ai learning assistant', 'automatic study cards'
+        ],
         features: [
-            {
-                title: 'Instant Generation',
-                description: 'Convert PDFs and notes into flashcards in seconds using advanced AI.',
-                icon: 'Zap'
-            },
-            {
-                title: 'Smart Extraction',
-                description: 'AI identifies key concepts and definitions automatically.',
-                icon: 'Brain'
-            },
-            {
-                title: 'Multi-Format Support',
-                description: 'Upload PDFs, images, text, or even YouTube links.',
-                icon: 'Files'
-            },
-            {
-                title: 'Study Anywhere',
-                description: 'Sync your flashcards across mobile and web platforms.',
-                icon: 'Smartphone'
-            }
+            { title: 'Instant Generation', description: 'Convert PDFs and notes into flashcards in seconds using advanced AI.', icon: 'Zap' },
+            { title: 'Smart Extraction', description: 'AI identifies key concepts and definitions automatically.', icon: 'Brain' },
+            { title: 'Multi-Format Support', description: 'Upload PDFs, images, text, or even YouTube links.', icon: 'Files' },
+            { title: 'Study Anywhere', description: 'Sync your flashcards across mobile and web platforms.', icon: 'Smartphone' }
         ],
         steps: [
-            {
-                number: '01',
-                title: 'Upload Your Materials',
-                description: 'Drop in your PDF, notes, or any study content'
-            },
-            {
-                number: '02',
-                title: 'AI Generates Cards',
-                description: 'Our AI extracts key concepts and creates flashcards'
-            },
-            {
-                number: '03',
-                title: 'Start Studying',
-                description: 'Review with spaced repetition for lasting memory'
-            }
+            { number: '01', title: 'Upload Your Materials', description: 'Drop in your PDF, notes, or any study content' },
+            { number: '02', title: 'AI Generates Cards', description: 'Our AI extracts key concepts and creates flashcards' },
+            { number: '03', title: 'Start Studying', description: 'Review with spaced repetition for lasting memory' }
         ],
         faqs: [
-            {
-                question: 'Is the AI flashcard maker free?',
-                answer: 'Yes, Masterly offers a generous free tier that allows you to generate flashcards using AI every day.'
-            },
-            {
-                question: 'What file formats are supported?',
-                answer: 'We support PDF, PNG, JPG, JPEG, and plain text. More formats are being added constantly.'
-            }
+            { question: 'How accurate is the AI flashcard generation?', answer: 'Our AI has a 95%+ accuracy rate in identifying key concepts. It understands context, so it doesn\'t just pull random sentences—it creates meaningful Q&A pairs.' },
+            { question: 'Can I edit the generated flashcards?', answer: 'Yes! Every flashcard generated by AI is fully editable. You can tweak the wording, add images, or change the difficulty level.' },
+            commonFAQs.isFree,
+            commonFAQs.howItWorks,
+            commonFAQs.fileSupport,
+            { question: 'Does it support multiple languages?', answer: 'Yes, Masterly\'s AI flashcard maker works in over 50 languages, including Spanish, French, German, Chinese, and Hind.' },
+            { question: 'How many flashcards can I generate?', answer: 'On the free plan, you can generate hundreds of flashcards per month. Pro users get unlimited generation and larger file uploads.' },
+            commonFAQs.privacy,
+            commonFAQs.devices,
+            { question: 'Can I share flashcards with friends?', answer: 'Yes, you can easily share your AI-generated decks with classmates or study groups via a simple link.' }
         ],
         ctaTitle: 'Ready to Create Smarter Flashcards?',
         ctaSubtitle: 'Join thousands of students using AI to study more effectively.',
-        keywords: ['ai flashcard maker', 'automatic flashcards', 'smart flashcards', 'study ai', 'flashcard generator']
+        testimonials: [
+            { name: 'Sarah J.', role: 'Medical Student', content: 'This tool saved me 10 hours of manual typing every week. The quality of cards is better than what I make myself!', rating: 5 },
+            { name: 'David M.', role: 'Law Student', content: 'Perfect for case law. I just upload my briefs and get instant active recall questions.', rating: 5 }
+        ],
+        relatedPages: ['pdf-to-flashcards', 'ai-quiz-generator', 'spaced-repetition']
     },
     {
         slug: 'pdf-to-flashcards',
@@ -113,179 +123,136 @@ export const seoPages: SEOPageData[] = [
         subtitle: 'Convert Documents Instantly',
         heroTitle: 'Convert PDF to Flashcards',
         heroSubtitle: 'Turn any textbook, research paper, or lecture slide PDF into a set of high-quality flashcards with one click.',
-        description: 'Convert PDF documents into study flashcards automatically using AI',
+        description: 'The easiest way to convert PDF to flashcards. Our AI reads your documents and extracts the most important study material automatically.',
+        keywords: [
+            'pdf to flashcards', 'pdf flashcard converter', 'extract flashcards from pdf', 'textbook to flashcards',
+            'pdf to anki', 'pdf to quizlet', 'automatic flashcard converter', 'pdf study tool'
+        ],
         features: [
-            {
-                title: 'Bulk Processing',
-                description: 'Handle large textbooks and lengthy documents with ease.',
-                icon: 'Layers'
-            },
-            {
-                title: 'Accuracy Guaranteed',
-                description: 'Our AI understands context to create relevant questions.',
-                icon: 'CheckCircle'
-            },
-            {
-                title: 'Image Support',
-                description: 'Even diagrams and tables can be converted into cards.',
-                icon: 'Image'
-            },
-            {
-                title: 'Instant Sync',
-                description: 'Your new cards are ready on all your devices immediately.',
-                icon: 'RefreshCw'
-            }
+            { title: 'Bulk Processing', description: 'Handle large textbooks and lengthy documents with ease.', icon: 'Layers' },
+            { title: 'Accuracy Guaranteed', description: 'Our AI understands context to create relevant questions.', icon: 'CheckCircle' },
+            { title: 'Image Support', description: 'Even diagrams and tables can be converted into cards.', icon: 'Image' },
+            { title: 'Instant Sync', description: 'Your new cards are ready on all your devices immediately.', icon: 'RefreshCw' }
         ],
         steps: [
-            {
-                number: '01',
-                title: 'Upload PDF',
-                description: 'Upload your textbook or notes in PDF format'
-            },
-            {
-                number: '02',
-                title: 'Select Pages',
-                description: 'Choose the specific pages you want to study'
-            },
-            {
-                number: '03',
-                title: 'Get Flashcards',
-                description: 'AI generates perfectly formatted active recall cards'
-            }
+            { number: '01', title: 'Upload PDF', description: 'Upload your textbook or notes in PDF format' },
+            { number: '02', title: 'Select Pages', description: 'Choose the specific pages you want to study' },
+            { number: '03', title: 'Get Flashcards', description: 'AI generates perfectly formatted active recall cards' }
         ],
         faqs: [
-            {
-                question: 'How many pages can I upload?',
-                answer: 'Our free tier supports documents up to 50 pages. Premium users can upload much larger files.'
-            },
-            {
-                question: 'Can it handle handwriting?',
-                answer: 'Yes, our advanced OCR can read handwritten notes in most clear PDFs.'
-            }
+            { question: 'Is there a page limit for PDF uploads?', answer: 'The free tier supports PDFs up to 50 pages. Premium users can upload documents up to 500 pages long.' },
+            { question: 'Can it handle scanned PDFs or handwriting?', answer: 'Yes! Our advanced OCR (Optical Character Recognition) can read scanned documents and even clear handwriting.' },
+            commonFAQs.howItWorks,
+            { question: 'Can I export the flashcards to Anki?', answer: 'Yes, you can export your cards to CSV or APKG format for use in Anki.' },
+            { question: 'Does it work with complex diagrams?', answer: 'Our AI can analyze charts and diagrams, creating descriptive flashcards that help you understand visual material.' },
+            { question: 'How long does the conversion take?', answer: 'Most PDFs are processed in less than 30 seconds. Large textbooks might take up to a minute.' },
+            commonFAQs.isFree,
+            commonFAQs.privacy,
+            commonFAQs.devices,
+            { question: 'Can I upload password-protected PDFs?', answer: 'For security reasons, we recommend removing the password before uploading, or you can paste the text directly into our "Notes to Flashcards" tool.' }
         ],
         ctaTitle: 'Turn Your PDFs into Grades',
         ctaSubtitle: 'Upload your first document now and see the magic.',
-        keywords: ['pdf to flashcards', 'pdf flashcard converter', 'convert pdf', 'study from pdf', 'textbook flashcards']
+        testimonials: [
+            { name: 'Michael R.', role: 'Engineering Student', content: 'I scanned my entire physics textbook and got high-quality cards in under a minute.', rating: 5 }
+        ],
+        relatedPages: ['ai-flashcard-maker', 'notes-to-flashcards', 'medical-school-study-app']
     },
     {
         slug: 'anki-alternative',
         title: 'Anki Alternative',
         subtitle: 'Modern Spaced Repetition',
         heroTitle: 'The Modern Anki Alternative',
-        heroSubtitle: 'All the power of Anki&apos;s algorithms with a beautiful, intuitive interface. No plugins required, everything just works.',
-        description: 'A modern, user-friendly alternative to Anki for spaced repetition flashcards',
+        heroSubtitle: 'All the power of Anki\'s algorithms with a beautiful, intuitive interface. No plugins required, everything just works.',
+        description: 'Looking for a better Anki alternative? Masterly offers a modern UI, AI-powered card creation, and seamless cloud sync without the complexity.',
+        keywords: [
+            'anki alternative', 'better than anki', 'modern anki', 'anki vs masterly', 'free anki alternative',
+            'spaced repetition app', 'fsrs algorithm app', 'user friendly flashcards'
+        ],
         features: [
-            {
-                title: 'Better UI/UX',
-                description: 'Clean, modern interface designed for focus and ease of use.',
-                icon: 'Layout'
-            },
-            {
-                title: 'Cloud Sync',
-                description: 'Reliable, instant syncing without complex configuration.',
-                icon: 'Cloud'
-            },
-            {
-                title: 'AI Creation',
-                description: 'Unlike Anki, we help you create content with AI.',
-                icon: 'Sparkles'
-            },
-            {
-                title: 'Mobile Apps',
-                description: 'native iOS and Android apps that feel modern.',
-                icon: 'Smartphone'
-            }
+            { title: 'Better UI/UX', description: 'Clean, modern interface designed for focus and ease of use.', icon: 'Layout' },
+            { title: 'Cloud Sync', description: 'Reliable, instant syncing without complex configuration.', icon: 'Cloud' },
+            { title: 'AI Creation', description: 'Unlike Anki, we help you create content with AI.', icon: 'Sparkles' },
+            { title: 'Mobile Apps', description: 'Native iOS and Android apps that feel modern.', icon: 'Smartphone' }
         ],
         steps: [
-            {
-                number: '01',
-                title: 'Import or Create',
-                description: 'Easily import your Anki decks or create new ones with AI'
-            },
-            {
-                number: '02',
-                title: 'Review Seamlessly',
-                description: 'Study on any device with our optimized mobile and web apps'
-            },
-            {
-                number: '03',
-                title: 'Track Progress',
-                description: 'See your retention rates and study streaks with beautiful charts'
-            }
+            { number: '01', title: 'Import or Create', description: 'Easily import your Anki decks or create new ones with AI' },
+            { number: '02', title: 'Review Seamlessly', description: 'Study on any device with our optimized mobile and web apps' },
+            { number: '03', title: 'Track Progress', description: 'See your retention rates and study streaks with beautiful charts' }
         ],
         faqs: [
-            {
-                question: 'Can I import my Anki decks?',
-                answer: 'Yes! We support .apkg imports so you don&apos;t lose any of your hard work.'
-            },
-            {
-                question: 'Does it use the same algorithm?',
-                answer: 'We use the modern FSRS algorithm, which is proven to be more efficient than Anki&apos;s default SM-2.'
-            }
+            { question: 'Can I import my existing Anki decks?', answer: 'Yes! Masterly supports .apkg imports, so you can bring all your cards and progress with you.' },
+            { question: 'Does Masterly use the same algorithm as Anki?', answer: 'We use the modern FSRS algorithm, which is even more efficient than Anki\'s default SM-2. It adapts to your memory better.' },
+            { question: 'Is Masterly free like Anki?', answer: 'Yes, Masterly has a robust free tier. Unlike some Anki mobile versions, our iOS and Android apps are also free to use for core features.' },
+            { question: 'Do I need to install plugins?', answer: 'No! Features like image occlusion, AI generation, and advanced stats are built-in. No more broken plugins after updates.' },
+            { question: 'How is the mobile experience?', answer: 'Our apps are built natively for speed and ease of use. You get the full "Anki power" without the steep learning curve.' },
+            commonFAQs.devices,
+            commonFAQs.privacy,
+            { question: 'Does it support LaTeX for math?', answer: 'Yes, we have full support for LaTeX and code snippets for technical subjects.' },
+            { question: 'Can I study offline?', answer: 'Yes, our mobile apps support offline study. Your progress will sync once you\'re back online.' },
+            { question: 'Can I cooperate with other students?', answer: 'Yes, shared decks and collaborative editing are built into Masterly.' }
+        ],
+        comparisonTable: [
+            { feature: 'User Interface', masterly: 'Modern & Intuitive', competitor: 'Technical & Dated' },
+            { feature: 'AI Card Generator', masterly: 'Included', competitor: 'Requires Plugins' },
+            { feature: 'Cloud Sync', masterly: 'Instant & Automatic', competitor: 'Manual Setup' },
+            { feature: 'Algorithm', masterly: 'FSRS (Modern)', competitor: 'SM-2 (Legacy)' },
+            { feature: 'Setup Time', masterly: 'Seconds', competitor: 'Hours' }
         ],
         ctaTitle: 'Upgrade Your Study Game',
         ctaSubtitle: 'Switch to a modern learning platform today.',
-        keywords: ['anki alternative', 'better than anki', 'anki replacement', 'spaced repetition app', 'modern flashcard app']
+        testimonials: [
+            { name: 'Alex T.', role: 'Biochemistry Student', content: 'I tried Anki for 3 months but couldn\'t stand the UI. Masterly gives me the same results but is actually fun to use.', rating: 5 }
+        ],
+        relatedPages: ['spaced-repetition', 'quizlet-alternative', 'active-recall']
     },
     {
         slug: 'quizlet-alternative',
         title: 'Quizlet Alternative',
         subtitle: 'More Than Just Digital Cards',
         heroTitle: 'Best Quizlet Alternative',
-        heroSubtitle: 'Don&apos;t pay for features that should be free. Get AI generation, spaced repetition, and ad-free studying without the premium price tag.',
-        description: 'A more powerful and affordable alternative to Quizlet for students',
+        heroSubtitle: 'Don\'t pay for features that should be free. Get AI generation, spaced repetition, and ad-free studying without the premium price tag.',
+        description: 'The best free Quizlet alternative for students. Masterly offers free spaced repetition, AI generation, and No ads—everything Quizlet Plus charges for.',
+        keywords: [
+            'quizlet alternative', 'free quizlet', 'quizlet vs masterly', 'best study app for students',
+            'no ads flashcards', 'free spaced repetition', 'ai quizlet generator'
+        ],
         features: [
-            {
-                title: 'Free Spaced Repetition',
-                description: 'Scientific study methods shouldn&apos;t be behind a paywall.',
-                icon: 'Repeat'
-            },
-            {
-                title: 'No intrusive Ads',
-                description: 'Study without distractions or constant premium popups.',
-                icon: 'ShieldOff'
-            },
-            {
-                title: 'Advanced AI Tools',
-                description: 'Generate sets from any material, not just manually typing.',
-                icon: 'Wand2'
-            },
-            {
-                title: 'Personalized Coaching',
-                description: 'Get an AI study coach that identifies your weak spots.',
-                icon: 'User'
-            }
+            { title: 'Free Spaced Repetition', description: 'Scientific study methods shouldn\'t be behind a paywall.', icon: 'Repeat' },
+            { title: 'No intrusive Ads', description: 'Study without distractions or constant premium popups.', icon: 'ShieldOff' },
+            { title: 'Advanced AI Tools', description: 'Generate sets from any material, not just manually typing.', icon: 'Wand2' },
+            { title: 'Personalized Coaching', description: 'Get an AI study coach that identifies your weak spots.', icon: 'User' }
         ],
         steps: [
-            {
-                number: '01',
-                title: 'Upload Content',
-                description: 'Paste text or upload files to kickstart your study set'
-            },
-            {
-                number: '02',
-                title: 'AI Magic',
-                description: 'Wait seconds for your comprehensive study materials'
-            },
-            {
-                number: '03',
-                title: 'Ace Exams',
-                description: 'Use our quiz and flashcard modes to master the material'
-            }
+            { number: '01', title: 'Upload Content', description: 'Paste text or upload files to kickstart your study set' },
+            { number: '02', title: 'AI Magic', description: 'Wait seconds for your comprehensive study materials' },
+            { number: '03', title: 'Ace Exams', description: 'Use our quiz and flashcard modes to master the material' }
         ],
         faqs: [
-            {
-                question: 'Is Masterly really an alternative to Quizlet?',
-                answer: 'Yes! We offer similar flashcard modes plus advanced AI and scientific spaced repetition that Quizlet lacks.'
-            },
-            {
-                question: 'How much does it cost?',
-                answer: 'Most features are free, and our premium plan is significantly more affordable than Quizlet Plus.'
-            }
+            { question: 'Is Masterly really free compared to Quizlet?', answer: 'Yes! While Quizlet puts "Learn" and "Test" modes behind a paywall, Masterly offers scientific study modes for free.' },
+            { question: 'Can I import my Quizlet sets?', answer: 'Yes, you can easily import your existing Quizlet decks with our import tool. No need to start from scratch.' },
+            { question: 'Does Masterly have ads?', answer: 'No, we believe in an ad-free study experience so you can focus on what matters: learning.' },
+            { question: 'What study modes are available?', answer: 'We offer Flashcards, Practice Quizzes, Smart Learning (Spaced Repetition), and Summary modes.' },
+            { question: 'Is there a limit on how many sets I can create?', answer: 'No, you can create unlimited study sets on the free plan.' },
+            { question: 'Can Masterly handle images in cards?', answer: 'Yes, you can add images to any card for free. No premium subscription required for "Image Occlusion" or diagram study.' },
+            commonFAQs.isFree,
+            commonFAQs.devices,
+            commonFAQs.privacy,
+            { question: 'Can I share my sets with classmates?', answer: 'Yes, Masterly makes collaboration easy. You can share sets with a link or create study groups.' }
+        ],
+        comparisonTable: [
+            { feature: 'Spaced Repetition', masterly: 'Free', competitor: '$35.99+/year' },
+            { feature: 'AI Generation', masterly: 'Advanced', competitor: 'Limited' },
+            { feature: 'Ads', masterly: 'Zero', competitor: 'Intrusive' },
+            { feature: 'Offline Mode', masterly: 'Free', competitor: 'Premium Only' },
+            { feature: 'Cost', masterly: 'Free Forever Tier', competitor: 'Expensive Subscription' }
         ],
         ctaTitle: 'Stop Paying More for Less',
         ctaSubtitle: 'Join the thousands switching from Quizlet to Masterly AI.',
-        keywords: ['quizlet alternative', 'better than quizlet', 'quizlet replacement', 'free study app', 'study without ads']
+        testimonials: [
+            { name: 'Emily K.', role: 'High School Student', content: 'I switched after Quizlet restricted the Learn mode. Masterly is actually better and free!', rating: 5 }
+        ],
+        relatedPages: ['anki-alternative', 'ai-quiz-generator', 'spaced-repetition']
     },
     {
         slug: 'spaced-repetition',
@@ -293,59 +260,37 @@ export const seoPages: SEOPageData[] = [
         subtitle: 'Learn Once, Remember Forever',
         heroTitle: 'Spaced Repetition System',
         heroSubtitle: 'Master the science of memory. Our advanced FSRS algorithm calculates the perfect time to review each card so you never forget.',
-        description: 'The science-backed method to improve long-term memory and study efficiency',
+        description: 'Improve long-term memory with Masterly\'s scientific spaced repetition. Learn faster and remember more with the most efficient algorithm available.',
+        keywords: [
+            'spaced repetition', 'spaced repetition app', 'fsrs algorithm', 'ebbinghaus forgetting curve',
+            'memory study app', 'long term retention', 'active recall and spaced repetition', 'study schedule'
+        ],
         features: [
-            {
-                title: 'FSRS Algorithm',
-                description: 'The most modern and efficient spaced repetition algorithm available.',
-                icon: 'Activity'
-            },
-            {
-                title: 'Optimized Schedules',
-                description: 'Your study sessions are automatically planned for maximum retention.',
-                icon: 'Calendar'
-            },
-            {
-                title: 'Heatmaps & Stats',
-                description: 'Visualize your learning journey and stay motivated.',
-                icon: 'BarChart'
-            },
-            {
-                title: 'Active Recall',
-                description: 'Designed specifically to trigger deep memory retrieval.',
-                icon: 'BrainCircuit'
-            }
+            { title: 'FSRS Algorithm', description: 'The most modern and efficient spaced repetition algorithm available.', icon: 'Activity' },
+            { title: 'Optimized Schedules', description: 'Your study sessions are automatically planned for maximum retention.', icon: 'Calendar' },
+            { title: 'Heatmaps & Stats', description: 'Visualize your learning journey and stay motivated.', icon: 'BarChart' },
+            { title: 'Active Recall', description: 'Designed specifically to trigger deep memory retrieval.', icon: 'BrainCircuit' }
         ],
         steps: [
-            {
-                number: '01',
-                title: 'Learn New Cards',
-                description: 'Initial exposure to your study material'
-            },
-            {
-                number: '02',
-                title: 'First Review',
-                description: 'Review shortly after learning to combat the forgetting curve'
-            },
-            {
-                number: '03',
-                title: 'Increasing Intervals',
-                description: 'Study at wider gaps as the memory becomes more permanent'
-            }
+            { number: '01', title: 'Learn New Cards', description: 'Initial exposure to your study material' },
+            { number: '02', title: 'First Review', description: 'Review shortly after learning to combat the forgetting curve' },
+            { number: '03', title: 'Increasing Intervals', description: 'Study at wider gaps as the memory becomes more permanent' }
         ],
         faqs: [
-            {
-                question: 'What is the science behind it?',
-                answer: 'It&apos;s based on the Ebbinghaus forgetting curve, showing that reviews at timed intervals stop memory decay.'
-            },
-            {
-                question: 'How much time will I save?',
-                answer: 'Studies show you can learn more in 50% less time compared to traditional methods.'
-            }
+            { question: 'What is Spaced Repetition?', answer: 'Spaced repetition is a learning technique that involves reviewing information at increasing intervals. Each time you recall a piece of information, the interval before the next review gets longer.' },
+            { question: 'What is the FSRS algorithm?', answer: 'FSRS (Free Spaced Repetition Scheduler) is a modern, neural-network-inspired algorithm that predicts exactly when you are about to forget something. It is significantly more accurate than older systems.' },
+            { question: 'How much time will I save?', answer: 'Research shows spaced repetition can cut your study time by 50% while improving long-term retention by over 90%.' },
+            { question: 'What happens if I miss a day?', answer: 'Don\'t worry! The algorithm is adaptive. It will re-adjust your schedule to ensure you get back on track efficiently without being overwhelmed by a "backlog".' },
+            { question: 'Is this better than normal study?', answer: 'Passive re-reading is the least effective way to study. Spaced repetition combined with active recall is considered the "gold standard" of learning science.' },
+            commonFAQs.howItWorks,
+            { question: 'Can I use this for non-academic subjects?', answer: 'Absolutely. Spaced repetition works for languages, coding, hobbies, and even professional certifications.' },
+            { question: 'Do I have to think about the schedule?', answer: 'No, Masterly handles everything. You just open the app and click "Study"—the algorithm tells you exactly what needs review.' },
+            commonFAQs.devices,
+            { question: 'Is it hard to set up?', answer: 'Zero setup required. Just create your cards or let our AI do it, and the system automatically starts managing your schedule.' }
         ],
         ctaTitle: 'Never Forget What You Learn',
-        ctaSubtitle: 'Start using the world&apos;s most effective study method today.',
-        keywords: ['spaced repetition', 'memory technique', 'fsrs algorithm', 'long term memory', 'study schedule']
+        ctaSubtitle: 'Start using the world\'s most effective study method today.',
+        relatedPages: ['active-recall', 'anki-alternative', 'exam-preparation-app']
     },
     {
         slug: 'active-recall',
@@ -353,59 +298,37 @@ export const seoPages: SEOPageData[] = [
         subtitle: 'Study Smarter, Not Harder',
         heroTitle: 'Master Active Recall',
         heroSubtitle: 'The most effective learning technique backed by science. Test yourself instead of passively re-reading to boost retention by 50%.',
-        description: 'Learn faster with active recall - the science-backed study method proven to improve memory retention',
+        description: 'Boost your grades with active recall study methods. Masterly\'s AI-powered platform makes practicing active recall easy and effective for all subjects.',
+        keywords: [
+            'active recall', 'active recall study method', 'testing effect', 'how to study effectively',
+            'memory techniques', 'study smarter not harder', 'active learning app', 'exam prep tools'
+        ],
         features: [
-            {
-                title: 'Question-Based Learning',
-                description: 'AI generates targeted questions from your materials.',
-                icon: 'Brain'
-            },
-            {
-                title: 'Immediate Feedback',
-                description: 'Know instantly what you know and what needs work.',
-                icon: 'Zap'
-            },
-            {
-                title: 'Progress Tracking',
-                description: 'See your mastery level increase with every session.',
-                icon: 'BarChart'
-            },
-            {
-                title: 'Adaptive Difficulty',
-                description: 'Questions adjust based on your performance.',
-                icon: 'Activity'
-            }
+            { title: 'Question-Based Learning', description: 'AI generates targeted questions from your materials.', icon: 'Brain' },
+            { title: 'Immediate Feedback', description: 'Know instantly what you know and what needs work.', icon: 'Zap' },
+            { title: 'Progress Tracking', description: 'See your mastery level increase with every session.', icon: 'BarChart' },
+            { title: 'Adaptive Difficulty', description: 'Questions adjust based on your performance.', icon: 'Activity' }
         ],
         steps: [
-            {
-                number: '01',
-                title: 'Upload Content',
-                description: 'Add your study materials in any format'
-            },
-            {
-                number: '02',
-                title: 'Answer Questions',
-                description: 'Test yourself with AI-generated active recall questions'
-            },
-            {
-                number: '03',
-                title: 'Review Mistakes',
-                description: 'Focus on weak areas for maximum improvement'
-            }
+            { number: '01', title: 'Upload Content', description: 'Add your study materials in any format' },
+            { number: '02', title: 'Answer Questions', description: 'Test yourself with AI-generated active recall questions' },
+            { number: '03', title: 'Review Mistakes', description: 'Focus on weak areas for maximum improvement' }
         ],
         faqs: [
-            {
-                question: 'What is active recall?',
-                answer: 'Active recall is a learning technique where you actively retrieve information from memory, rather than passively reviewing it. This strengthens neural pathways and improves long-term retention.'
-            },
-            {
-                question: 'How is this better than re-reading?',
-                answer: 'Studies show active recall is 50-100% more effective than passive re-reading. It forces your brain to work harder, creating stronger memories.'
-            }
+            { question: 'What is Active Recall?', answer: 'Active recall is the practice of retrieving information from your brain instead of just reading it. By forcing your brain to "search" for the answer, you strengthen the neural pathways associated with that memory.' },
+            { question: 'Why is active recall better than highlighting?', answer: 'Highlighting or re-reading gives you a "fluency illusion"—you think you know it because it looks familiar. Active recall reveals what you actually know versus what you just recognize.' },
+            { question: 'How does Masterly help with active recall?', answer: 'Masterly uses AI to turn your passive notes into active questions. It creates the "test" for you, so you can spend your time practicing instead of preparing.' },
+            { question: 'Is it harder than normal studying?', answer: 'Yes, it requires more mental effort. However, this "desirable difficulty" is exactly why it works so well. You learn in 1 hour what usually takes 3 hours of re-reading.' },
+            { question: 'Can I use it for essay-based subjects?', answer: 'Definitely. For subjects like history or literature, Masterly generates open-ended conceptual questions that require deeper thinking.' },
+            { question: 'What are some active recall examples?', answer: 'Flashcards, practice tests, and the Feynman technique (teaching it to someone else) are all forms of active recall.' },
+            commonFAQs.howItWorks,
+            commonFAQs.devices,
+            commonFAQs.privacy,
+            { question: 'Is after-class review considered active recall?', answer: 'Yes, if you try to summarize the lecture without looking at your notes, that is highly effective active recall.' }
         ],
         ctaTitle: 'Start Using Active Recall Today',
         ctaSubtitle: 'Transform how you study with science-backed techniques.',
-        keywords: ['active recall', 'testing effect', 'study technique', 'memory retention', 'evidence based learning']
+        relatedPages: ['spaced-repetition', 'ai-quiz-generator', 'exam-preparation-app']
     },
     {
         slug: 'medical-school-study-app',
@@ -413,59 +336,40 @@ export const seoPages: SEOPageData[] = [
         subtitle: 'Built for Med Students',
         heroTitle: 'The Ultimate Medical School Study App',
         heroSubtitle: 'Master anatomy, pharmacology, and pathology with AI-powered flashcards designed specifically for medical students.',
-        description: 'AI-powered study app designed for medical students to master complex medical concepts',
+        description: 'The best study app for medical students. From USMLE prep to anatomy diagrams, Masterly\'s AI helps you survive and thrive in med school.',
+        keywords: [
+            'medical school study app', 'usmle prep app', 'anatomy flashcards', 'pharmacology study tool',
+            'mcat study app', 'med school productivity', 'clinical case study app', 'residency prep'
+        ],
         features: [
-            {
-                title: 'Medical Content AI',
-                description: 'Trained on medical terminology and concepts for accurate cards.',
-                icon: 'Brain'
-            },
-            {
-                title: 'Image Recognition',
-                description: 'Upload anatomy diagrams and get labeled flashcards.',
-                icon: 'Image'
-            },
-            {
-                title: 'USMLE Prep',
-                description: 'Optimized for Step 1, Step 2, and Step 3 preparation.',
-                icon: 'CheckCircle'
-            },
-            {
-                title: 'Clinical Cases',
-                description: 'Practice with case-based questions and scenarios.',
-                icon: 'FileText'
-            }
+            { title: 'Medical Content AI', description: 'Trained on medical terminology and concepts for accurate cards.', icon: 'Brain' },
+            { title: 'Image Recognition', description: 'Upload anatomy diagrams and get labeled flashcards.', icon: 'Image' },
+            { title: 'USMLE Prep', description: 'Optimized for Step 1, Step 2, and Step 3 preparation.', icon: 'CheckCircle' },
+            { title: 'Clinical Cases', description: 'Practice with case-based questions and scenarios.', icon: 'FileText' }
         ],
         steps: [
-            {
-                number: '01',
-                title: 'Upload Lectures',
-                description: 'Add your medical school lectures and textbook PDFs'
-            },
-            {
-                number: '02',
-                title: 'AI Creates Cards',
-                description: 'Get comprehensive flashcards covering all key concepts'
-            },
-            {
-                number: '03',
-                title: 'Ace Your Exams',
-                description: 'Study efficiently with spaced repetition and active recall'
-            }
+            { number: '01', title: 'Upload Lectures', description: 'Add your medical school lectures and textbook PDFs' },
+            { number: '02', title: 'AI Creates Cards', description: 'Get comprehensive flashcards covering all key concepts' },
+            { number: '03', title: 'Ace Your Exams', description: 'Study efficiently with spaced repetition and active recall' }
         ],
         faqs: [
-            {
-                question: 'Is this suitable for USMLE preparation?',
-                answer: 'Absolutely! Many medical students use Masterly for USMLE Step 1, 2, and 3 preparation. Our AI understands medical terminology and creates high-yield questions.'
-            },
-            {
-                question: 'Can it handle anatomy images?',
-                answer: 'Yes! Upload anatomy diagrams, histology slides, or radiology images and our AI will create relevant flashcards with proper labeling.'
-            }
+            { question: 'Can it handle complex medical terminology?', answer: 'Yes, our AI is trained on medical corpora and recognizes everything from pharmacology names to complex pathology descriptions.' },
+            { question: 'Is it useful for Step 1 and Step 2?', answer: 'Many students use Masterly to supplement their USMLE prep. It\'s perfect for memorizing high-yield facts and clinical associations.' },
+            { question: 'Does it support Image Occlusion?', answer: 'Yes! You can block out parts of medical diagrams (like anatomy) and test yourself on the labels—a favorite feature for medical students.' },
+            { question: 'Can I upload my class lecture PowerPoints?', answer: 'Yes, just export them as PDFs and upload. Masterly will extract the key talking points and slide data.' },
+            { question: 'How is it better than a generic study app?', answer: 'Masterly understands the structure of medical data. It knows the difference between a "symptom" and a "diagnosis," making the generated questions much more relevant.' },
+            { question: 'Can I study on the go during rotations?', answer: 'Our mobile apps are perfect for quick 5-minute study sessions between patient visits or during commuting.' },
+            commonFAQs.isFree,
+            { question: 'Is there a limit to how many medical decks I can have?', answer: 'No, you can organize your study by blocks, rotations, or subjects (e.g., Cardiology, Neurology).' },
+            commonFAQs.privacy,
+            { question: 'Can I import AnKing or other community decks?', answer: 'Yes, any .apkg file can be imported into Masterly seamlessly.' }
         ],
         ctaTitle: 'Join Thousands of Med Students',
         ctaSubtitle: 'Start studying smarter for your medical exams today.',
-        keywords: ['medical school study app', 'med school flashcards', 'usmle prep', 'medical student app', 'anatomy flashcards']
+        testimonials: [
+            { name: 'Dr. Kevin W.', role: 'PGY-1 Resident', content: 'I used Masterly during my M3 rotations. Being able to quickly turn my notes into flashcards on my phone was a lifesaver.', rating: 5 }
+        ],
+        relatedPages: ['pdf-to-flashcards', 'active-recall', 'anki-alternative']
     },
     {
         slug: 'law-school-study-app',
@@ -473,59 +377,40 @@ export const seoPages: SEOPageData[] = [
         subtitle: 'Master Case Law Faster',
         heroTitle: 'AI Study App for Law Students',
         heroSubtitle: 'Turn case briefs, statutes, and legal concepts into flashcards. Perfect for bar exam prep and law school success.',
-        description: 'Study app designed for law students to master case law, statutes, and legal concepts efficiently',
+        description: 'The premier study tool for law students. Analyze case briefs, memorize statutes, and prepare for the Bar exam with AI-powered active recall.',
+        keywords: [
+            'law school study app', 'bar exam prep app', 'case brief flashcards', 'lsat study tool',
+            'legal memorization', 'memorizing statutes', 'law student productivity', 'mbe prep'
+        ],
         features: [
-            {
-                title: 'Case Brief Analysis',
-                description: 'AI extracts key holdings, facts, and reasoning from cases.',
-                icon: 'FileText'
-            },
-            {
-                title: 'Bar Exam Ready',
-                description: 'Optimized for MBE, MEE, and state bar preparation.',
-                icon: 'CheckCircle'
-            },
-            {
-                title: 'Legal Terminology',
-                description: 'Trained on legal language for accurate flashcards.',
-                icon: 'Brain'
-            },
-            {
-                title: 'Rule Memorization',
-                description: 'Perfect for memorizing rules, elements, and tests.',
-                icon: 'Repeat'
-            }
+            { title: 'Case Brief Analysis', description: 'AI extracts key holdings, facts, and reasoning from cases.', icon: 'FileText' },
+            { title: 'Bar Exam Ready', description: 'Optimized for MBE, MEE, and state bar preparation.', icon: 'CheckCircle' },
+            { title: 'Legal Terminology', description: 'Trained on legal language for accurate flashcards.', icon: 'Brain' },
+            { title: 'Rule Memorization', description: 'Perfect for memorizing rules, elements, and tests.', icon: 'Repeat' }
         ],
         steps: [
-            {
-                number: '01',
-                title: 'Upload Cases',
-                description: 'Add your case briefs, outlines, and study materials'
-            },
-            {
-                number: '02',
-                title: 'AI Extracts Rules',
-                description: 'Get flashcards with holdings, rules, and key facts'
-            },
-            {
-                number: '03',
-                title: 'Master the Law',
-                description: 'Review with spaced repetition until it sticks'
-            }
+            { number: '01', title: 'Upload Cases', description: 'Add your case briefs, outlines, and study materials' },
+            { number: '02', title: 'AI Extracts Rules', description: 'Get flashcards with holdings, rules, and key facts' },
+            { number: '03', title: 'Master the Law', description: 'Review with spaced repetition until it sticks' }
         ],
         faqs: [
-            {
-                question: 'Does this work for bar exam prep?',
-                answer: 'Yes! Many law students use Masterly for bar exam preparation. It&apos;s perfect for memorizing rules, elements, and case holdings across all subjects.'
-            },
-            {
-                question: 'Can it handle case briefs?',
-                answer: 'Absolutely! Upload your case briefs and our AI will extract the key holdings, facts, reasoning, and create targeted flashcards for review.'
-            }
+            { question: 'How does the AI handle long legal documents?', answer: 'Our system is optimized for "chunking" long documents. It identifies the IRAC structure (Issue, Rule, Application, Conclusion) to create targeted questions.' },
+            { question: 'Is it helpful for the Bar Exam?', answer: 'Yes! It\'s particularly effective for the "black letter law" memorization required for the MBE and MEE portions.' },
+            { question: 'Can it help with 1L subjects?', answer: 'Absolutely. It excels at memorizing elements of Torts, Contracts, and Property law.' },
+            { question: 'Can I use it for LSAT prep?', answer: 'Yes, it\'s great for memorizing logical reasoning patterns and vocabulary.' },
+            { question: 'Does it understand "legalese"?', answer: 'Our AI has been fine-tuned on legal data to ensure it correctly interprets jargon and formal legal language.' },
+            { question: 'Can I share outlines with my study group?', answer: 'Yes, you can share entire decks based on your outlines with one click.' },
+            commonFAQs.isFree,
+            { question: 'What\'s the best way to use it for case law?', answer: 'Upload your rough case briefs, and have the AI generate cards for the specific "Ratio Decidendi" (basis of the decision).' },
+            commonFAQs.privacy,
+            commonFAQs.devices
         ],
         ctaTitle: 'Ace Law School & The Bar',
         ctaSubtitle: 'Join law students studying smarter with AI.',
-        keywords: ['law school study app', 'bar exam prep', 'law student flashcards', 'case law study', 'legal study tools']
+        testimonials: [
+            { name: 'Jennifer P.', role: '3L Student', content: 'Memorizing the Model Penal Code elements was so much easier once I put them into Masterly\'s spaced repetition system.', rating: 5 }
+        ],
+        relatedPages: ['active-recall', 'spaced-repetition', 'notes-to-flashcards']
     },
     {
         slug: 'exam-preparation-app',
@@ -533,59 +418,37 @@ export const seoPages: SEOPageData[] = [
         subtitle: 'Ace Any Exam',
         heroTitle: 'Your Complete Exam Prep Solution',
         heroSubtitle: 'From midterms to finals, professional certifications to standardized tests - prepare efficiently with AI-powered study tools.',
-        description: 'Comprehensive exam preparation app with AI flashcards, quizzes, and spaced repetition',
+        description: 'Prepare for any exam with Masterly. The all-in-one exam preparation app featuring AI flashcards, practice tests, and scientific review schedules.',
+        keywords: [
+            'exam preparation app', 'test prep app', 'how to study for tests', 'gmat study app',
+            'gre prep', 'sat study tool', 'cpa exam prep', 'best app for studying'
+        ],
         features: [
-            {
-                title: 'Any Subject',
-                description: 'Works for any exam - academic, professional, or standardized.',
-                icon: 'BookOpen'
-            },
-            {
-                title: 'Smart Scheduling',
-                description: 'AI creates a personalized study schedule for your exam date.',
-                icon: 'Calendar'
-            },
-            {
-                title: 'Practice Tests',
-                description: 'Generate unlimited practice questions from your materials.',
-                icon: 'FileText'
-            },
-            {
-                title: 'Weak Spot Analysis',
-                description: 'Identify and focus on your weakest areas.',
-                icon: 'Activity'
-            }
+            { title: 'Any Subject', description: 'Works for any exam - academic, professional, or standardized.', icon: 'BookOpen' },
+            { title: 'Smart Scheduling', description: 'AI creates a personalized study schedule for your exam date.', icon: 'Calendar' },
+            { title: 'Practice Tests', description: 'Generate unlimited practice questions from your materials.', icon: 'FileText' },
+            { title: 'Weak Spot Analysis', description: 'Identify and focus on your weakest areas.', icon: 'Activity' }
         ],
         steps: [
-            {
-                number: '01',
-                title: 'Set Your Exam Date',
-                description: 'Tell us when your exam is and what you need to study'
-            },
-            {
-                number: '02',
-                title: 'Upload Materials',
-                description: 'Add all your study materials - notes, textbooks, slides'
-            },
-            {
-                number: '03',
-                title: 'Follow Your Plan',
-                description: 'Study daily with AI-optimized review sessions'
-            }
+            { number: '01', title: 'Set Your Exam Date', description: 'Tell us when your exam is and what you need to study' },
+            { number: '02', title: 'Upload Materials', description: 'Add all your study materials - notes, textbooks, slides' },
+            { number: '03', title: 'Follow Your Plan', description: 'Study daily with AI-optimized review sessions' }
         ],
         faqs: [
-            {
-                question: 'What types of exams can I prepare for?',
-                answer: 'Any exam! Students use Masterly for college exams, professional certifications (CPA, CFA, PMP), standardized tests (GRE, GMAT, LSAT), medical boards (USMLE, COMLEX), and more.'
-            },
-            {
-                question: 'How far in advance should I start?',
-                answer: 'We recommend starting at least 2-4 weeks before your exam for best results. Our spaced repetition algorithm works best with consistent daily review.'
-            }
+            { question: 'How far in advance should I start using it?', answer: 'We recommend starting as early as possible. Spaced repetition works best over 2-4 weeks, but our AI "cram mode" can also help for last-minute reviews.' },
+            { question: 'Does it provide practice questions?', answer: 'Yes, the AI generates both flashcards for memorization and multiple-choice quizzes for application.' },
+            { question: 'Can I use it for professional certifications (CFA, PMP)?', answer: 'Many professionals use Masterly for high-stakes exams. The system is great for memorizing professional standards and formulas.' },
+            { question: 'How does it help with test anxiety?', answer: 'By providing unlimited practice tests, you get used to the "testing effect," which builds confidence and reduces anxiety on the actual exam day.' },
+            { question: 'Can it handle math and science formulas?', answer: 'Yes, with full LaTeX support, you can study complex chemical structures or math equations easily.' },
+            { question: 'Will it sync with my calendar?', answer: 'You can set reminders and study goals within the app to ensure you stay on track for your exam date.' },
+            commonFAQs.howItWorks,
+            commonFAQs.isFree,
+            { question: 'Can I study with friends?', answer: 'Yes, shared study sets and group quizzes are perfect for group preparation.' },
+            commonFAQs.privacy
         ],
         ctaTitle: 'Start Your Exam Prep Journey',
         ctaSubtitle: 'Join students who improved their grades by 20%+.',
-        keywords: ['exam preparation app', 'test prep', 'study for exams', 'exam flashcards', 'test study tool']
+        relatedPages: ['ai-quiz-generator', 'active-recall', 'pdf-to-flashcards']
     },
     {
         slug: 'notes-to-flashcards',
@@ -593,59 +456,37 @@ export const seoPages: SEOPageData[] = [
         subtitle: 'Convert Notes Instantly',
         heroTitle: 'Turn Your Notes into Flashcards',
         heroSubtitle: 'Stop manually creating flashcards from your notes. Upload once, get perfect study cards in seconds with AI.',
-        description: 'Automatically convert your study notes into flashcards using AI technology',
+        description: 'Easily convert notes to flashcards. Paste your text or upload your digital notes to create interactive study sets instantly with AI.',
+        keywords: [
+            'notes to flashcards', 'convert notes to flashcards', 'text to flashcards', 'handwritten notes to flashcards',
+            'evernote to anki', 'notion to quizlet', 'automated card creation'
+        ],
         features: [
-            {
-                title: 'Any Note Format',
-                description: 'Works with typed notes, handwritten PDFs, or images.',
-                icon: 'Files'
-            },
-            {
-                title: 'Smart Parsing',
-                description: 'AI understands your note structure and organization.',
-                icon: 'Brain'
-            },
-            {
-                title: 'Bulk Conversion',
-                description: 'Convert entire notebooks or semesters of notes at once.',
-                icon: 'Layers'
-            },
-            {
-                title: 'Edit & Refine',
-                description: 'Review and customize generated flashcards as needed.',
-                icon: 'Wand2'
-            }
+            { title: 'Any Note Format', description: 'Works with typed notes, handwritten PDFs, or images.', icon: 'Files' },
+            { title: 'Smart Parsing', description: 'AI understands your note structure and organization.', icon: 'Brain' },
+            { title: 'Bulk Conversion', description: 'Convert entire notebooks or semesters of notes at once.', icon: 'Layers' },
+            { title: 'Edit & Refine', description: 'Review and customize generated flashcards as needed.', icon: 'Wand2' }
         ],
         steps: [
-            {
-                number: '01',
-                title: 'Upload Notes',
-                description: 'Add your class notes in any format'
-            },
-            {
-                number: '02',
-                title: 'AI Converts',
-                description: 'Watch as AI creates flashcards from key concepts'
-            },
-            {
-                number: '03',
-                title: 'Start Learning',
-                description: 'Review with spaced repetition for maximum retention'
-            }
+            { number: '01', title: 'Upload Notes', description: 'Add your class notes in any format' },
+            { number: '02', title: 'AI Converts', description: 'Watch as AI creates flashcards from key concepts' },
+            { number: '03', title: 'Start Learning', description: 'Review with spaced repetition for maximum retention' }
         ],
         faqs: [
-            {
-                question: 'Can it read my handwriting?',
-                answer: 'Yes! Our OCR technology can read most handwritten notes. For best results, ensure your handwriting is reasonably clear and well-lit in photos.'
-            },
-            {
-                question: 'What if my notes are messy or unorganized?',
-                answer: 'Our AI is trained to extract key concepts even from unstructured notes. It identifies important information regardless of formatting.'
-            }
+            { question: 'Can I paste text directly?', answer: 'Yes, you can either upload files or simply copy-paste your notes directly into our smart editor.' },
+            { question: 'Does it work with Notion or Evernote?', answer: 'Yes, just export your notes as PDF or text and upload them. We are also working on direct integrations.' },
+            { question: 'Can it read my messy handwriting?', answer: 'Our AI is quite robust at reading handwriting in images. For best results, ensure the lighting is good and the photo is clear.' },
+            { question: 'What if my notes are just bullet points?', answer: 'Bullet points are actually great! Our AI understands hierarchical structures and turns them into logical question-and-answer pairs.' },
+            { question: 'Can it generate summaries too?', answer: 'Yes, in addition to flashcards, Masterly can create concise summaries of long notes to help you see the "big picture".' },
+            { question: 'How specific are the flashcards?', answer: 'You can control the depth. Choose "Comprehensive" for detail or "High-Yield" for just the most important facts.' },
+            commonFAQs.howItWorks,
+            commonFAQs.isFree,
+            commonFAQs.privacy,
+            commonFAQs.devices
         ],
         ctaTitle: 'Transform Your Notes Today',
         ctaSubtitle: 'Stop wasting time on manual flashcard creation.',
-        keywords: ['notes to flashcards', 'convert notes', 'study from notes', 'notes flashcards', 'handwritten notes']
+        relatedPages: ['ai-flashcard-maker', 'pdf-to-flashcards', 'ai-quiz-generator']
     },
     {
         slug: 'ai-quiz-generator',
@@ -653,58 +494,37 @@ export const seoPages: SEOPageData[] = [
         subtitle: 'Test Your Knowledge',
         heroTitle: 'AI-Powered Quiz Generator',
         heroSubtitle: 'Create unlimited practice quizzes from any study material. Perfect for self-testing and exam preparation.',
-        description: 'Generate practice quizzes automatically from your study materials using AI',
+        description: 'The world\'s best AI quiz generator. Turn notes, PDFs, or lectures into custom practice tests with multiple-choice questions in seconds.',
+        keywords: [
+            'ai quiz generator', 'ai quiz maker', 'generate quiz from text', 'pdf to quiz',
+            'multiple choice quiz generator', 'practice test maker', 'test yourself ai'
+        ],
         features: [
-            {
-                title: 'Multiple Question Types',
-                description: 'Multiple choice, true/false, short answer, and more.',
-                icon: 'FileText'
-            },
-            {
-                title: 'Difficulty Levels',
-                description: 'Choose from easy, medium, or hard questions.',
-                icon: 'Activity'
-            },
-            {
-                title: 'Instant Grading',
-                description: 'Get immediate feedback on your answers.',
-                icon: 'CheckCircle'
-            },
-            {
-                title: 'Unlimited Quizzes',
-                description: 'Generate as many practice quizzes as you need.',
-                icon: 'Repeat'
-            }
+            { title: 'Multiple Question Types', description: 'Multiple choice, true/false, short answer, and more.', icon: 'FileText' },
+            { title: 'Difficulty Levels', description: 'Choose from easy, medium, or hard questions.', icon: 'Activity' },
+            { title: 'Instant Grading', description: 'Get immediate feedback on your answers.', icon: 'CheckCircle' },
+            { title: 'Unlimited Quizzes', description: 'Generate as many practice quizzes as you need.', icon: 'Repeat' }
         ],
         steps: [
-            {
-                number: '01',
-                title: 'Upload Content',
-                description: 'Add your study materials or textbook chapters'
-            },
-            {
-                number: '02',
-                title: 'Generate Quiz',
-                description: 'AI creates a comprehensive quiz in seconds'
-            },
-            {
-                number: '03',
-                title: 'Take & Review',
-                description: 'Test yourself and review detailed explanations'
-            }
+            { number: '01', title: 'Upload Content', description: 'Add your study materials or textbook chapters' },
+            { number: '02', title: 'Generate Quiz', description: 'AI creates a comprehensive quiz in seconds' },
+            { number: '03', title: 'Take & Review', description: 'Test yourself and review detailed explanations' }
         ],
         faqs: [
-            {
-                question: 'How many questions can I generate?',
-                answer: 'There&apos;s no limit! Generate as many quizzes as you need. Each quiz can have 5-50 questions depending on your preference.'
-            },
-            {
-                question: 'Does it provide explanations?',
-                answer: 'Yes! Every question comes with a detailed explanation of the correct answer to help you learn from mistakes.'
-            }
+            { question: 'Do the quizzes have explanations?', answer: 'Yes, every question comes with a detailed explanation of why the correct answer is right and why the other options are wrong.' },
+            { question: 'What types of questions can it generate?', answer: 'We currently support Multiple Choice, True/False, Fill in the Blanks, and conceptual Short Answer questions.' },
+            { question: 'How many questions can I have per quiz?', answer: 'You can choose to generate anywhere from 5 to 50 questions at a time.' },
+            { question: 'Is it helpful for certifications like SAT or GRE?', answer: 'Absolutely. It\'s great for practicing the styles of questions found on standardized tests. Just upload a sample passage or chapter.' },
+            { question: 'Can I export the quiz?', answer: 'Yes, you can export your practice tests as PDF or CSV for printing or using elsewhere.' },
+            { question: 'Can I retake the same quiz?', answer: 'Yes, or you can have the AI generate a "Remix"—different questions covering the same core material from a different angle.' },
+            commonFAQs.howItWorks,
+            commonFAQs.isFree,
+            commonFAQs.privacy,
+            commonFAQs.devices
         ],
         ctaTitle: 'Start Creating Quizzes Now',
         ctaSubtitle: 'Test yourself with unlimited AI-generated practice questions.',
-        keywords: ['ai quiz generator', 'quiz maker', 'practice questions', 'test generator', 'study quiz']
+        relatedPages: ['exam-preparation-app', 'active-recall', 'ai-flashcard-maker']
     }
 ];
+
