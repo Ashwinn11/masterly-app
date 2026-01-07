@@ -6,7 +6,7 @@ import { Flame } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { LottieAnimation } from "@/components/ui/LottieAnimation";
-import thinkingAnimation from "@/assets/animations/Learning.json";
+import { useEffect, useState } from "react";
 
 export const Hero = () => {
   return (
@@ -100,8 +100,8 @@ export const Hero = () => {
                 transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                 className="w-full h-full p-8"
               >
-                <LottieAnimation 
-                  animationData={thinkingAnimation} 
+                <LottieAnimation
+                  animationPath="/animations/Learning.json"
                   className="w-full h-full drop-shadow-2xl"
                 />
               </motion.div>

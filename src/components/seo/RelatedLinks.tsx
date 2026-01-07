@@ -87,22 +87,22 @@ export function RelatedLinks({
       aria-label="Related content"
       className={cn('space-y-4', className)}
     >
-      <h3 className="text-lg font-semibold text-white">{title}</h3>
+      <h3 className="text-lg font-semibold text-foreground">{title}</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {links.map((link) => (
           <Link
             key={link.href}
             href={link.href}
             className={cn(
-              'group p-4 rounded-xl border border-white/10 bg-white/5',
-              'hover:bg-white/10 hover:border-primary/30 transition-all'
+              'group p-4 rounded-xl border-[3px] border-foreground bg-card',
+              'hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:border-primary transition-all'
             )}
           >
-            <h4 className="font-semibold text-white group-hover:text-primary transition-colors">
+            <h4 className="font-semibold text-foreground group-hover:text-primary transition-colors">
               {link.label}
             </h4>
             {link.description && (
-              <p className="mt-1 text-sm text-gray-400 line-clamp-2">
+              <p className="mt-1 text-sm text-foreground/60 line-clamp-2">
                 {link.description}
               </p>
             )}

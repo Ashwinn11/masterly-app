@@ -3,7 +3,6 @@
 import React from 'react';
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
 import { LottieAnimation } from "@/components/ui/LottieAnimation";
-import girlStudyingAnimation from "@/assets/animations/Great_knowledge.json";
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Flame, Trophy } from 'lucide-react';
 import Link from 'next/link';
@@ -53,10 +52,10 @@ export default function LoginPage() {
           {/* Lottie Animation with Glow */}
           <div className="relative mb-6 w-full max-w-lg">
              <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-75 animate-pulse-slow" />
-             <LottieAnimation 
-                animationData={girlStudyingAnimation} 
-                className="w-full h-auto drop-shadow-2xl relative z-10"
-              />
+             <LottieAnimation
+               animationPath="/animations/Great_knowledge.json"
+               className="w-full h-auto drop-shadow-2xl relative z-10"
+             />
               
               {/* Floating Widgets */}
               <div className="absolute -right-4 top-10 bg-card border-[3px] border-foreground p-3 rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,0.1)] animate-float delay-700 flex items-center gap-3">

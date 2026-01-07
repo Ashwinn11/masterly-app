@@ -7,24 +7,31 @@ User-agent: *
 # Allow all public pages
 Allow: /
 Allow: /login
+
+# SEO Landing Pages - High Priority
 Allow: /ai-flashcard-maker
 Allow: /pdf-to-flashcards
 Allow: /spaced-repetition
 Allow: /anki-alternative
 Allow: /quizlet-alternative
+Allow: /active-recall
+Allow: /medical-school-study-app
+Allow: /law-school-study-app
+Allow: /exam-preparation-app
+Allow: /notes-to-flashcards
+Allow: /ai-quiz-generator
+
+# Public Pages
 Allow: /help
 Allow: /privacy
 Allow: /terms
 
 # Disallow protected app routes (require authentication)
 Disallow: /dashboard
-Disallow: /upload
-Disallow: /seeds
-Disallow: /exams
-Disallow: /flashcards
-Disallow: /quiz
+Disallow: /materials
+Disallow: /questions
+Disallow: /play
 Disallow: /profile
-Disallow: /onboarding
 
 # Disallow API routes
 Disallow: /api/

@@ -4,12 +4,22 @@ import { cn } from "@/lib/utils";
 import { Brain, FileText, LineChart, Upload } from "lucide-react";
 import { LottieAnimation } from "@/components/ui/LottieAnimation";
 import { motion } from "framer-motion";
-import booksAnimation from "@/assets/animations/Books-stack.json";
-import finishingStudiesAnimation from "@/assets/animations/finish_study.json";
-import quizAnimation from "@/assets/animations/quiz.json";
-import examAnimation from "@/assets/animations/exam.json";
+import { useEffect, useState } from "react";
 
-const FeatureRow = ({ 
+const useAnimation = (path: string) => {
+  const [data, setData] = useState<unknown>(null);
+
+  useEffect(() => {
+    fetch(path)
+      .then((res) => res.json())
+      .then(setData)
+      .catch(console.error);
+  }, [path]);
+
+  return data;
+};
+
+const FeatureRow = ({
   title, 
   description, 
   animationData,
@@ -71,10 +81,14 @@ const FeatureRow = ({
                 transition={{ type: "spring", stiffness: 300 }}
                 className="w-full h-full"
               >
-                <LottieAnimation 
-                  animationData={animationData} 
-                  className="w-full h-full drop-shadow-2xl"
-                />
+                <>
+                  {animationData && (
+                    <LottieAnimation
+                      animationData={animationData}
+                      className="w-full h-full drop-shadow-2xl"
+                    />
+                  )}
+                </>
               </motion.div>
             </div>
           </motion.div>
@@ -85,6 +99,11 @@ const FeatureRow = ({
 };
 
 export const Features = () => {
+  const booksAnimation = useAnimation("/animations/Books-stack.json");
+  const finishingStudiesAnimation = useAnimation("/animations/finish_study.json");
+  const quizAnimation = useAnimation("/animations/quiz.json");
+  const examAnimation = useAnimation("/animations/exam.json");
+
   return (
     <section className="bg-background relative" id="features">
       <div className="space-y-0">

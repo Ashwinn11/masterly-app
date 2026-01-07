@@ -8,12 +8,11 @@ import {
   Layout, Cloud, Sparkles, Repeat,
   ShieldOff, Wand2, User, Activity,
   Calendar, BarChart, BrainCircuit,
-  ArrowRight
+  ArrowRight, BookOpen, FileText
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SEOPageData } from '@/lib/seo/content';
 import { LottieAnimation } from '@/components/ui/LottieAnimation';
-import thinkingAnimation from '@/assets/animations/Learning.json';
 import { StructuredData, schemas } from './StructuredData';
 import { Footer } from '@/components/Footer';
 import { RelatedLinks } from './RelatedLinks';
@@ -24,7 +23,7 @@ const iconMap: Record<string, any> = {
   Layers, CheckCircle, Image, RefreshCw,
   Layout, Cloud, Sparkles, Repeat,
   ShieldOff, Wand2, User, Activity,
-  Calendar, BarChart, BrainCircuit
+  Calendar, BarChart, BrainCircuit, BookOpen, FileText
 };
 
 interface SEOTemplateProps {
@@ -80,7 +79,7 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
                   <span className="block text-primary mt-2 italic">— Fast & Free.</span>
                 </h1>
                 
-                <p className="text-2xl text-info leading-tight text-balance italic opacity-80">
+                <p className="text-2xl text-foreground/70 leading-tight text-balance italic">
                   {data.heroSubtitle}
                 </p>
                 
@@ -110,7 +109,7 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
                     className="w-full h-full p-8"
                   >
                     <LottieAnimation 
-                      animationData={thinkingAnimation} 
+                      animationPath="/animations/Learning.json"
                       className="w-full h-full drop-shadow-2xl"
                     />
                   </motion.div>
@@ -127,7 +126,7 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
               <h2 className="text-4xl md:text-6xl font-black text-foreground mb-4">
                 Why choose Masterly?
               </h2>
-              <p className="text-2xl text-info italic">Everything you need to study smarter.</p>
+              <p className="text-2xl text-foreground/70 italic">Everything you need to study smarter.</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -148,7 +147,7 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
                     <h3 className="text-2xl font-black text-foreground mb-3 font-handwritten">
                       {feature.title}
                     </h3>
-                    <p className="text-lg text-info font-handwritten italic opacity-80 leading-snug">
+                    <p className="text-lg text-foreground/70 font-handwritten italic leading-snug">
                       {feature.description}
                     </p>
                   </motion.div>
@@ -165,7 +164,7 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
               <h2 className="text-4xl md:text-6xl font-black text-foreground mb-4">
                 How it works
               </h2>
-              <p className="text-2xl text-info italic">Three simple steps to mastery.</p>
+              <p className="text-2xl text-foreground/70 italic">Three simple steps to mastery.</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
@@ -180,7 +179,7 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
                   <h3 className="text-3xl font-black text-foreground mb-4 font-handwritten">
                     {step.title}
                   </h3>
-                  <p className="text-xl text-info font-handwritten italic opacity-80">
+                  <p className="text-xl text-foreground/70 font-handwritten italic">
                     {step.description}
                   </p>
                 </div>
@@ -208,7 +207,7 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
                   <h3 className="text-2xl font-black text-foreground mb-4 font-handwritten">
                     {faq.question}
                   </h3>
-                  <p className="text-xl text-info font-handwritten italic opacity-80">
+                  <p className="text-xl text-foreground/70 font-handwritten italic">
                     {faq.answer}
                   </p>
                 </motion.div>
@@ -237,7 +236,7 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
             <h2 className="text-5xl md:text-7xl font-black mb-8 leading-tight">
               {data.ctaTitle}
             </h2>
-            <p className="text-2xl mb-12 opacity-90 italic">
+            <p className="text-2xl mb-12 italic text-primary-foreground/90">
               {data.ctaSubtitle}
             </p>
             <Button 

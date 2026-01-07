@@ -77,8 +77,8 @@ export default {
           hover: "#8a3729",
         },
         muted: {
-          DEFAULT: "#6B705C", // Info color from iOS
-          foreground: "#FDFBF7",
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
           DEFAULT: "#E9B44C", // Mustard Yellow from iOS

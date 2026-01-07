@@ -324,5 +324,359 @@ export const seoPages: SEOPageData[] = [
         ],
         ctaTitle: 'Never Forget What You Learn',
         ctaSubtitle: 'Start using the world&apos;s most effective study method today.'
+    },
+    {
+        slug: 'active-recall',
+        title: 'Active Recall',
+        subtitle: 'Study Smarter, Not Harder',
+        heroTitle: 'Master Active Recall',
+        heroSubtitle: 'The most effective learning technique backed by science. Test yourself instead of passively re-reading to boost retention by 50%.',
+        description: 'Learn faster with active recall - the science-backed study method proven to improve memory retention',
+        features: [
+            {
+                title: 'Question-Based Learning',
+                description: 'AI generates targeted questions from your materials.',
+                icon: 'Brain'
+            },
+            {
+                title: 'Immediate Feedback',
+                description: 'Know instantly what you know and what needs work.',
+                icon: 'Zap'
+            },
+            {
+                title: 'Progress Tracking',
+                description: 'See your mastery level increase with every session.',
+                icon: 'BarChart'
+            },
+            {
+                title: 'Adaptive Difficulty',
+                description: 'Questions adjust based on your performance.',
+                icon: 'Activity'
+            }
+        ],
+        steps: [
+            {
+                number: '01',
+                title: 'Upload Content',
+                description: 'Add your study materials in any format'
+            },
+            {
+                number: '02',
+                title: 'Answer Questions',
+                description: 'Test yourself with AI-generated active recall questions'
+            },
+            {
+                number: '03',
+                title: 'Review Mistakes',
+                description: 'Focus on weak areas for maximum improvement'
+            }
+        ],
+        faqs: [
+            {
+                question: 'What is active recall?',
+                answer: 'Active recall is a learning technique where you actively retrieve information from memory, rather than passively reviewing it. This strengthens neural pathways and improves long-term retention.'
+            },
+            {
+                question: 'How is this better than re-reading?',
+                answer: 'Studies show active recall is 50-100% more effective than passive re-reading. It forces your brain to work harder, creating stronger memories.'
+            }
+        ],
+        ctaTitle: 'Start Using Active Recall Today',
+        ctaSubtitle: 'Transform how you study with science-backed techniques.'
+    },
+    {
+        slug: 'medical-school-study-app',
+        title: 'Medical School Study App',
+        subtitle: 'Built for Med Students',
+        heroTitle: 'The Ultimate Medical School Study App',
+        heroSubtitle: 'Master anatomy, pharmacology, and pathology with AI-powered flashcards designed specifically for medical students.',
+        description: 'AI-powered study app designed for medical students to master complex medical concepts',
+        features: [
+            {
+                title: 'Medical Content AI',
+                description: 'Trained on medical terminology and concepts for accurate cards.',
+                icon: 'Brain'
+            },
+            {
+                title: 'Image Recognition',
+                description: 'Upload anatomy diagrams and get labeled flashcards.',
+                icon: 'Image'
+            },
+            {
+                title: 'USMLE Prep',
+                description: 'Optimized for Step 1, Step 2, and Step 3 preparation.',
+                icon: 'CheckCircle'
+            },
+            {
+                title: 'Clinical Cases',
+                description: 'Practice with case-based questions and scenarios.',
+                icon: 'FileText'
+            }
+        ],
+        steps: [
+            {
+                number: '01',
+                title: 'Upload Lectures',
+                description: 'Add your medical school lectures and textbook PDFs'
+            },
+            {
+                number: '02',
+                title: 'AI Creates Cards',
+                description: 'Get comprehensive flashcards covering all key concepts'
+            },
+            {
+                number: '03',
+                title: 'Ace Your Exams',
+                description: 'Study efficiently with spaced repetition and active recall'
+            }
+        ],
+        faqs: [
+            {
+                question: 'Is this suitable for USMLE preparation?',
+                answer: 'Absolutely! Many medical students use Masterly for USMLE Step 1, 2, and 3 preparation. Our AI understands medical terminology and creates high-yield questions.'
+            },
+            {
+                question: 'Can it handle anatomy images?',
+                answer: 'Yes! Upload anatomy diagrams, histology slides, or radiology images and our AI will create relevant flashcards with proper labeling.'
+            }
+        ],
+        ctaTitle: 'Join Thousands of Med Students',
+        ctaSubtitle: 'Start studying smarter for your medical exams today.'
+    },
+    {
+        slug: 'law-school-study-app',
+        title: 'Law School Study App',
+        subtitle: 'Master Case Law Faster',
+        heroTitle: 'AI Study App for Law Students',
+        heroSubtitle: 'Turn case briefs, statutes, and legal concepts into flashcards. Perfect for bar exam prep and law school success.',
+        description: 'Study app designed for law students to master case law, statutes, and legal concepts efficiently',
+        features: [
+            {
+                title: 'Case Brief Analysis',
+                description: 'AI extracts key holdings, facts, and reasoning from cases.',
+                icon: 'FileText'
+            },
+            {
+                title: 'Bar Exam Ready',
+                description: 'Optimized for MBE, MEE, and state bar preparation.',
+                icon: 'CheckCircle'
+            },
+            {
+                title: 'Legal Terminology',
+                description: 'Trained on legal language for accurate flashcards.',
+                icon: 'Brain'
+            },
+            {
+                title: 'Rule Memorization',
+                description: 'Perfect for memorizing rules, elements, and tests.',
+                icon: 'Repeat'
+            }
+        ],
+        steps: [
+            {
+                number: '01',
+                title: 'Upload Cases',
+                description: 'Add your case briefs, outlines, and study materials'
+            },
+            {
+                number: '02',
+                title: 'AI Extracts Rules',
+                description: 'Get flashcards with holdings, rules, and key facts'
+            },
+            {
+                number: '03',
+                title: 'Master the Law',
+                description: 'Review with spaced repetition until it sticks'
+            }
+        ],
+        faqs: [
+            {
+                question: 'Does this work for bar exam prep?',
+                answer: 'Yes! Many law students use Masterly for bar exam preparation. It&apos;s perfect for memorizing rules, elements, and case holdings across all subjects.'
+            },
+            {
+                question: 'Can it handle case briefs?',
+                answer: 'Absolutely! Upload your case briefs and our AI will extract the key holdings, facts, reasoning, and create targeted flashcards for review.'
+            }
+        ],
+        ctaTitle: 'Ace Law School & The Bar',
+        ctaSubtitle: 'Join law students studying smarter with AI.'
+    },
+    {
+        slug: 'exam-preparation-app',
+        title: 'Exam Preparation App',
+        subtitle: 'Ace Any Exam',
+        heroTitle: 'Your Complete Exam Prep Solution',
+        heroSubtitle: 'From midterms to finals, professional certifications to standardized tests - prepare efficiently with AI-powered study tools.',
+        description: 'Comprehensive exam preparation app with AI flashcards, quizzes, and spaced repetition',
+        features: [
+            {
+                title: 'Any Subject',
+                description: 'Works for any exam - academic, professional, or standardized.',
+                icon: 'BookOpen'
+            },
+            {
+                title: 'Smart Scheduling',
+                description: 'AI creates a personalized study schedule for your exam date.',
+                icon: 'Calendar'
+            },
+            {
+                title: 'Practice Tests',
+                description: 'Generate unlimited practice questions from your materials.',
+                icon: 'FileText'
+            },
+            {
+                title: 'Weak Spot Analysis',
+                description: 'Identify and focus on your weakest areas.',
+                icon: 'Activity'
+            }
+        ],
+        steps: [
+            {
+                number: '01',
+                title: 'Set Your Exam Date',
+                description: 'Tell us when your exam is and what you need to study'
+            },
+            {
+                number: '02',
+                title: 'Upload Materials',
+                description: 'Add all your study materials - notes, textbooks, slides'
+            },
+            {
+                number: '03',
+                title: 'Follow Your Plan',
+                description: 'Study daily with AI-optimized review sessions'
+            }
+        ],
+        faqs: [
+            {
+                question: 'What types of exams can I prepare for?',
+                answer: 'Any exam! Students use Masterly for college exams, professional certifications (CPA, CFA, PMP), standardized tests (GRE, GMAT, LSAT), medical boards (USMLE, COMLEX), and more.'
+            },
+            {
+                question: 'How far in advance should I start?',
+                answer: 'We recommend starting at least 2-4 weeks before your exam for best results. Our spaced repetition algorithm works best with consistent daily review.'
+            }
+        ],
+        ctaTitle: 'Start Your Exam Prep Journey',
+        ctaSubtitle: 'Join students who improved their grades by 20%+.'
+    },
+    {
+        slug: 'notes-to-flashcards',
+        title: 'Notes to Flashcards',
+        subtitle: 'Convert Notes Instantly',
+        heroTitle: 'Turn Your Notes into Flashcards',
+        heroSubtitle: 'Stop manually creating flashcards from your notes. Upload once, get perfect study cards in seconds with AI.',
+        description: 'Automatically convert your study notes into flashcards using AI technology',
+        features: [
+            {
+                title: 'Any Note Format',
+                description: 'Works with typed notes, handwritten PDFs, or images.',
+                icon: 'Files'
+            },
+            {
+                title: 'Smart Parsing',
+                description: 'AI understands your note structure and organization.',
+                icon: 'Brain'
+            },
+            {
+                title: 'Bulk Conversion',
+                description: 'Convert entire notebooks or semesters of notes at once.',
+                icon: 'Layers'
+            },
+            {
+                title: 'Edit & Refine',
+                description: 'Review and customize generated flashcards as needed.',
+                icon: 'Wand2'
+            }
+        ],
+        steps: [
+            {
+                number: '01',
+                title: 'Upload Notes',
+                description: 'Add your class notes in any format'
+            },
+            {
+                number: '02',
+                title: 'AI Converts',
+                description: 'Watch as AI creates flashcards from key concepts'
+            },
+            {
+                number: '03',
+                title: 'Start Learning',
+                description: 'Review with spaced repetition for maximum retention'
+            }
+        ],
+        faqs: [
+            {
+                question: 'Can it read my handwriting?',
+                answer: 'Yes! Our OCR technology can read most handwritten notes. For best results, ensure your handwriting is reasonably clear and well-lit in photos.'
+            },
+            {
+                question: 'What if my notes are messy or unorganized?',
+                answer: 'Our AI is trained to extract key concepts even from unstructured notes. It identifies important information regardless of formatting.'
+            }
+        ],
+        ctaTitle: 'Transform Your Notes Today',
+        ctaSubtitle: 'Stop wasting time on manual flashcard creation.'
+    },
+    {
+        slug: 'ai-quiz-generator',
+        title: 'AI Quiz Generator',
+        subtitle: 'Test Your Knowledge',
+        heroTitle: 'AI-Powered Quiz Generator',
+        heroSubtitle: 'Create unlimited practice quizzes from any study material. Perfect for self-testing and exam preparation.',
+        description: 'Generate practice quizzes automatically from your study materials using AI',
+        features: [
+            {
+                title: 'Multiple Question Types',
+                description: 'Multiple choice, true/false, short answer, and more.',
+                icon: 'FileText'
+            },
+            {
+                title: 'Difficulty Levels',
+                description: 'Choose from easy, medium, or hard questions.',
+                icon: 'Activity'
+            },
+            {
+                title: 'Instant Grading',
+                description: 'Get immediate feedback on your answers.',
+                icon: 'CheckCircle'
+            },
+            {
+                title: 'Unlimited Quizzes',
+                description: 'Generate as many practice quizzes as you need.',
+                icon: 'Repeat'
+            }
+        ],
+        steps: [
+            {
+                number: '01',
+                title: 'Upload Content',
+                description: 'Add your study materials or textbook chapters'
+            },
+            {
+                number: '02',
+                title: 'Generate Quiz',
+                description: 'AI creates a comprehensive quiz in seconds'
+            },
+            {
+                number: '03',
+                title: 'Take & Review',
+                description: 'Test yourself and review detailed explanations'
+            }
+        ],
+        faqs: [
+            {
+                question: 'How many questions can I generate?',
+                answer: 'There&apos;s no limit! Generate as many quizzes as you need. Each quiz can have 5-50 questions depending on your preference.'
+            },
+            {
+                question: 'Does it provide explanations?',
+                answer: 'Yes! Every question comes with a detailed explanation of the correct answer to help you learn from mistakes.'
+            }
+        ],
+        ctaTitle: 'Start Creating Quizzes Now',
+        ctaSubtitle: 'Test yourself with unlimited AI-generated practice questions.'
     }
 ];

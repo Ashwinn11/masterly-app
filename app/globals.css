@@ -32,9 +32,10 @@ All colors MUST be HSL.
     --accent: 40 79% 61%;
     --accent-foreground: 0 0% 18%;
 
-    --muted: 73 10% 25%;
-    /* Darker #414437 for better contrast */
-    --muted-foreground: 73 10% 25%;
+    --muted: 73 10% 88%;
+    /* Light muted background */
+    --muted-foreground: 73 10% 40%;
+    /* Dark text for good contrast on light background */
 
     --destructive: 9 54% 42%;
     --destructive-foreground: 48 40% 98%;

@@ -27,9 +27,9 @@ const Navigation: React.FC<NavigationProps> = ({ className }) => {
 
   // Navigation links
   const navLinks = [
-    { name: "Features", href: "#features" },
-    { name: "Testimonials", href: "#testimonials" },
-    { name: "FAQ", href: "#faq" },
+    { name: "Features", href: "/#features" },
+    { name: "Testimonials", href: "/#testimonials" },
+    { name: "FAQ", href: "/#faq" },
   ];
 
   // Handle scroll for background transparency
@@ -43,14 +43,7 @@ const Navigation: React.FC<NavigationProps> = ({ className }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Smooth scroll to section
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-    setMobileMenuOpen(false);
-  };
+
 
   // Logo Component - uses transparent background.png with app name
   const Logo: React.FC<{ className?: string; showText?: boolean }> = ({ 
@@ -90,13 +83,13 @@ const Navigation: React.FC<NavigationProps> = ({ className }) => {
             {/* Desktop Navigation Links */}
             <nav className="hidden md:flex items-center space-x-8">
               {navLinks.map((link) => (
-                <button
+                <Link
                   key={link.name}
-                  onClick={() => scrollToSection(link.href)}
+                  href={link.href}
                   className="text-sm font-medium transition-colors text-foreground/90 hover:text-foreground"
                 >
                   {link.name}
-                </button>
+                </Link>
               ))}
             </nav>
 
@@ -165,13 +158,14 @@ const Navigation: React.FC<NavigationProps> = ({ className }) => {
                     {/* Mobile Navigation Links */}
                     <nav className="flex flex-col space-y-4">
                       {navLinks.map((link) => (
-                        <button
+                        <Link
                           key={link.name}
-                          onClick={() => scrollToSection(link.href)}
+                          href={link.href}
+                          onClick={() => setMobileMenuOpen(false)}
                           className="text-2xl font-black text-foreground hover:text-primary transition-colors text-left font-handwritten"
                         >
                           {link.name}
-                        </button>
+                        </Link>
                       ))}
                     </nav>
 

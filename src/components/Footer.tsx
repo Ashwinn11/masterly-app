@@ -43,19 +43,19 @@ export const Footer = () => {
             <h4 className="font-black mb-8 text-2xl underline decoration-accent/50 decoration-4 underline-offset-8">Product</h4>
             <ul className="space-y-4 text-xl font-bold text-white/90 italic">
               <li>
-                <button onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-accent transition-colors">
+                <Link href="/#features" className="hover:text-accent transition-colors">
                   Features
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => document.getElementById('testimonials')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-accent transition-colors">
+                <Link href="/#testimonials" className="hover:text-accent transition-colors">
                   Testimonials
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-accent transition-colors">
+                <Link href="/#faq" className="hover:text-accent transition-colors">
                   FAQ
-                </button>
+                </Link>
               </li>
             </ul>
           </div>
