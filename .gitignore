@@ -12,6 +12,16 @@ dist
 dist-ssr
 *.local
 
+
+masterlyapp/
+
+masterlyapp/*
+
+masterlyapp/**
+
+masterlyapp
+
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

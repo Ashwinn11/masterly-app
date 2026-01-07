@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { getSupabaseClient } from '@/lib/supabase/client';
 import { ProcessingModal } from '@/components/ui/ProcessingModal';
-import { cn } from '@/lib/utils';
+import { cn, getFriendlyErrorMessage } from '@/lib/utils';
 
 type UploadMode = 'file' | 'text' | 'record';
 
@@ -173,7 +173,7 @@ export default function UploadPage() {
       setStatus('success');
       setTimeout(() => router.push('/materials'), 1500);
     } catch (err: any) {
-      setError(err.message || 'An error occurred');
+      setError(getFriendlyErrorMessage(err));
       setStatus('error');
     } finally {
       setUploading(false);
@@ -302,7 +302,7 @@ export default function UploadPage() {
       setStatus('success');
       setTimeout(() => router.push('/materials'), 1500);
     } catch (err: any) {
-      setError(err.message || 'An error occurred during upload');
+      setError(getFriendlyErrorMessage(err));
       setStatus('error');
     } finally {
       setUploading(false);
@@ -360,7 +360,7 @@ export default function UploadPage() {
       setStatus('success');
       setTimeout(() => router.push('/materials'), 1500);
     } catch (err: any) {
-      setError(err.message || 'An error occurred');
+      setError(getFriendlyErrorMessage(err));
       setStatus('error');
     } finally {
       setUploading(false);

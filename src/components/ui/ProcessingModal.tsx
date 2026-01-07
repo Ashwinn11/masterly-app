@@ -81,11 +81,11 @@ export function ProcessingModal({
               "font-handwritten text-3xl font-black mb-2",
               isError ? "text-secondary" : "text-primary"
             )}>
-              {isError ? "Oops! Error" : message}
+              {isError ? error : message}
             </h3>
             
             <p className="font-handwritten text-lg text-info font-bold opacity-80 leading-tight mb-8 italic">
-              {isError ? error : "Please wait while we work our magic ✨"}
+              {isError ? "Please try again with different content" : "Please wait while we work our magic ✨"}
             </p>
 
             {/* Progress/Action Section */}
