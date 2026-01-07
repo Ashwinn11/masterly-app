@@ -68,9 +68,7 @@ export default function PrivacyPage() {
                 <div className="p-4 bg-card rounded-2xl border-2 border-foreground/5">
                   <span className="font-bold">Supabase:</span> Secure Database
                 </div>
-                <div className="p-4 bg-card rounded-2xl border-2 border-foreground/5">
-                  <span className="font-bold">Sentry:</span> Stability & Speed
-                </div>
+
               </div>
             </section>
 
