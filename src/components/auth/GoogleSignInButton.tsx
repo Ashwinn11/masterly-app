@@ -3,7 +3,6 @@
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 export function GoogleSignInButton() {
   const { signInWithGoogle } = useAuth();
@@ -15,7 +14,7 @@ export function GoogleSignInButton() {
       await signInWithGoogle();
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Failed to sign in with Google';
-      toast.error(message);
+      console.error(message);
       setIsLoading(false);
     }
   };

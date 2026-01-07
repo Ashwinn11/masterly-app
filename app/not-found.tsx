@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import { BlobBackground } from '@/components/ui/BlobBackground';
 import { Button } from '@/components/ui/button';
 
 export default function NotFound() {
@@ -11,7 +10,6 @@ export default function NotFound() {
 
   return (
     <div className="min-h-screen content-layer py-20 relative">
-      <BlobBackground position="top" color="#ff7664" animate={true} />
       <div className="container mx-auto px-4 max-w-4xl relative z-10">
         <div className="bg-white rounded-2xl shadow-elevated p-8 md:p-12 text-center">
           <h1 className="text-6xl font-bold mb-4 text-foreground">404</h1>

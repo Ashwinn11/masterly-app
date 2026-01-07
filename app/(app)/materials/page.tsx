@@ -17,7 +17,6 @@ import Link from 'next/link';
 import { getSupabaseClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
 import { useConfirmationStore } from '@/lib/utils/confirmationUtils';
-import { toast } from 'sonner';
 
 interface Material {
   id: string;
@@ -125,9 +124,7 @@ export default function MaterialsPage() {
 
         if (error) {
           console.error('Error deleting material:', error);
-          toast.error('Failed to delete material');
         } else {
-          toast.success('Material deleted');
           loadMaterials();
         }
       }

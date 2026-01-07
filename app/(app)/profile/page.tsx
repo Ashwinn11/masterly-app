@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useConfirmationStore } from '@/lib/utils/confirmationUtils';
-import { toast } from 'sonner';
 import { 
   User, 
   Mail, 
@@ -42,9 +41,8 @@ export default function ProfilePage() {
       onConfirm: async () => {
         try {
           await deleteAccount();
-          toast.success('Account deleted successfully');
         } catch (error) {
-          toast.error('Failed to delete account');
+          console.error('Failed to delete account:', error);
         }
       }
     });

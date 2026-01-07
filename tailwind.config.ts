@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['"Chalkboard SE"', 'Poppins', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-        handwritten: ['"Chalkboard SE"', 'cursive'],
+        sans: ['"Chalkboard SE"'],
+        handwritten: ['"Chalkboard SE"'],
       },
       fontSize: {
         'display-large': ['36px', { lineHeight: '40px', fontWeight: '700' }],

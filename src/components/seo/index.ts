@@ -8,3 +8,4 @@ export type { BreadcrumbItem } from './Breadcrumbs';
 export { RelatedLinks, SEOLink } from './RelatedLinks';
 export { StructuredData, schemas, DefaultJsonLd } from './StructuredData';
 export { JsonLd } from './JsonLd';
+export { default as SEOTemplate } from './SEOTemplate';
