@@ -15,9 +15,12 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
   return (
     <>
       <DecorativeBackground />
-      <Navigation />
-      <div className="relative z-10">
-        {children}
+      <div className="min-h-screen relative">
+        <div className="absolute inset-0 bg-background/90" />
+        <Navigation />
+        <div className="relative z-10">
+          {children}
+        </div>
       </div>
     </>
   );

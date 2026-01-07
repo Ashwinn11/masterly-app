@@ -51,7 +51,7 @@ export default function RootLayout({
         {/* Structured Data */}
         <JsonLd />
       </head>
-      <body className="font-sans">
+      <body className="font-sans bg-transparent">
         <Providers>
           {children}
           <GlobalConfirmationDialog />

@@ -7,7 +7,7 @@ export const DecorativeBackground = () => {
     <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
       {/* Top left - Star (Accent color) */}
       <svg
-        className="absolute top-[10%] left-[10%] w-10 h-10 text-accent opacity-40 animate-float"
+        className="absolute top-[10%] left-[10%] w-10 h-10 text-accent opacity-60 animate-float"
         style={{ animationDelay: '0s', transform: 'rotate(15deg)' }}
         viewBox="0 0 24 24"
         fill="currentColor"
@@ -17,7 +17,7 @@ export const DecorativeBackground = () => {
 
       {/* Top right - Cloud (Info/Muted color) */}
       <svg
-        className="absolute top-[15%] right-[5%] w-[60px] h-[60px] text-muted-foreground opacity-30 animate-float"
+        className="absolute top-[15%] right-[5%] w-[60px] h-[60px] text-muted-foreground opacity-50 animate-float"
         style={{ animationDelay: '0.5s', transform: 'rotate(-10deg)' }}
         viewBox="0 0 24 24"
         fill="currentColor"
@@ -27,7 +27,7 @@ export const DecorativeBackground = () => {
 
       {/* Middle left - Heart (Secondary color) */}
       <svg
-        className="absolute top-[45%] left-[5%] w-9 h-9 text-secondary opacity-40 animate-float"
+        className="absolute top-[45%] left-[5%] w-9 h-9 text-secondary opacity-60 animate-float"
         style={{ animationDelay: '1s', transform: 'rotate(-20deg)' }}
         viewBox="0 0 24 24"
         fill="currentColor"
@@ -37,7 +37,7 @@ export const DecorativeBackground = () => {
 
       {/* Bottom right - Sparkle/Creativity (Success/Primary color) */}
       <svg
-        className="absolute bottom-[20%] right-[10%] w-[45px] h-[45px] text-primary opacity-40 animate-float"
+        className="absolute bottom-[20%] right-[10%] w-[45px] h-[45px] text-primary opacity-60 animate-float"
         style={{ animationDelay: '1.5s', transform: 'rotate(25deg)' }}
         viewBox="0 0 24 24"
         fill="currentColor"
@@ -47,7 +47,7 @@ export const DecorativeBackground = () => {
 
       {/* Bottom left - Pencil (Primary color, lighter) */}
       <svg
-        className="absolute bottom-[10%] left-[15%] w-[50px] h-[50px] text-primary opacity-20 animate-float"
+        className="absolute bottom-[10%] left-[15%] w-[50px] h-[50px] text-primary opacity-50 animate-float"
         style={{ animationDelay: '2s', transform: 'rotate(-45deg)' }}
         viewBox="0 0 24 24"
         fill="currentColor"
@@ -57,7 +57,7 @@ export const DecorativeBackground = () => {
 
       {/* Middle right - Flower (Accent color) */}
       <svg
-        className="absolute top-[60%] right-[15%] w-10 h-10 text-accent opacity-30 animate-float"
+        className="absolute top-[60%] right-[15%] w-10 h-10 text-accent opacity-50 animate-float"
         style={{ animationDelay: '2.5s', transform: 'rotate(10deg)' }}
         viewBox="0 0 24 24"
         fill="currentColor"
@@ -67,7 +67,7 @@ export const DecorativeBackground = () => {
 
       {/* Additional small decorative elements */}
       <svg
-        className="absolute top-[30%] right-[25%] w-6 h-6 text-accent opacity-25 animate-float"
+        className="absolute top-[30%] right-[25%] w-6 h-6 text-accent opacity-50 animate-float"
         style={{ animationDelay: '0.3s' }}
         viewBox="0 0 24 24"
         fill="currentColor"
@@ -76,7 +76,7 @@ export const DecorativeBackground = () => {
       </svg>
 
       <svg
-        className="absolute bottom-[35%] left-[25%] w-7 h-7 text-accent opacity-30 animate-float"
+        className="absolute bottom-[35%] left-[25%] w-7 h-7 text-accent opacity-50 animate-float"
         style={{ animationDelay: '0.7s' }}
         viewBox="0 0 24 24"
         fill="currentColor"
@@ -85,7 +85,7 @@ export const DecorativeBackground = () => {
       </svg>
 
       <svg
-        className="absolute top-[70%] left-[8%] w-5 h-5 text-secondary opacity-35 animate-float"
+        className="absolute top-[70%] left-[8%] w-5 h-5 text-secondary opacity-50 animate-float"
         style={{ animationDelay: '1.2s' }}
         viewBox="0 0 24 24"
         fill="currentColor"

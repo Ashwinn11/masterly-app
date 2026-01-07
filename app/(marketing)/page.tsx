@@ -9,7 +9,7 @@ import { Footer } from "@/components/Footer";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-background selection:bg-primary/20 selection:text-primary">
+    <main className="min-h-screen selection:bg-primary/20 selection:text-primary">
       <Hero />
       <SocialProof />
       <Features />

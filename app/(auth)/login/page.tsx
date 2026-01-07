@@ -24,7 +24,7 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <div className="min-h-screen w-full flex bg-background relative overflow-hidden">
+    <div className="min-h-screen w-full flex relative overflow-hidden">
       {/* Global Ambient Background Effects */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.05]">
          <div className="absolute top-[-10%] left-[-5%] w-[40vw] h-[40vw] bg-primary rounded-full" />
