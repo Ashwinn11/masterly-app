@@ -33,50 +33,31 @@ export const Footer = () => {
             </div>
           </div>
 
-          {/* Features Column */}
+          {/* Navigation Column */}
           <div>
-            <h4 className="font-bold mb-6 text-lg">Features</h4>
+            <h4 className="font-bold mb-6 text-lg">Product</h4>
             <ul className="space-y-3 font-medium text-white/80">
               <li>
-                <Link href="/ai-flashcard-maker" className="hover:text-white transition-colors">
-                  AI Flashcard Maker
-                </Link>
+                <button onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-white transition-colors">
+                  Features
+                </button>
               </li>
               <li>
-                <Link href="/pdf-to-flashcards" className="hover:text-white transition-colors">
-                  PDF to Flashcards
-                </Link>
+                <button onClick={() => document.getElementById('testimonials')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-white transition-colors">
+                  Testimonials
+                </button>
               </li>
               <li>
-                <Link href="/spaced-repetition" className="hover:text-white transition-colors">
-                  Spaced Repetition
-                </Link>
-              </li>
-              <li>
-                <Link href="/help" className="hover:text-white transition-colors">
-                  Help & Support
-                </Link>
+                <button onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-white transition-colors">
+                  FAQ
+                </button>
               </li>
             </ul>
           </div>
 
-          {/* Alternatives Column */}
+          {/* Legal Column */}
           <div>
-            <h4 className="font-bold mb-6 text-lg">Compare</h4>
-            <ul className="space-y-3 font-medium text-white/80">
-              <li>
-                <Link href="/anki-alternative" className="hover:text-white transition-colors">
-                  Anki Alternative
-                </Link>
-              </li>
-              <li>
-                <Link href="/quizlet-alternative" className="hover:text-white transition-colors">
-                  Quizlet Alternative
-                </Link>
-              </li>
-            </ul>
-            
-            <h4 className="font-bold mt-8 mb-4 text-lg">Legal</h4>
+            <h4 className="font-bold mb-6 text-lg">Legal</h4>
             <ul className="space-y-3 font-medium text-white/80">
               <li>
                 <Link href="/terms" className="hover:text-white transition-colors">
@@ -124,7 +105,7 @@ export const Footer = () => {
 
         <div className="border-t border-white/20 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-medium text-white/60">
-            <p>© 2025 Masterly AI. All rights reserved.</p>
+            <p>© 2026 Masterly AI. All rights reserved.</p>
             <p className="text-center md:text-right flex items-center gap-1">
               Made with <Heart className="w-4 h-4 text-red-500 fill-current" aria-hidden="true" /> for students everywhere.
             </p>

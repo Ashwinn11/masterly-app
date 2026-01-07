@@ -7,19 +7,63 @@ import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: User | null;
+  profile: any | null;
+  stats: {
+    current_streak: number;
+    longest_streak: number;
+    total_recalls: number;
+    due_count: number;
+  } | null;
   session: Session | null;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<any | null>(null);
+  const [stats, setStats] = useState<any | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  const refreshProfile = async (userId?: string) => {
+    const id = userId || user?.id;
+    if (!id) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const supabase = getSupabaseClient();
+      
+      // Fetch profile and stats in parallel
+      const [profileRes, statsRes] = await Promise.all([
+        supabase.from('profiles').select('*').eq('id', id).single(),
+        (supabase.rpc as any)('get_user_stats', { p_user_id: id })
+      ]);
+
+      if (profileRes.error) {
+        console.error('Error fetching profile:', profileRes.error);
+      } else {
+        setProfile(profileRes.data);
+      }
+
+      if (statsRes.error) {
+        console.error('Error fetching stats:', statsRes.error);
+      } else {
+        setStats(statsRes.data);
+      }
+    } catch (error) {
+      console.error('Unexpected error fetching auth data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const supabase = getSupabaseClient();
@@ -28,7 +72,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setLoading(false);
+      if (session?.user) {
+        refreshProfile(session.user.id);
+      } else {
+        setLoading(false);
+      }
     });
 
     // Listen for auth changes
@@ -37,11 +85,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setLoading(false);
+      if (session?.user) {
+        // We set loading back to true if a new user is signing in 
+        // to ensure we get their profile before showing the UI
+        setLoading(true);
+        refreshProfile(session.user.id);
+      } else {
+        setProfile(null);
+        setStats(null);
+        setLoading(false);
+      }
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [user?.id]);
 
   const signInWithGoogle = async () => {
     const supabase = getSupabaseClient();
@@ -70,6 +127,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Error signing out:', error);
     }
     setUser(null);
+    setProfile(null);
+    setStats(null);
     setLoading(false);
     // Use window.location for immediate redirect to landing page
     // This bypasses Next.js routing and middleware
@@ -80,10 +139,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
+        profile,
+        stats,
         session,
         loading,
         signInWithGoogle,
         signOut,
+        refreshProfile,
       }}
     >
       {children}

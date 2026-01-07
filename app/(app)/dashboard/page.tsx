@@ -1,496 +1,139 @@
-
 'use client';
 
-import { useEffect, useState, useCallback, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { examsService, type ExamWithSeeds } from '@/lib/api/examsService';
-import { profileStatsService } from '@/lib/api/profileStatsService';
-import { spacedRepetitionService, type ReviewStats } from '@/lib/api/spacedRepetitionService';
-import { useScreenRefresh } from '@/hooks/useScreenRefresh';
-import {
-  ArrowRight,
-  BookOpen,
-  Flame,
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { 
+  Sparkles, 
+  BookOpen, 
+  Upload,
   Zap,
-  Plus,
-  Cloud,
-  Loader2,
-  CheckCircle,
-  PlayCircle,
+  Star,
+  ArrowRight,
+  Calendar
 } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-
-interface DashboardStats {
-  currentStreak: number;
-  cardsReviewedToday: number;
-  dailyGoal: number;
-  minutesStudiedToday: number;
-  xp: number;
-  loading: boolean;
-  goalMet: boolean;
-  streakFreezes: number;
-}
-
-interface ExamCard {
-  id: string;
-  user_id: string;
-  subject_name: string;
-  created_at: string;
-  updated_at: string;
-  seedCount: number;
-  seeds: any[];
-  reviewStats?: ReviewStats | null;
-  averageGrade?: string;
-}
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const { user } = useAuth();
-  const [profile, setProfile] = useState<any>(null);
-  const [stats, setStats] = useState<DashboardStats>({
-    currentStreak: 0,
-    cardsReviewedToday: 0,
-    dailyGoal: 20,
-    minutesStudiedToday: 0,
-    xp: 0,
-    loading: true,
-    goalMet: false,
-    streakFreezes: 0,
-  });
-
-  const [exams, setExams] = useState<ExamCard[]>([]);
-  const [examsLoading, setExamsLoading] = useState(true);
-
-  // Greeting text based on time
-  const greetingText = useMemo(() => {
-    const hour = new Date().getHours();
-    const firstName = profile?.full_name?.split(' ')[0] || 'there';
-
-    if (hour < 12)
-      return {
-        title: `Good morning, ${firstName}!`,
-        subtitle: 'ready to lock in? 💪',
-      };
-    if (hour < 17)
-      return {
-        title: `Good afternoon, ${firstName}!`,
-        subtitle: 'keep that energy up ✨',
-      };
-    return {
-      title: `Good evening, ${firstName}!`,
-      subtitle: 'end the day on a high note 🎯',
-    };
-  }, [profile?.full_name]);
-
-  const loadStats = useCallback(async () => {
-    if (!user) return;
-
-    try {
-      // Load profile from user metadata or fetch from service
-      const userMetadata = (user as any)?.user_metadata || {};
-      setProfile({
-        full_name: userMetadata.full_name || user.email?.split('@')[0] || 'User',
-        avatar_url: userMetadata.avatar_url,
-      });
-
-      const userStats = await profileStatsService.getUserStats(user.id);
-      const data = (userStats as any)?.data;
-
-      // Fetch streak freezes from user_stats_historical
-      const { getSupabaseClient } = await import('@/lib/supabase/client');
-      const supabase = getSupabaseClient();
-      const { data: freezeData } = await supabase
-        .from('user_stats_historical')
-        .select('streak_freezes')
-        .eq('user_id', user.id)
-        .maybeSingle();
-
-      setStats({
-        currentStreak: data?.current?.currentStreak || 0,
-        cardsReviewedToday: data?.today?.cardsReviewedToday || 0,
-        dailyGoal: data?.preferences?.dailyCardsGoal || 20,
-        minutesStudiedToday: data?.today?.minutesStudiedToday || 0,
-        xp: data?.current?.xp || 0,
-        goalMet: (data?.today?.goalProgress || 0) >= 1,
-        loading: false,
-        streakFreezes: (freezeData as any)?.streak_freezes || 0,
-      });
-    } catch (error) {
-      console.error('Failed to load dashboard stats:', error);
-      setStats((prev) => ({ ...prev, loading: false }));
-    }
-  }, [user]);
-
-  const loadExams = useCallback(async () => {
-    if (!user) return;
-
-    setExamsLoading(true);
-    try {
-      const { exams: loadedExams, error } = await examsService.getExamsWithSeedCounts();
-
-      if (error || !loadedExams) {
-        console.error('Error loading exams:', error);
-        setExams([]);
-        return;
-      }
-
-      // Initialize Supabase client for spacedRepetitionService
-      const { createClient } = await import('@/lib/supabase/client');
-      const supabase = createClient();
-      spacedRepetitionService.setSupabase(supabase);
-
-      // Load review stats and average grades for each exam
-      const examsWithStats = await Promise.all(
-        loadedExams.map(async (exam) => {
-          // Get full exam data with seeds
-          const { examWithSeeds } = await examsService.getExamWithSeeds(exam.id);
-          const reviewStats = await spacedRepetitionService.getReviewStatsForExam(user.id, exam.id);
-
-          return {
-            ...exam,
-            seeds: examWithSeeds?.seeds || [],
-            reviewStats,
-            averageGrade: reviewStats?.averageGrade,
-          };
-        })
-      );
-
-      setExams(examsWithStats);
-    } catch (error) {
-      console.error('Failed to load exams:', error);
-      setExams([]);
-    } finally {
-      setExamsLoading(false);
-    }
-  }, [user]);
-
-  const refreshAll = useCallback(async () => {
-    await Promise.all([loadStats(), loadExams()]);
-  }, [loadStats, loadExams]);
-
-  useScreenRefresh({
-    screenName: user ? `dashboard-${user.id}` : 'dashboard',
-    refreshFn: refreshAll,
-    refreshOnMount: false,
-    refreshOnFocus: true,
-  });
-
-  useEffect(() => {
-    if (!user) return;
-    loadStats();
-    loadExams();
-  }, [user, loadStats, loadExams]);
-
-  const handleExamPress = (exam: ExamCard) => {
-    const stats = exam.reviewStats;
-
-    // If no materials, go to detail to upload
-    if (exam.seeds.length === 0) {
-      router.push(`/exams/${exam.id}`);
-      return;
-    }
-
-    // If no reviews due, show detail
-    if (!stats || (stats.dueToday === 0 && stats.overdue === 0)) {
-      router.push(`/exams/${exam.id}`);
-      return;
-    }
-
-    // Otherwise start review session
-    router.push(`/exams/${exam.id}/review?mode=review`);
-  };
-
-  if (!user) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <p className="text-muted-foreground">Please sign in to view your dashboard</p>
-      </div>
-    );
-  }
+  const { user, stats } = useAuth();
+  
+  const firstName = user?.user_metadata?.full_name?.split(' ')[0] || 
+                    user?.user_metadata?.name?.split(' ')[0] || 
+                    user?.email?.split('@')[0] || 
+                    'there';
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-4xl font-bold text-white">{greetingText.title}</h1>
-          <p className="mt-1 text-gray-400">{greetingText.subtitle}</p>
-        </div>
-        <Link href="/profile">
-          <Button variant="ghost" size="icon">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/50 flex items-center justify-center">
-              {profile?.avatar_url ? (
-                <img
-                  src={profile.avatar_url}
-                  alt="Profile"
-                  className="w-10 h-10 rounded-full"
-                />
-              ) : (
-                <span className="text-white font-semibold">
-                  {profile?.full_name?.[0]?.toUpperCase() || 'U'}
-                </span>
-              )}
+    <div className="space-y-8 animate-fade-in">
+      {/* Welcome & Stats Summary Section */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2 relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/20 via-secondary/10 to-background border border-primary/20 p-8 sm:p-12">
+          {/* Background Effects */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-[-50%] right-[-20%] w-[60%] h-[200%] bg-primary/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-[-50%] left-[-10%] w-[40%] h-[150%] bg-secondary/10 rounded-full blur-3xl" />
+          </div>
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 rounded-xl bg-primary/20 backdrop-blur">
+                <Sparkles className="w-6 h-6 text-primary" />
+              </div>
+              <span className="text-sm font-medium text-primary">Welcome Back</span>
             </div>
+            
+            <h1 className="text-4xl sm:text-5xl font-bold mb-6">
+              Hey, <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">{firstName}</span>! 👋
+            </h1>
+            
+            <div className="flex flex-wrap gap-4">
+              <div className="px-4 py-2 rounded-2xl bg-white/50 dark:bg-black/20 backdrop-blur border border-white/20 flex items-center gap-2">
+                <Zap className="w-5 h-5 text-orange-500 fill-current" />
+                <span className="font-bold text-lg">{stats?.current_streak || 0}</span>
+                <span className="text-sm text-muted-foreground font-medium">Day Streak</span>
+              </div>
+              <div className="px-4 py-2 rounded-2xl bg-white/50 dark:bg-black/20 backdrop-blur border border-white/20 flex items-center gap-2">
+                <Star className="w-5 h-5 text-yellow-500 fill-current" />
+                <span className="font-bold text-lg">{stats?.total_recalls || 0}</span>
+                <span className="text-sm text-muted-foreground font-medium">Total Recalls</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Daily Recall Card */}
+        <Card className="border-primary/30 shadow-lg shadow-primary/5 bg-gradient-to-br from-primary/5 to-background flex flex-col justify-center text-center p-6">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-primary/20 flex items-center justify-center">
+            <Calendar className="w-8 h-8 text-primary" />
+          </div>
+          <h3 className="text-2xl font-bold mb-1">Daily Recall</h3>
+          <p className="text-muted-foreground mb-6">
+            {stats?.due_count || 0} questions due
+          </p>
+          <Button className="w-full gap-2 bg-primary hover:bg-primary/90 shadow-md" asChild>
+            <Link href="/materials">
+              Start Learning
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </Button>
-        </Link>
-      </div>
-
-      {/* Daily Progress Card */}
-      {stats.loading ? (
-        <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10 backdrop-blur-xl p-8 h-48 animate-pulse" />
-      ) : (
-        <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10 backdrop-blur-xl p-8 space-y-6">
-          {/* Streak & Goal Status */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
-                {stats.goalMet ? (
-                  <Flame className="w-6 h-6 text-orange-400" />
-                ) : (
-                  <Zap className="w-6 h-6 text-yellow-400" />
-                )}
-              </div>
-              <div>
-                <p className="text-sm text-gray-400">Current Streak</p>
-                <p className="text-2xl font-bold text-white">{stats.currentStreak} Days</p>
-                {stats.streakFreezes > 0 && (
-                  <p className="text-xs text-blue-400 mt-1">
-                    {stats.streakFreezes} freeze{stats.streakFreezes !== 1 ? 's' : ''} 🧊
-                  </p>
-                )}
-              </div>
-            </div>
-            {stats.goalMet ? (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20">
-                <CheckCircle className="w-4 h-4 text-green-400" />
-                <span className="text-sm font-semibold text-green-400">no cap, you're on fire 🔥</span>
-              </div>
-            ) : (
-              <div className="text-right">
-                <p className="text-sm text-gray-400">Today's Goal</p>
-                <p className="text-lg font-semibold text-white">
-                  {stats.cardsReviewedToday} / {stats.dailyGoal}
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Progress Bar */}
-          <div className="space-y-2">
-            <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-primary to-primary/50 transition-all duration-500"
-                style={{
-                  width: `${Math.min(
-                    (stats.cardsReviewedToday / Math.max(stats.dailyGoal, 1)) * 100,
-                    100
-                  )}%`,
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Stats Row */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="rounded-lg bg-white/5 p-3">
-              <p className="text-xs text-gray-400">Cards Reviewed</p>
-              <p className="text-xl font-bold text-white mt-1">{stats.cardsReviewedToday}</p>
-            </div>
-            <div className="rounded-lg bg-white/5 p-3">
-              <p className="text-xs text-gray-400">Time Studied</p>
-              <p className="text-xl font-bold text-white mt-1">{stats.minutesStudiedToday}m</p>
-            </div>
-            <div className="rounded-lg bg-white/5 p-3">
-              <p className="text-xs text-gray-400">XP Earned</p>
-              <p className="text-xl font-bold text-white mt-1">{stats.xp}</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Your Exams Section */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-white">Your Exams</h2>
-          <Link href="/exams/create">
-            <Button variant="ghost" size="sm" className="gap-2">
-              <Plus className="w-4 h-4" />
-              New Exam
-            </Button>
-          </Link>
-        </div>
-
-        {examsLoading ? (
-          <div className="flex gap-4 overflow-x-auto pb-4">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="min-w-64 h-40 rounded-xl bg-white/5 border border-white/10 animate-pulse"
-              />
-            ))}
-          </div>
-        ) : exams.length === 0 ? (
-          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-12 text-center space-y-4">
-            <BookOpen className="w-16 h-16 text-primary/40 mx-auto" />
-            <div>
-              <h3 className="text-xl font-semibold text-white">No Exams Yet</h3>
-              <p className="text-gray-400 mt-2">Create your first exam to get started</p>
-            </div>
-            <Link href="/exams/create">
-              <Button className="gap-2">
-                <Plus className="w-4 h-4" />
-                Create Exam
-              </Button>
-            </Link>
-          </div>
-        ) : (
-          <div className="flex gap-4 overflow-x-auto pb-4">
-            {exams.map((exam) => {
-              const stats = exam.reviewStats;
-              const isDue = stats && (stats.dueToday > 0 || stats.overdue > 0);
-              const needsMaterial = exam.seeds.length === 0;
-
-              return (
-                <button
-                  key={exam.id}
-                  onClick={() => handleExamPress(exam)}
-                  className="min-w-64 group rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] hover:from-white/10 hover:to-white/5 backdrop-blur-xl overflow-hidden transition-all"
-                >
-                  {/* Header with gradient */}
-                  <div className="h-24 bg-gradient-to-br from-primary/40 to-primary/20 p-4 flex items-start justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-md bg-white/10 flex items-center justify-center">
-                        <BookOpen className="w-4 h-4 text-white" />
-                      </div>
-                      <div className="text-left">
-                        <p className="text-sm font-semibold text-white line-clamp-1">
-                          {exam.subject_name}
-                        </p>
-                        <p className="text-xs text-gray-300">
-                          {exam.seeds.length} {exam.seeds.length === 1 ? 'Topic' : 'Topics'}
-                        </p>
-                      </div>
-                    </div>
-                    {exam.averageGrade && (
-                      <div className="px-3 py-1 rounded-full bg-white/10 backdrop-blur">
-                        <p className="text-xs font-semibold text-white">
-                          {exam.averageGrade}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-4 space-y-4">
-                    {needsMaterial ? (
-                      <div className="flex items-center gap-2 text-primary">
-                        <Cloud className="w-4 h-4" />
-                        <span className="text-sm font-medium">Add materials</span>
-                      </div>
-                    ) : isDue ? (
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-gray-400">Cards Due</span>
-                          <span className="font-semibold text-white">
-                            {stats.dueToday + stats.overdue}
-                          </span>
-                        </div>
-                        <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-primary to-primary/50"
-                            style={{
-                              width: `${Math.min(
-                                ((stats.dueToday + stats.overdue) /
-                                  Math.max(stats.totalItems, 1)) *
-                                  100,
-                                100
-                              )}%`,
-                            }}
-                          />
-                        </div>
-                        <div className="flex items-center gap-2 pt-2">
-                          <PlayCircle className="w-4 h-4 text-primary" />
-                          <span className="text-sm font-medium text-primary">Review Due</span>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2 text-green-400">
-                        <CheckCircle className="w-4 h-4" />
-                        <span className="text-sm font-medium">All caught up!</span>
-                      </div>
-                    )}
-                  </div>
-                </button>
-              );
-            })}
-
-            {/* Add Exam Button */}
-            <Link
-              href="/exams/create"
-              className="min-w-64 group rounded-xl border border-dashed border-white/20 hover:border-primary/50 bg-white/5 hover:bg-white/10 backdrop-blur-xl flex items-center justify-center transition-all"
-            >
-              <div className="flex flex-col items-center gap-2">
-                <Plus className="w-8 h-8 text-white/50 group-hover:text-primary" />
-                <span className="text-sm font-medium text-white/50 group-hover:text-primary">
-                  Add Exam
-                </span>
-              </div>
-            </Link>
-          </div>
-        )}
+        </Card>
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-        <Link
-          href="/upload"
-          className="rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] hover:from-white/10 hover:to-white/5 backdrop-blur-xl p-6 transition-all group"
-        >
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center group-hover:bg-primary/30 transition-colors">
-              <Cloud className="w-6 h-6 text-primary" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-white">Upload Material</h3>
-              <p className="text-sm text-gray-400 mt-1">Add new study content</p>
-            </div>
-            <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors ml-auto self-center" />
-          </div>
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* Materials Library */}
+        <Link href="/materials">
+          <Card className="border-primary/30 hover:shadow-lg transition-all cursor-pointer h-full">
+            <CardHeader>
+              <div className="flex items-center gap-2 text-primary mb-2">
+                <BookOpen className="w-5 h-5" />
+                <span className="text-sm font-semibold uppercase tracking-wider">Library</span>
+              </div>
+              <CardTitle className="text-xl">My Materials</CardTitle>
+              <CardDescription>
+                View and practice your uploaded study materials
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full gap-2" variant="outline">
+                Open Library
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </CardContent>
+          </Card>
         </Link>
 
-        <Link
-          href="/seeds"
-          className="rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] hover:from-white/10 hover:to-white/5 backdrop-blur-xl p-6 transition-all group"
-        >
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-lg bg-secondary/20 flex items-center justify-center group-hover:bg-secondary/30 transition-colors">
-              <BookOpen className="w-6 h-6 text-secondary" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-white">Study Materials</h3>
-              <p className="text-sm text-gray-400 mt-1">Browse your materials</p>
-            </div>
-            <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors ml-auto self-center" />
-          </div>
+        {/* Upload New Material */}
+        <Link href="/materials/upload">
+          <Card className="border-secondary/30 hover:shadow-lg transition-all cursor-pointer h-full bg-gradient-to-br from-secondary/5 to-background">
+            <CardHeader>
+              <div className="flex items-center gap-2 text-secondary mb-2">
+                <Upload className="w-5 h-5" />
+                <span className="text-sm font-semibold uppercase tracking-wider">Upload</span>
+              </div>
+              <CardTitle className="text-xl">Add Material</CardTitle>
+              <CardDescription>
+                Upload PDFs, images, audio, or paste text to create flashcards
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full gap-2 bg-secondary hover:bg-secondary/90">
+                Upload Now
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </CardContent>
+          </Card>
         </Link>
+      </div>
 
-        <Link
-          href="/exams"
-          className="rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] hover:from-white/10 hover:to-white/5 backdrop-blur-xl p-6 transition-all group"
-        >
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-lg bg-info/20 flex items-center justify-center group-hover:bg-info/30 transition-colors">
-              <Zap className="w-6 h-6 text-info" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-white">All Exams</h3>
-              <p className="text-sm text-gray-400 mt-1">Manage your exams</p>
-            </div>
-            <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors ml-auto self-center" />
-          </div>
-        </Link>
+      {/* Sync Status */}
+      <div className="flex flex-col items-center justify-center pt-4">
+        <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-green-500/10 border border-green-500/20">
+          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+          <span className="text-sm font-semibold text-green-600 dark:text-green-400 uppercase tracking-tighter">
+            Synced with iOS App
+          </span>
+        </div>
+        <p className="mt-2 text-xs text-muted-foreground">Your data is synchronized across all devices</p>
       </div>
     </div>
   );

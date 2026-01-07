@@ -1,10 +1,10 @@
-
 'use client';
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Mail } from 'lucide-react';
 import { BlobBackground } from '@/components/ui/BlobBackground';
+import Link from 'next/link';
 
 export default function PrivacyPage() {
   const router = useRouter();
@@ -26,91 +26,123 @@ export default function PrivacyPage() {
             Back
           </button>
           <h1 className="text-4xl font-bold mb-4 text-gray-800">Privacy Policy</h1>
-          <p className="text-sm text-gray-800/70 mb-8">Last updated: November 1, 2025</p>
+          <p className="text-sm text-primary font-medium mb-8">Last Updated: January 7, 2026</p>
           
           <div className="prose prose-lg max-w-none text-gray-800/80 space-y-6">
             <p>
-              Masterly ("we", "us", "our") is committed to protecting your privacy. This Privacy Policy explains what information we collect, how we use it, and the choices you have.
+              At Masterly (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;), we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our learning application.
             </p>
-
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 my-6">
-              <p className="text-sm text-blue-900">
-                <strong>Important Note:</strong> Apple Inc. and its subsidiaries are third-party beneficiaries of our Terms of Service and have the right to enforce those terms against you.
-              </p>
-            </div>
 
             <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">1. Information We Collect</h2>
+            
+            <h3 className="text-lg font-medium text-primary mt-6 mb-3">Account Information</h3>
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Account Information:</strong> Name, email address, grade level, study goals, and other onboarding details you provide.</li>
-              <li><strong>Content Uploads:</strong> Documents, images, audio, video, and text you submit for study material generation.</li>
-              <li><strong>Usage Data:</strong> App interactions, feature usage patterns, device type, operating system, and diagnostics.</li>
-              <li><strong>Analytics & Logs:</strong> Event telemetry collected to improve reliability. You can opt out from analytics in the Profile settings.</li>
-              <li><strong>Notifications:</strong> If you enable push notifications, we collect a device token to deliver reminders.</li>
-              <li><strong>Error & Crash Reports:</strong> When the app encounters errors, we collect diagnostic data (device model, OS version, stack traces) via Sentry to improve stability. No personally identifying information is included in crash reports.</li>
+              <li>Email address and name (from your authentication provider)</li>
+              <li>Profile information you choose to provide</li>
+              <li>Learning progress and statistics</li>
             </ul>
 
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">2. How We Use Information</h2>
+            <h3 className="text-lg font-medium text-primary mt-6 mb-3">Learning Content</h3>
             <ul className="list-disc pl-6 space-y-2">
-              <li>Deliver core learning features, including AI-generated study guides and spaced repetition reminders.</li>
-              <li>Personalize content recommendations and track study progress.</li>
-              <li>Provide customer support, prevent abuse, and maintain security.</li>
-              <li>Communicate product updates and important changes to our Terms or policies.</li>
+              <li>Materials you upload (PDFs, images, audio, text)</li>
+              <li>Generated questions and flashcards</li>
+              <li>Your answers and response times</li>
             </ul>
 
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">3. Data Sharing & Processors</h2>
-            <p className="font-medium text-gray-800 mb-3">We share data with the following processors to deliver app functionality:</p>
+            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">2. How We Use Your Information</h2>
+            <p>We use your information to:</p>
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Supabase:</strong> Hosts authentication, database, and file storage. All data is encrypted in transit.</li>
-              <li><strong>OpenAI:</strong> Processes content (documents, images, audio) you upload to generate AI-powered explanations, study guides, and practice questions.</li>
-              <li><strong>Google Cloud Services:</strong>
-                <ul className="list-disc pl-6 mt-1 space-y-1">
-                  <li><strong>Document AI:</strong> Analyzes PDFs and images using OCR to extract text</li>
-                  <li><strong>Vision API:</strong> Detects and extracts text from images</li>
-                  <li><strong>Speech-to-Text:</strong> Transcribes audio and video files to text</li>
-                  <li><strong>Cloud Storage:</strong> Temporarily stores files during processing</li>
-                </ul>
-              </li>
-              <li><strong>RevenueCat:</strong> Processes subscription purchase events and manages entitlements. RevenueCat does not store payment card information (handled by Apple).</li>
-              <li><strong>Sentry:</strong> Receives error logs and crash reports to diagnose and improve app stability. Sentry does not receive personally identifying information in crash reports.</li>
-              <li><strong>Expo Push Notification Service:</strong> Delivers study reminders and notifications. We collect device tokens only to send notifications you enable.</li>
-              <li>We do not sell your personal information. We only share data with these processors under strict data processing agreements that limit their use to providing services to Masterly.</li>
+              <li>Provide and improve our learning services</li>
+              <li>Track your progress using spaced repetition algorithms</li>
+              <li>Generate personalized questions from your materials</li>
+              <li>Send you important updates about your account</li>
             </ul>
 
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">4. Data Retention</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">3. Data Storage & Security</h2>
             <ul className="list-disc pl-6 space-y-2">
-              <li>We retain your personal data while your account is active. If you request deletion or close your account, we remove or anonymize personal data within 30 days except where retention is required by law.</li>
-              <li>Aggregated, de-identified data may be retained for analytics and product improvement.</li>
+              <li>All data is stored securely on Supabase servers</li>
+              <li>We use industry-standard encryption</li>
+              <li>Your learning materials are private and only accessible by you</li>
+              <li>We do not sell your personal data to third parties</li>
             </ul>
 
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">5. Your Choices & Rights</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">4. Third-Party Services</h2>
+            <p>To provide our services, we use the following trusted third-party services:</p>
+
+            <h3 className="text-lg font-medium text-primary mt-6 mb-3">RevenueCat</h3>
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong>Access & Update:</strong> Review and update profile details in the Profile → Settings tab.</li>
-              <li><strong>Analytics Opt-Out:</strong> Disable analytics collection from the Profile settings. Push notifications are opt-in and can be disabled in system settings.</li>
-              <li><strong>Account Deletion:</strong> Use the in-app account deletion flow or email support@masterlyapp.in to request deletion. We will confirm completion once all associated data is removed.</li>
-              <li><strong>Children's Privacy (COPPA):</strong> Masterly supports learners of all ages. When a child under 13 uses the App, a parent or legal guardian must review this Privacy Policy, provide any required consent, and supervise the experience. We honor verified requests from parents or guardians to access, update, or delete a child's information by contacting support@masterlyapp.in.</li>
-              <li><strong>California Residents (CCPA):</strong> You have the right to request disclosure of data collected, request deletion, and opt out of data "sales" (we do not sell data). Contact support@masterlyapp.in to exercise these rights.</li>
-              <li><strong>European Residents (GDPR):</strong> You have rights to data access, rectification, erasure, and portability under GDPR. Contact support@masterlyapp.in for requests.</li>
+              <li>Manages subscriptions and payments</li>
+              <li>Processes payment information securely</li>
+              <li>Privacy: <Link href="https://www.revenuecat.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://www.revenuecat.com/privacy</Link></li>
             </ul>
 
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">6. Security</h2>
+            <h3 className="text-lg font-medium text-primary mt-6 mb-3">OpenAI</h3>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Generates questions from your learning materials</li>
+              <li>Processes uploaded content (PDF, text, images)</li>
+              <li>Privacy: <Link href="https://openai.com/policies" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://openai.com/policies</Link></li>
+            </ul>
+
+            <h3 className="text-lg font-medium text-primary mt-6 mb-3">Google Services</h3>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Google Cloud Vision API (image processing)</li>
+              <li>Google Cloud Speech-to-Text (audio transcription)</li>
+              <li>Google Document AI (PDF processing)</li>
+              <li>Privacy: <Link href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://policies.google.com/privacy</Link></li>
+            </ul>
+
+            <h3 className="text-lg font-medium text-primary mt-6 mb-3">Sentry</h3>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Error monitoring and crash reporting</li>
+              <li>Helps us improve app stability</li>
+              <li>Privacy: <Link href="https://sentry.io/privacy/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://sentry.io/privacy/</Link></li>
+            </ul>
+
+            <h3 className="text-lg font-medium text-primary mt-6 mb-3">Supabase</h3>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Backend database and authentication</li>
+              <li>Real-time data synchronization</li>
+              <li>Privacy: <Link href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://supabase.com/privacy</Link></li>
+            </ul>
+
+            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">5. Spaced Repetition Data</h2>
+            <p>To optimize your learning experience, we track:</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Question performance (correct/incorrect)</li>
+              <li>Response times</li>
+              <li>Review schedules</li>
+              <li>Learning streaks and statistics</li>
+            </ul>
+
+            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">6. Your Rights</h2>
+            <p>You have the right to:</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Access your personal data</li>
+              <li>Correct inaccurate information</li>
+              <li>Delete your account and all associated data</li>
+              <li>Opt-out of non-essential communications</li>
+            </ul>
+
+            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">7. Children&apos;s Privacy</h2>
             <p>
-              We implement industry-standard safeguards, including encryption in transit (TLS), secure credential storage, and role-based access controls. Despite these measures, no system is completely secure; please use strong passwords and keep your device protected.
+              Our service is not intended for children under 13. We do not knowingly collect information from children under 13.
             </p>
 
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">7. International Transfers</h2>
+            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">8. Changes to This Policy</h2>
             <p>
-              If you access Masterly from outside the United States, your information may be transferred to and processed in the U.S. or other countries where our service providers operate. We ensure appropriate protections are in place for such transfers.
-            </p>
-
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">8. Policy Updates</h2>
-            <p>
-              We may update this Privacy Policy to reflect changes in technology, law, or our services. We will notify you of material changes via email or in-app messaging. Continued use of the App after such changes indicates acceptance of the revised Policy.
+              We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page.
             </p>
 
             <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">9. Contact Us</h2>
-            <p>
-              For privacy questions or requests, contact <strong>support@masterlyapp.in</strong>
-            </p>
+            <p>If you have questions about this Privacy Policy, please contact us at:</p>
+            
+            <a 
+              href="mailto:support@masterlyapp.in" 
+              className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-primary/10 text-primary font-medium rounded-lg hover:bg-primary/20 transition-colors"
+            >
+              <Mail className="w-4 h-4" />
+              support@masterlyapp.in
+            </a>
           </div>
 
         </div>

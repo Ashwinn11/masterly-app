@@ -3,7 +3,6 @@ import './globals.css'
 import { Providers } from './providers'
 import { metadata } from './metadata'
 import { GlobalConfirmationDialog } from '@/components/GlobalConfirmationDialog'
-import { OnboardingRedirect } from '@/components/OnboardingRedirect'
 import { JsonLd } from '@/components/seo/JsonLd'
 
 export { metadata }
@@ -54,10 +53,8 @@ export default function RootLayout({
       </head>
       <body className="font-sans">
         <Providers>
-          <OnboardingRedirect>
-            {children}
-            <GlobalConfirmationDialog />
-          </OnboardingRedirect>
+          {children}
+          <GlobalConfirmationDialog />
         </Providers>
       </body>
     </html>
