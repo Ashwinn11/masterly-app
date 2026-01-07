@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['"Chalkboard SE"'],
-        handwritten: ['"Chalkboard SE"'],
+        sans: ['"Patrick Hand"', '"Caveat"', '"Chalkboard SE"', '"Comic Sans MS"', 'cursive', 'sans-serif'],
+        handwritten: ['"Caveat"', '"Patrick Hand"', '"Chalkboard SE"', '"Comic Sans MS"', 'cursive', 'sans-serif'],
       },
       fontSize: {
         'display-large': ['36px', { lineHeight: '40px', fontWeight: '700' }],
