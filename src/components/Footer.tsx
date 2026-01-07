@@ -1,7 +1,7 @@
 'use client';
 
 import { Mail, Heart, Sparkles } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
 import { motion } from "framer-motion";
 

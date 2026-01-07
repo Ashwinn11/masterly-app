@@ -206,6 +206,7 @@ export const schemas = {
 
 /**
  * Default JSON-LD for the entire site
+ * Includes organization, website, and software application schemas
  */
 export function DefaultJsonLd() {
   return (
@@ -217,4 +218,12 @@ export function DefaultJsonLd() {
       ]}
     />
   );
+}
+
+/**
+ * Alias for DefaultJsonLd for backwards compatibility
+ * @deprecated Use DefaultJsonLd instead
+ */
+export function JsonLd() {
+  return <DefaultJsonLd />;
 }

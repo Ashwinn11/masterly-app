@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { DecorativeBackground } from '@/components/DecorativeBackground';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {

@@ -5,10 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function getFriendlyErrorMessage(error: any): string {
+export function getFriendlyErrorMessage(error: unknown): string {
   if (!error) return "Something went wrong. Please try again.";
 
-  const message = typeof error === "string" ? error : error.message || "";
+  const message = typeof error === "string" ? error : error instanceof Error ? error.message : "";
 
   if (message.includes("failed to fetch") || message.includes("network error") || message.includes("Failed to send a request")) {
     return "Upload failed. Please check your internet connection or try a smaller file.";

@@ -3,7 +3,7 @@ import './globals.css'
 import { Providers } from './providers'
 import { metadata } from './metadata'
 import { GlobalConfirmationDialog } from '@/components/GlobalConfirmationDialog'
-import { JsonLd } from '@/components/seo/JsonLd'
+import { JsonLd } from '@/components/seo'
 
 export { metadata }
 

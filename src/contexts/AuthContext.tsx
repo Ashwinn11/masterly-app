@@ -1,20 +1,16 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { getSupabaseClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import type { UserProfile, UserStats } from '@/types/auth';
 
 interface AuthContextType {
   user: User | null;
-  profile: any | null;
+  profile: UserProfile | null;
   fullName: string | null;
-  stats: {
-    current_streak: number;
-    longest_streak: number;
-    total_recalls: number;
-    due_count: number;
-  } | null;
+  stats: UserStats | null;
   session: Session | null;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
@@ -25,28 +21,27 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Export the context so it can be used by the useAuth hook
+export { AuthContext };
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<any | null>(null);
-  const [stats, setStats] = useState<any | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [stats, setStats] = useState<UserStats | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const refreshProfile = async (userId?: string) => {
-    const id = userId || user?.id;
-    if (!id) {
-      setLoading(false);
-      return;
-    }
-
+  // Function to fetch user profile and stats
+  const fetchUserProfile = async (userId: string) => {
     try {
       const supabase = getSupabaseClient();
-      
+
       // Fetch profile and stats in parallel
       const [profileRes, statsRes] = await Promise.all([
-        supabase.from('profiles').select('*').eq('id', id).single(),
-        (supabase.rpc as any)('get_user_stats', { p_user_id: id })
+        supabase.from('profiles').select('*').eq('id', userId).single<UserProfile>(),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        supabase.rpc('get_user_stats', { p_user_id: userId } as any)
       ]);
 
       if (profileRes.error) {
@@ -58,7 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (statsRes.error) {
         console.error('Error fetching stats:', statsRes.error);
       } else {
-        setStats(statsRes.data);
+        setStats((statsRes.data as UserStats) || null);
       }
     } catch (error) {
       console.error('Unexpected error fetching auth data:', error);
@@ -66,6 +61,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     }
   };
+
+  const refreshProfile = useCallback(async (userId?: string) => {
+    const id = userId || user?.id;
+    if (!id) {
+      setLoading(false);
+      return;
+    }
+    await fetchUserProfile(id);
+  }, [user?.id]);
 
   useEffect(() => {
     const supabase = getSupabaseClient();
@@ -75,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        refreshProfile(session.user.id);
+        fetchUserProfile(session.user.id);
       } else {
         setLoading(false);
       }
@@ -88,10 +92,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        // We set loading back to true if a new user is signing in 
+        // We set loading back to true if a new user is signing in
         // to ensure we get their profile before showing the UI
         setLoading(true);
-        refreshProfile(session.user.id);
+        fetchUserProfile(session.user.id);
       } else {
         setProfile(null);
         setStats(null);
@@ -100,7 +104,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => subscription.unsubscribe();
-  }, [user?.id]);
+  }, []);
 
   const signInWithGoogle = async () => {
     const supabase = getSupabaseClient();
@@ -143,7 +147,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const supabase = getSupabaseClient();
       const { data, error } = await supabase.functions.invoke('delete-account');
       if (error) throw error;
-      
+
       await signOut();
     } catch (error) {
       console.error('Error deleting account:', error);
@@ -152,9 +156,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const fullName = profile?.full_name || 
-                   user?.user_metadata?.full_name || 
-                   user?.user_metadata?.name || 
+  const fullName = profile?.full_name ||
+                   user?.user_metadata?.full_name ||
+                   user?.user_metadata?.name ||
                    user?.email?.split('@')[0];
 
   return (
@@ -175,12 +179,4 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 }

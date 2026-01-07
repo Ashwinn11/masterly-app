@@ -1,7 +1,7 @@
 'use client';
 
-import { useAuth } from '@/contexts/AuthContext';
-import { useEffect, useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScreenLayout } from '@/components/ui/ScreenLayout';
@@ -58,12 +58,12 @@ export default function MaterialsPage() {
   const [loading, setLoading] = useState(true);
   const { openConfirmation } = useConfirmationStore();
 
-  const loadMaterials = async () => {
+  const loadMaterials = useCallback(async () => {
     if (!user?.id) return;
 
     setLoading(true);
     const supabase = getSupabaseClient();
-    
+
     const { data: materialsData, error: materialsError } = await (supabase
       .from('materials') as any)
       .select('*')
@@ -101,11 +101,11 @@ export default function MaterialsPage() {
     }
 
     setLoading(false);
-  };
+  }, [user?.id]);
 
   useEffect(() => {
     loadMaterials();
-  }, [user?.id]);
+  }, [loadMaterials]);
 
   const handleDelete = async (materialId: string, title: string) => {
     if (!user?.id) return;

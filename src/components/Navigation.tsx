@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu, User, LogOut, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
 const backgroundImage = "/background1.png";
 

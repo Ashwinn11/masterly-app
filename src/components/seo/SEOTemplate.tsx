@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Zap, Brain, Files, Smartphone, 
+import {
+  Zap, Brain, Files, Smartphone,
   Layers, CheckCircle, Image, RefreshCw,
   Layout, Cloud, Sparkles, Repeat,
   ShieldOff, Wand2, User, Activity,
@@ -16,10 +16,10 @@ import { LottieAnimation } from '@/components/ui/LottieAnimation';
 import { StructuredData, schemas } from './StructuredData';
 import { Footer } from '@/components/Footer';
 import { RelatedLinks } from './RelatedLinks';
-import { seoPages } from '@/lib/seo/content';
+import { generateInternalLinks } from '@/lib/seo/internal-linking';
 
 const iconMap: Record<string, any> = {
-  Zap, Brain, Files, Smartphone, 
+  Zap, Brain, Files, Smartphone,
   Layers, CheckCircle, Image, RefreshCw,
   Layout, Cloud, Sparkles, Repeat,
   ShieldOff, Wand2, User, Activity,
@@ -34,25 +34,8 @@ import { Breadcrumbs } from './Breadcrumbs';
 import { Star } from 'lucide-react';
 
 const SEOTemplate = ({ data }: SEOTemplateProps) => {
-  // Logic to find relevant related pages
-  const relevantPageSlugs = data.relatedPages || [];
-  const relatedPagesBySlug = seoPages
-    .filter(p => relevantPageSlugs.includes(p.slug))
-    .map(p => ({
-      href: `/${p.slug}`,
-      label: p.title,
-      description: p.description
-    }));
-
-  // fallback to some generic other pages if none specified
-  const otherPages = relatedPagesBySlug.length > 0 ? relatedPagesBySlug : seoPages
-    .filter(p => p.slug !== data.slug)
-    .slice(0, 5)
-    .map(p => ({
-      href: `/${p.slug}`,
-      label: p.title,
-      description: p.description
-    }));
+  // Smart internal linking: Use algorithm to find related pages
+  const relatedPages = generateInternalLinks(data.slug);
 
   const breadcrumbItems = [
     { name: 'Home', href: '/' },
@@ -85,10 +68,10 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
         {/* Hero Section */}
         <section className="relative py-8 lg:py-16 overflow-hidden flex items-center justify-center">
           <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-30 pointer-events-none" />
-          
+
           <div className="container mx-auto px-4 relative z-10">
             <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
@@ -98,19 +81,19 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
                   <Sparkles className="h-4 w-4" />
                   {data.subtitle}
                 </div>
-                
+
                 <h1 className="text-5xl md:text-7xl font-black tracking-tight text-foreground text-balance">
                   {data.heroTitle}
                   <span className="block text-primary mt-2 italic">— Fast & Free.</span>
                 </h1>
-                
+
                 <p className="text-2xl text-foreground/70 leading-tight text-balance italic">
                   {data.heroSubtitle}
                 </p>
-                
+
                 <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start pt-4">
-                  <Button 
-                    size="lg" 
+                  <Button
+                    size="lg"
                     className="h-16 px-12 rounded-2xl text-2xl font-black uppercase tracking-wider transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,0.2)]"
                     asChild
                   >
@@ -121,7 +104,7 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
                 </div>
               </motion.div>
 
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3, duration: 0.8, type: "spring" }}
@@ -133,7 +116,7 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
                     transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                     className="w-full h-full p-8"
                   >
-                    <LottieAnimation 
+                    <LottieAnimation
                       animationPath="/animations/Learning.json"
                       className="w-full h-full drop-shadow-2xl"
                     />
@@ -188,7 +171,7 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
               </h2>
               <p className="text-2xl text-foreground/70 italic">Everything you need to study smarter.</p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {data.features.map((feature, index) => {
                 const Icon = iconMap[feature.icon] || Brain;
@@ -257,11 +240,11 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
               </h2>
               <p className="text-2xl text-foreground/70 italic">Three simple steps to mastery.</p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
               {data.steps.map((step, index) => (
                 <div key={index} className="text-center group">
-                  <motion.div 
+                  <motion.div
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     className="text-7xl font-black text-primary/10 group-hover:text-primary transition-colors mb-4 font-handwritten"
                   >
@@ -285,7 +268,7 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
             <h2 className="text-4xl md:text-6xl font-black text-center mb-16 font-handwritten">
               Common Questions
             </h2>
-            
+
             <div className="max-w-3xl mx-auto space-y-8">
               {data.faqs.map((faq, index) => (
                 <motion.div
@@ -307,22 +290,24 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
           </div>
         </section>
 
-        {/* Related Links Section */}
-        <section className="py-16 lg:py-32 bg-background">
-          <div className="container mx-auto px-4">
-            <RelatedLinks 
-              links={otherPages} 
-              title="More Study Tools" 
-              className="font-handwritten"
-              variant="card"
-            />
-          </div>
-        </section>
+        {/* Related Links Section - Smart Internal Linking */}
+        {relatedPages.length > 0 && (
+          <section className="py-16 lg:py-32 bg-background">
+            <div className="container mx-auto px-4">
+              <RelatedLinks
+                links={relatedPages}
+                title="More Study Tools"
+                className="font-handwritten"
+                variant="card"
+              />
+            </div>
+          </section>
+        )}
 
         {/* CTA Section */}
         <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(#ffffff10_1px,transparent_1px)] [background-size:20px_20px] opacity-30" />
-          
+
           <div className="container mx-auto px-4 text-center relative z-10 font-handwritten">
             <h2 className="text-5xl md:text-7xl font-black mb-8 leading-tight">
               {data.ctaTitle}
@@ -330,8 +315,8 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
             <p className="text-2xl mb-12 italic text-primary-foreground/90">
               {data.ctaSubtitle}
             </p>
-            <Button 
-                size="lg" 
+            <Button
+                size="lg"
                 variant="secondary"
                 className="h-20 px-16 rounded-[24px] text-3xl font-black uppercase tracking-wider transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,0.3)] bg-accent text-accent-foreground hover:bg-accent/90"
                 asChild
