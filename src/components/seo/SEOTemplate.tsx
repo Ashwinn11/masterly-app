@@ -17,6 +17,9 @@ import { StructuredData, schemas } from './StructuredData';
 import { Footer } from '@/components/Footer';
 import { RelatedLinks } from './RelatedLinks';
 import { generateInternalLinks } from '@/lib/seo/internal-linking';
+import { StudyTimeCalculator } from './StudyTimeCalculator';
+import { LearningStyleQuiz } from './LearningStyleQuiz';
+import { CaseStudies } from './CaseStudies';
 
 const iconMap: Record<string, any> = {
   Zap, Brain, Files, Smartphone,
@@ -287,6 +290,32 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
                 </motion.div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Interactive Tools Section */}
+        <section className="py-16 lg:py-32 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16 font-handwritten">
+              <h2 className="text-4xl md:text-6xl font-black text-foreground mb-4">
+                Plan Your Study Strategy
+              </h2>
+              <p className="text-2xl text-foreground/70 italic">
+                Use science-backed tools to optimize your learning
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+              <StudyTimeCalculator examType={data.title.toLowerCase()} />
+              <LearningStyleQuiz />
+            </div>
+          </div>
+        </section>
+
+        {/* Case Studies Section */}
+        <section className="py-16 lg:py-32 bg-background">
+          <div className="container mx-auto px-4">
+            <CaseStudies examType={data.title.includes('Medical') ? 'USMLE' : data.title.includes('Law') ? 'Bar' : undefined} />
           </div>
         </section>
 

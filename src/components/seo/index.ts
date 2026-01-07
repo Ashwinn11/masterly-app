@@ -8,3 +8,6 @@ export type { BreadcrumbItem } from './Breadcrumbs';
 export { RelatedLinks, SEOLink } from './RelatedLinks';
 export { StructuredData, schemas, DefaultJsonLd, JsonLd } from './StructuredData';
 export { default as SEOTemplate } from './SEOTemplate';
+export { StudyTimeCalculator } from './StudyTimeCalculator';
+export { LearningStyleQuiz } from './LearningStyleQuiz';
+export { CaseStudies } from './CaseStudies';
