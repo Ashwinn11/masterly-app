@@ -8,99 +8,65 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Masterly Brand Colors - Dark Navy + Coral */
-    --background: 222 47% 11%;
-    --foreground: 0 0% 100%;
+    /* Masterly iOS Theme - Cream + Forest Green */
+    --background: 48 40% 98%; /* #FDFBF7 */
+    --foreground: 0 0% 18%; /* #2D2D2D */
 
-    --card: 222 47% 14%;
-    --card-foreground: 0 0% 100%;
+    --card: 48 40% 98%;
+    --card-foreground: 0 0% 18%;
 
-    --popover: 222 47% 14%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 48 40% 98%;
+    --popover-foreground: 0 0% 18%;
 
-    /* Primary: Coral/Salmon (ff7664) */
-    --primary: 6 100% 71%;
-    --primary-foreground: 0 0% 100%;
+    /* Primary: Forest Green (2D4F1E) */
+    --primary: 102 45% 21%;
+    --primary-foreground: 48 40% 98%;
 
-    /* Secondary: Same as primary for consistency */
-    --secondary: 6 100% 71%;
-    --secondary-foreground: 0 0% 100%;
+    /* Secondary: Brick Red (A44231) */
+    --secondary: 9 54% 42%;
+    --secondary-foreground: 48 40% 98%;
 
-    /* Accent: Same as primary for consistency */
-    --accent: 6 100% 71%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent: Mustard Yellow (E9B44C) */
+    --accent: 40 79% 61%;
+    --accent-foreground: 0 0% 18%;
 
-    --muted: 222 47% 20%;
-    --muted-foreground: 0 0% 70%;
+    --muted: 73 10% 25%; /* Darker #414437 for better contrast */
+    --muted-foreground: 73 10% 25%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 222 47% 11%;
+    --destructive: 9 54% 42%;
+    --destructive-foreground: 48 40% 98%;
 
-    --border: 222 47% 20%;
-    --input: 222 47% 20%;
-    --ring: 6 100% 71%;
+    --border: 0 0% 18% / 0.15;
+    --input: 0 0% 18% / 0.1;
+    --ring: 102 45% 21%;
 
     /* Sidebar colors */
-    --sidebar-background: 222 47% 11%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 6 100% 71%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 6 100% 20%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 222 47% 20%;
-    --sidebar-ring: 6 100% 71%;
+    --sidebar-background: 48 40% 98%;
+    --sidebar-foreground: 0 0% 18%;
+    --sidebar-primary: 102 45% 21%;
+    --sidebar-primary-foreground: 48 40% 98%;
+    --sidebar-accent: 40 79% 61%;
+    --sidebar-accent-foreground: 0 0% 18%;
+    --sidebar-border: 0 0% 18% / 0.1;
+    --sidebar-ring: 102 45% 21%;
 
     --radius: 1.5rem;
 
-    /* Tactile Shadows */
-    --shadow-soft: 0 4px 0 hsla(222, 47%, 90%, 1);
-    --shadow-pop: 0 8px 0 hsla(222, 47%, 90%, 1);
-
-    /* Animations */
-    --spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Crayon Shadow */
+    --shadow-crayon: 4px 4px 0px 0px hsla(0, 0%, 18%, 0.1);
   }
 
   .dark {
-    --background: 222 47% 11%;
-    --foreground: 0 0% 100%;
-
-    --card: 222 47% 14%;
-    --card-foreground: 0 0% 100%;
-
-    --popover: 222 47% 14%;
-    --popover-foreground: 0 0% 100%;
-
-    --primary: 6 100% 71%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 6 100% 71%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 222 47% 20%;
-    --muted-foreground: 0 0% 70%;
-
-    --accent: 6 100% 71%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 222 47% 11%;
-
-    --border: 222 47% 20%;
-    --input: 222 47% 20%;
-    --ring: 6 100% 71%;
-
-    /* Sidebar colors */
-    --sidebar-background: 222 47% 11%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 6 100% 71%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 6 100% 20%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 222 47% 20%;
-    --sidebar-ring: 6 100% 71%;
-
-    --shadow-soft: 0 4px 0 hsla(0, 0%, 20%, 1);
-    --shadow-pop: 0 8px 0 hsla(0, 0%, 20%, 1);
+    /* Keeping the same theme for now as iOS design.json is light-centric */
+    --background: 48 40% 98%;
+    --foreground: 0 0% 18%;
+    --card: 48 40% 98%;
+    --card-foreground: 0 0% 18%;
+    --primary: 102 45% 21%;
+    --primary-foreground: 48 40% 98%;
+    --secondary: 9 54% 42%;
+    --accent: 40 79% 61%;
+    --border: 0 0% 18% / 0.15;
   }
 }
 
@@ -111,7 +77,7 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Chalkboard SE', 'Poppins', sans-serif;
   }
 
   h1,
@@ -121,6 +87,7 @@ All colors MUST be HSL.
   h5,
   h6 {
     @apply font-bold tracking-tight;
+    font-family: 'Chalkboard SE', 'Poppins', sans-serif;
   }
 }
 
@@ -144,10 +111,6 @@ All colors MUST be HSL.
 
   .text-balance {
     text-wrap: balance;
-  }
-
-  .glass-panel {
-    @apply bg-white/70 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-lg;
   }
 
   /* Decorative Blobs */

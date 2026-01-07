@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 interface AuthContextType {
   user: User | null;
   profile: any | null;
+  fullName: string | null;
   stats: {
     current_streak: number;
     longest_streak: number;
@@ -19,6 +20,7 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -135,17 +137,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     window.location.href = '/';
   };
 
+  const deleteAccount = async () => {
+    setLoading(true);
+    try {
+      const supabase = getSupabaseClient();
+      const { data, error } = await supabase.functions.invoke('delete-account');
+      if (error) throw error;
+      
+      await signOut();
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      setLoading(false);
+      throw error;
+    }
+  };
+
+  const fullName = profile?.full_name || 
+                   user?.user_metadata?.full_name || 
+                   user?.user_metadata?.name || 
+                   user?.email?.split('@')[0];
+
   return (
     <AuthContext.Provider
       value={{
         user,
         profile,
+        fullName,
         stats,
         session,
         loading,
         signInWithGoogle,
         signOut,
         refreshProfile,
+        deleteAccount,
       }}
     >
       {children}

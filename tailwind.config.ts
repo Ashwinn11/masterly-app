@@ -14,7 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Poppins', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        sans: ['"Chalkboard SE"', 'Poppins', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        handwritten: ['"Chalkboard SE"', 'cursive'],
       },
       fontSize: {
         'display-large': ['36px', { lineHeight: '40px', fontWeight: '700' }],
@@ -45,34 +46,53 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#ff7664", // Brand Primary
-          foreground: "#FFFFFF",
-          hover: "#e66a5a", // Darker shade
+          DEFAULT: "#2D4F1E", // Forest Green from iOS
+          foreground: "#FDFBF7",
+          hover: "#1e3614",
         },
         secondary: {
-          DEFAULT: "#1CB0F6", // Blue
-          foreground: "#FFFFFF",
-          hover: "#1899D6",
+          DEFAULT: "#A44231", // Brick Red from iOS
+          foreground: "#FDFBF7",
+          hover: "#8a3729",
+        },
+        success: {
+          DEFAULT: "#588157",
+          foreground: "#FDFBF7",
+        },
+        info: {
+          DEFAULT: "#6B705C",
+          foreground: "#FDFBF7",
+        },
+        warning: {
+          DEFAULT: "#E9B44C",
+          foreground: "#2D2D2D",
+        },
+        error: {
+          DEFAULT: "#A44231",
+          foreground: "#FDFBF7",
         },
         destructive: {
-          DEFAULT: "#FF4B4B", // Red
-          foreground: "#FFFFFF",
-          hover: "#D33131",
+          DEFAULT: "#A44231",
+          foreground: "#FDFBF7",
+          hover: "#8a3729",
         },
         muted: {
-          DEFAULT: "#1e293b", // Darker muted for dark theme
-          foreground: "#94a3b8", // Slate-400
+          DEFAULT: "#6B705C", // Info color from iOS
+          foreground: "#FDFBF7",
         },
         accent: {
-          DEFAULT: "#ff7664", // Brand Primary (same as primary)
-          foreground: "#FFFFFF",
-          hover: "#e66a5a", // Darker shade
+          DEFAULT: "#E9B44C", // Mustard Yellow from iOS
+          foreground: "#2D2D2D",
+          hover: "#d1a144",
         },
         card: {
-          DEFAULT: "#1e293b", // Slate-800 for cards in dark mode
-          foreground: "#FFFFFF",
+          DEFAULT: "#FDFBF7",
+          foreground: "#2D2D2D",
         },
-
+        "duolingo-green": "#588157", // Mapping to success color
+        "duolingo-macaw": "#2196F3", // Blue
+        "duolingo-bee": "#E9B44C", // Mustard/Yellow
+        "duolingo-fox": "#A44231", // Brick/Orange-red
       },
       borderRadius: {
         lg: "var(--radius)",

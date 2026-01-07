@@ -34,31 +34,30 @@ export const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
-              className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground text-balance"
+              className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-foreground text-balance font-handwritten"
             >
-              <span className="text-primary">Masterly AI</span> — The free, fun, and effective way to <span className="text-duolingo-green">master your studies.</span>
+              <span className="text-primary">Masterly AI</span> — The smartest way to <span className="text-duolingo-green">ace your studies.</span>
             </motion.h1>
 
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
-              className="text-xl md:text-2xl text-muted-foreground leading-relaxed text-balance"
+              className="text-2xl text-info leading-tight text-balance font-handwritten italic"
             >
-              Ditch the boring textbooks. Masterly AI turns your notes into bite-sized lessons, quizzes, and flashcards instantly.
+              Turn your PDFs, audio, and images into interactive study sessions. Powered by the scientific FSRS algorithm to help you remember everything you learn.
             </motion.p>
 
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
-              className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start"
+              className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start pt-4"
             >
               <Button 
                 size="lg" 
                 className={cn(
-                  "h-14 px-10 rounded-2xl-custom text-lg font-bold uppercase tracking-wide transition-all",
-                  "bg-primary text-white shadow-3d hover:bg-primary/90 active:translate-y-[4px] active:shadow-none"
+                  "h-16 px-12 rounded-2xl text-2xl font-black font-handwritten uppercase tracking-wider transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,0.2)]"
                 )}
                 asChild
               >
@@ -91,12 +90,15 @@ export const Hero = () => {
             transition={{ delay: 0.3, duration: 0.8, type: "spring" }}
             className="flex-1 w-full max-w-lg lg:max-w-xl relative"
           >
-            <div className="relative aspect-square flex items-center justify-center">
+            {/* Decorative Tape */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 w-24 h-8 bg-foreground/10 rotate-[-2deg] z-20 rounded-sm" />
+
+            <div className="relative aspect-square flex items-center justify-center bg-card border-[3px] border-foreground rounded-[40px] shadow-[12px_12px_0px_0px_rgba(0,0,0,0.1)] overflow-hidden">
               {/* Main Mascot Placeholder */}
               <motion.div
                 animate={{ y: [0, -15, 0] }}
                 transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                className="w-full h-full"
+                className="w-full h-full p-8"
               >
                 <LottieAnimation 
                   animationData={thinkingAnimation} 
@@ -114,7 +116,7 @@ export const Hero = () => {
                 <motion.div
                   animate={{ y: [0, -10, 0], rotate: [6, 8, 6] }}
                   transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", delay: 0.5 }}
-                  className="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-xl-custom shadow-card transform rotate-6"
+                  className="bg-card border-[3px] border-foreground p-4 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] transform rotate-6"
                 >
                   <span className="text-4xl">🅰️+</span>
                 </motion.div>
@@ -129,7 +131,7 @@ export const Hero = () => {
                 <motion.div
                    animate={{ y: [0, -10, 0], rotate: [-6, -4, -6] }}
                    transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 1 }}
-                   className="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-xl-custom shadow-card transform -rotate-6"
+                   className="bg-card border-[3px] border-foreground p-4 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] transform -rotate-6"
                 >
                  <Flame className="w-10 h-10 text-orange-500" />
                </motion.div>

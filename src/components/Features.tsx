@@ -40,19 +40,19 @@ const FeatureRow = ({
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.7, type: "spring", bounce: 0.3 }}
-            className="flex-1 text-center md:text-left space-y-8"
+            className="flex-1 text-center md:text-left space-y-8 font-handwritten"
           >
             <motion.div 
               whileHover={{ scale: 1.1, rotate: 10 }}
               whileTap={{ scale: 0.9 }}
-              className="inline-flex p-4 rounded-2xl-custom bg-white/10 backdrop-blur-sm border-2 border-white/20 shadow-sm mb-2"
+              className="inline-flex p-5 rounded-2xl border-[3px] border-foreground bg-primary/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] mb-2"
             >
               <Icon className="h-10 w-10 text-primary" />
             </motion.div>
-            <h3 className="text-4xl md:text-5xl font-black text-foreground tracking-tight leading-tight">
+            <h3 className="text-5xl md:text-6xl font-black text-foreground tracking-tight leading-tight">
               {title}
             </h3>
-            <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-lg mx-auto md:mx-0 font-medium">
+            <p className="text-2xl md:text-3xl text-info leading-tight max-w-lg mx-auto md:mx-0 font-bold opacity-80 italic">
               {description}
             </p>
           </motion.div>
@@ -89,39 +89,39 @@ export const Features = () => {
     <section className="bg-background relative" id="features">
       <div className="space-y-0">
         <FeatureRow
-          title="Everything you need, in one place."
-          description="Upload PDFs, images, record lectures, or paste YouTube links. We handle it all."
+          title="Upload anything, learn everything."
+          description="Transform PDFs, lecture recordings, images, or notes into structured study sets instantly with AI."
           icon={Upload}
           animationData={booksAnimation}
           imageSide="right"
-          bgColor="bg-transparent"
+          bgColor="bg-background"
         />
 
         <FeatureRow
-          title="Notes that write themselves."
-          description="AI turns your chaos into structured, easy-to-read study guides instantly."
+          title="5 Fun Ways to Master Topics"
+          description="Ditch the monotony. Switch between MCQ, True/False, Match Pairs, Ordering, and Flashcards for a fun learning experience."
           icon={FileText}
           animationData={finishingStudiesAnimation}
           imageSide="left"
-          bgColor="bg-white/5"
+          bgColor="bg-background"
         />
 
         <FeatureRow
-          title="Study like a scientist."
-          description="Generate Flashcards & Quizzes instantly. Master topics with Spaced Repetition."
+          title="Scientifically Proven Results"
+          description="Powered by the FSRS Spaced Repetition algorithm. Our 'Play Mode' schedules your reviews at the optimal time for long-term memory."
           icon={Brain}
           animationData={quizAnimation}
           imageSide="right"
-          bgColor="bg-transparent"
+          bgColor="bg-background"
         />
 
         <FeatureRow
-          title="Watch your grades soar."
-          description="Daily exam practice & detailed report cards to track your success."
+          title="Build a Learning Streak"
+          description="Daily exam practice & detailed stats help you track your mastery. Stay consistent and watch your grades soar."
           icon={LineChart}
           animationData={examAnimation}
           imageSide="left"
-          bgColor="bg-white/5"
+          bgColor="bg-background"
         />
       </div>
     </section>

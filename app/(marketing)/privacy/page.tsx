@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Mail } from 'lucide-react';
-import { BlobBackground } from '@/components/ui/BlobBackground';
+import { BackButton } from '@/components/ui/BackButton';
+import { Mail, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 
 export default function PrivacyPage() {
@@ -14,137 +14,92 @@ export default function PrivacyPage() {
   }, []);
 
   return (
-    <div className="min-h-screen content-layer py-20 relative">
-      <BlobBackground position="top" color="#ff7664" animate={true} />
-      <div className="container mx-auto px-4 max-w-4xl relative z-10">
-        <div className="bg-white rounded-2xl shadow-elevated p-8 md:p-12">
-          <button
-            onClick={() => router.back()}
-            className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-colors mb-6"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back
-          </button>
-          <h1 className="text-4xl font-bold mb-4 text-gray-800">Privacy Policy</h1>
-          <p className="text-sm text-primary font-medium mb-8">Last Updated: January 7, 2026</p>
+    <div className="min-h-screen bg-background py-12 px-4">
+      <div className="container mx-auto max-w-4xl">
+        <BackButton className="mb-8" />
+        
+        <div className="bg-card border-[3px] border-foreground rounded-[40px] shadow-[12px_12px_0px_0px_rgba(0,0,0,0.1)] p-8 md:p-16 animate-fade-in-up">
+          <h1 className="text-5xl font-black mb-4 text-primary font-handwritten">Privacy Policy</h1>
+          <p className="text-xl text-info font-handwritten font-bold mb-10 opacity-70 italic">Last Updated: January 7, 2026</p>
           
-          <div className="prose prose-lg max-w-none text-gray-800/80 space-y-6">
-            <p>
-              At Masterly (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;), we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our learning application.
+          <div className="font-handwritten text-xl text-foreground/80 space-y-8 leading-relaxed">
+            <p className="text-2xl font-bold italic text-foreground bg-primary/5 p-6 rounded-3xl border-2 border-dashed border-primary/10">
+              At Masterly, your privacy is our priority. We are committed to protecting your data while you learn.
             </p>
 
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">1. Information We Collect</h2>
-            
-            <h3 className="text-lg font-medium text-primary mt-6 mb-3">Account Information</h3>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Email address and name (from your authentication provider)</li>
-              <li>Profile information you choose to provide</li>
-              <li>Learning progress and statistics</li>
-            </ul>
+            <section>
+              <h2 className="text-3xl font-black text-primary mb-4 underline decoration-accent decoration-4">1. Info We Collect</h2>
+              <ul className="list-disc pl-8 space-y-3 mt-4">
+                <li><span className="font-bold">Account:</span> Name and email from your login provider.</li>
+                <li><span className="font-bold">Content:</span> PDFs, images, and notes you upload.</li>
+                <li><span className="font-bold">Learning:</span> Quiz scores and study streaks.</li>
+              </ul>
+            </section>
 
-            <h3 className="text-lg font-medium text-primary mt-6 mb-3">Learning Content</h3>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Materials you upload (PDFs, images, audio, text)</li>
-              <li>Generated questions and flashcards</li>
-              <li>Your answers and response times</li>
-            </ul>
+            <section>
+              <h2 className="text-3xl font-black text-primary mb-4 underline decoration-accent decoration-4">2. How We Use It</h2>
+              <p>We use your information only to:</p>
+              <ul className="list-disc pl-8 space-y-3 mt-4">
+                <li>Personalize your learning experience.</li>
+                <li>Generate questions using AI from your notes.</li>
+                <li>Track progress across web and mobile apps.</li>
+              </ul>
+            </section>
 
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">2. How We Use Your Information</h2>
-            <p>We use your information to:</p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Provide and improve our learning services</li>
-              <li>Track your progress using spaced repetition algorithms</li>
-              <li>Generate personalized questions from your materials</li>
-              <li>Send you important updates about your account</li>
-            </ul>
+            <section>
+              <h2 className="text-3xl font-black text-primary mb-4 underline decoration-accent decoration-4">3. Data Safety</h2>
+              <p>
+                Your data is stored securely on <span className="font-bold text-info">Supabase</span> servers. We never sell your personal information to third parties. Your uploaded materials are private and accessible only to you.
+              </p>
+            </section>
 
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">3. Data Storage & Security</h2>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>All data is stored securely on Supabase servers</li>
-              <li>We use industry-standard encryption</li>
-              <li>Your learning materials are private and only accessible by you</li>
-              <li>We do not sell your personal data to third parties</li>
-            </ul>
+            <section className="bg-info/5 p-8 rounded-[32px] border-[3px] border-info/10">
+              <h2 className="text-2xl font-black text-info mb-4 flex items-center gap-3">
+                <ShieldCheck className="w-8 h-8" />
+                Third-Party Trusted Services
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-lg">
+                <div className="p-4 bg-card rounded-2xl border-2 border-foreground/5">
+                  <span className="font-bold">OpenAI:</span> Question generation
+                </div>
+                <div className="p-4 bg-card rounded-2xl border-2 border-foreground/5">
+                  <span className="font-bold">Google:</span> Transcription & OCR
+                </div>
+                <div className="p-4 bg-card rounded-2xl border-2 border-foreground/5">
+                  <span className="font-bold">Supabase:</span> Secure Database
+                </div>
+                <div className="p-4 bg-card rounded-2xl border-2 border-foreground/5">
+                  <span className="font-bold">Sentry:</span> Stability & Speed
+                </div>
+              </div>
+            </section>
 
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">4. Third-Party Services</h2>
-            <p>To provide our services, we use the following trusted third-party services:</p>
+            <section>
+              <h2 className="text-3xl font-black text-primary mb-4 underline decoration-accent decoration-4">4. Your Rights</h2>
+              <p>You can always:</p>
+              <ul className="list-disc pl-8 space-y-3 mt-4">
+                <li>Download your data.</li>
+                <li>Correct your profile information.</li>
+                <li>Permanently delete your account and all data.</li>
+              </ul>
+            </section>
 
-            <h3 className="text-lg font-medium text-primary mt-6 mb-3">RevenueCat</h3>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Manages subscriptions and payments</li>
-              <li>Processes payment information securely</li>
-              <li>Privacy: <Link href="https://www.revenuecat.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://www.revenuecat.com/privacy</Link></li>
-            </ul>
+            <div className="pt-10 border-t-2 border-foreground/5">
+              <p className="font-bold mb-4 text-primary">Need help? Email us:</p>
+              
+              <a 
+                href="mailto:support@masterlyapp.in" 
+                className="inline-flex items-center gap-3 px-6 py-3 bg-primary text-white font-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-transform"
+              >
+                <Mail className="w-5 h-5" />
+                support@masterlyapp.in
+              </a>
 
-            <h3 className="text-lg font-medium text-primary mt-6 mb-3">OpenAI</h3>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Generates questions from your learning materials</li>
-              <li>Processes uploaded content (PDF, text, images)</li>
-              <li>Privacy: <Link href="https://openai.com/policies" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://openai.com/policies</Link></li>
-            </ul>
-
-            <h3 className="text-lg font-medium text-primary mt-6 mb-3">Google Services</h3>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Google Cloud Vision API (image processing)</li>
-              <li>Google Cloud Speech-to-Text (audio transcription)</li>
-              <li>Google Document AI (PDF processing)</li>
-              <li>Privacy: <Link href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://policies.google.com/privacy</Link></li>
-            </ul>
-
-            <h3 className="text-lg font-medium text-primary mt-6 mb-3">Sentry</h3>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Error monitoring and crash reporting</li>
-              <li>Helps us improve app stability</li>
-              <li>Privacy: <Link href="https://sentry.io/privacy/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://sentry.io/privacy/</Link></li>
-            </ul>
-
-            <h3 className="text-lg font-medium text-primary mt-6 mb-3">Supabase</h3>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Backend database and authentication</li>
-              <li>Real-time data synchronization</li>
-              <li>Privacy: <Link href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://supabase.com/privacy</Link></li>
-            </ul>
-
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">5. Spaced Repetition Data</h2>
-            <p>To optimize your learning experience, we track:</p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Question performance (correct/incorrect)</li>
-              <li>Response times</li>
-              <li>Review schedules</li>
-              <li>Learning streaks and statistics</li>
-            </ul>
-
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">6. Your Rights</h2>
-            <p>You have the right to:</p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Access your personal data</li>
-              <li>Correct inaccurate information</li>
-              <li>Delete your account and all associated data</li>
-              <li>Opt-out of non-essential communications</li>
-            </ul>
-
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">7. Children&apos;s Privacy</h2>
-            <p>
-              Our service is not intended for children under 13. We do not knowingly collect information from children under 13.
-            </p>
-
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">8. Changes to This Policy</h2>
-            <p>
-              We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page.
-            </p>
-
-            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">9. Contact Us</h2>
-            <p>If you have questions about this Privacy Policy, please contact us at:</p>
-            
-            <a 
-              href="mailto:support@masterlyapp.in" 
-              className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-primary/10 text-primary font-medium rounded-lg hover:bg-primary/20 transition-colors"
-            >
-              <Mail className="w-4 h-4" />
-              support@masterlyapp.in
-            </a>
+              <p className="mt-12 text-info opacity-60 italic text-center font-bold">
+                Stay curious. Stay private. Happy studying! 📚
+              </p>
+            </div>
           </div>
-
         </div>
       </div>
     </div>

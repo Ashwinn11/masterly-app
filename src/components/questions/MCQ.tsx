@@ -22,21 +22,21 @@ export function MCQ({ question, onAnswer, selectedOption, showFeedback, isCorrec
         const showAsWrong = showFeedback && isSelected && !isCorrect;
 
         return (
-          <Button
+          <button
             key={index}
             onClick={() => !showFeedback && onAnswer(index)}
             disabled={showFeedback}
-            variant="outline"
             className={cn(
-              "w-full justify-start text-left h-auto py-4 px-6 text-base font-medium transition-all",
-              showAsCorrect && "bg-green-500/20 border-green-500 text-green-700 dark:text-green-400",
-              showAsWrong && "bg-red-500/20 border-red-500 text-red-700 dark:text-red-400",
-              !showFeedback && "hover:bg-primary/10 hover:border-primary"
+              "w-full justify-start text-left h-auto py-4 px-6 text-base font-bold transition-all font-handwritten",
+              "bg-card border-[3px] border-foreground rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]",
+              showAsCorrect && "bg-green-500/20 border-green-600 text-green-700 shadow-none translate-x-[2px] translate-y-[2px]",
+              showAsWrong && "bg-red-500/20 border-red-600 text-red-700 shadow-none translate-x-[2px] translate-y-[2px]",
+              !showFeedback && "hover:bg-muted hover:-translate-y-0.5 active:translate-y-0 active:shadow-none"
             )}
           >
-            <span className="mr-3 font-bold">{String.fromCharCode(65 + index)}.</span>
+            <span className="mr-3 font-black">{String.fromCharCode(65 + index)}.</span>
             {option}
-          </Button>
+          </button>
         );
       })}
     </div>

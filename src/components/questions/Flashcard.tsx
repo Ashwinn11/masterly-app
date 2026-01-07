@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { FlashcardQuestion } from '@/types/question';
-import { Star, Hand } from 'lucide-react';
+import { Hand } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface FlashcardProps {
@@ -12,7 +12,6 @@ interface FlashcardProps {
 
 export function Flashcard({ question, onComplete }: FlashcardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [isStarred, setIsStarred] = useState(false);
   const [flipTime, setFlipTime] = useState(Date.now());
 
   const flip = () => {
@@ -24,20 +23,8 @@ export function Flashcard({ question, onComplete }: FlashcardProps) {
     }
   };
 
-  const handleStar = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const starred = !isStarred;
-    setIsStarred(starred);
-
-    // When starred, mark for review in FSRS
-    if (starred) {
-      const responseTime = Date.now() - flipTime;
-      onComplete(true);
-    }
-  };
-
   return (
-    <div className="flex items-center justify-center min-h-[400px]">
+    <div className="flex flex-col items-center gap-8 w-full">
       <div 
         className="relative w-full max-w-2xl h-[400px] cursor-pointer perspective-1000"
         onClick={flip}
@@ -51,13 +38,15 @@ export function Flashcard({ question, onComplete }: FlashcardProps) {
           {/* Front */}
           <div className={cn(
             "absolute w-full h-full backface-hidden",
-            "bg-card border-2 border-foreground rounded-3xl shadow-lg",
-            "flex flex-col items-center justify-center p-8"
+            "bg-card border-[3px] border-foreground rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)]",
+            "flex flex-col items-center p-8 pt-12 pb-16 font-handwritten"
           )}>
-            <p className="text-3xl md:text-4xl font-bold text-center leading-relaxed">
-              {question.question}
-            </p>
-            <div className="absolute bottom-8 flex items-center gap-2 opacity-50">
+            <div className="flex-1 w-full overflow-y-auto scrollbar-hide flex items-center justify-center">
+              <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-center leading-relaxed">
+                {question.question}
+              </p>
+            </div>
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 opacity-50 whitespace-nowrap">
               <Hand className="w-5 h-5" />
               <span className="text-sm">Tap to flip</span>
             </div>
@@ -66,26 +55,41 @@ export function Flashcard({ question, onComplete }: FlashcardProps) {
           {/* Back */}
           <div className={cn(
             "absolute w-full h-full backface-hidden rotate-y-180",
-            "bg-card border-2 border-foreground rounded-3xl shadow-lg",
-            "flex flex-col items-center justify-center p-8"
+            "bg-card border-[3px] border-foreground rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)]",
+            "flex flex-col items-center p-8 py-12 font-handwritten"
           )}>
-            <p className="text-4xl md:text-5xl font-bold text-center text-primary leading-relaxed">
-              {question.answer}
-            </p>
-            <button
-              onClick={handleStar}
-              className="absolute bottom-8 flex items-center gap-2 hover:scale-110 transition-transform"
-            >
-              <Star 
-                className={cn(
-                  "w-8 h-8",
-                  isStarred ? "fill-yellow-500 text-yellow-500" : "text-muted-foreground"
-                )} 
-              />
-              <span className="text-sm text-muted-foreground">Mark for review</span>
-            </button>
+            <div className="flex-1 w-full overflow-y-auto scrollbar-hide flex items-center justify-center">
+              <p className="text-3xl md:text-4xl lg:text-5xl font-black text-center text-primary leading-relaxed">
+                {question.answer}
+              </p>
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* Buttons outside the card, shown only when flipped */}
+      <div className={cn(
+        "w-full max-w-2xl px-8 flex gap-4 transition-all duration-300",
+        isFlipped ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+      )}>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onComplete(true); // Study Again (needs review)
+          }}
+          className="flex-1 h-16 bg-secondary text-white rounded-2xl font-black text-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,0.2)] hover:-translate-y-1 active:translate-y-0 active:shadow-none transition-all flex items-center justify-center gap-2"
+        >
+          Study Again
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onComplete(false); // Got it (no review)
+          }}
+          className="flex-1 h-16 bg-primary text-white rounded-2xl font-black text-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,0.2)] hover:-translate-y-1 active:translate-y-0 active:shadow-none transition-all flex items-center justify-center gap-2"
+        >
+          Got it!
+        </button>
       </div>
 
       <style jsx>{`

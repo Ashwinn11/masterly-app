@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { getSupabaseClient } from '@/lib/supabase/client';
 import { Question } from '@/types/question';
@@ -12,14 +12,12 @@ import { Flashcard } from '@/components/questions/Flashcard';
 import { ScreenLayout } from '@/components/ui/ScreenLayout';
 import { BackButton } from '@/components/ui/BackButton';
 import { Progress } from '@/components/ui/progress';
-import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
+import { Loader2, CheckCircle2, XCircle, PartyPopper } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-function QuestionFeedPageContent() {
+export default function PlayPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { user } = useAuth();
-  const materialId = searchParams.get('materialId');
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,33 +31,31 @@ function QuestionFeedPageContent() {
   const progress = questions.length > 0 ? ((currentIndex + 1) / questions.length) * 100 : 0;
 
   useEffect(() => {
-    const loadQuestions = async () => {
+    const loadDueQuestions = async () => {
       if (!user?.id) return;
 
       setLoading(true);
       const supabase = getSupabaseClient();
 
-      // If materialId is provided, get questions for that material.
-      // Otherwise, get all due questions for the user (Daily Recall).
-      let result;
-      if (materialId) {
-        result = await (supabase.rpc as any)('get_questions_for_material', {
-          p_material_id: materialId,
-          p_user_id: user.id,
-        });
-      } else {
-        result = await (supabase.rpc as any)('get_due_questions', {
-          p_user_id: user.id,
-        });
-      }
+      const { data, error } = await (supabase.rpc as any)('get_due_questions_for_play', {
+        p_user_id: user.id,
+        p_limit: 20,
+      });
 
-      if (result.error) {
-        console.error('Error loading questions:', result.error);
-      } else if (result.data) {
-        // Map questions and include the individual_question_id for record_answer
-        const transformedQuestions = result.data.map((q: any) => ({
-          ...q.question_data,
-          individualQuestionId: q.individual_question_id
+      if (error) {
+        console.error('Error loading due questions:', error);
+      } else if (data) {
+        // Transform the data to match Question format
+        const transformedQuestions = data.map((item: any) => ({
+          ...item.question_data,
+          individualQuestionId: item.individual_question_id,
+          questionSetId: item.question_set_id,
+          materialId: item.material_id,
+          fsrs: {
+            stability: item.stability,
+            difficulty: item.difficulty,
+            next_due_at: item.next_due_at,
+          },
         }));
         setQuestions(transformedQuestions);
       }
@@ -67,8 +63,8 @@ function QuestionFeedPageContent() {
       setLoading(false);
     };
 
-    loadQuestions();
-  }, [materialId, user?.id]);
+    loadDueQuestions();
+  }, [user?.id]);
 
   useEffect(() => {
     setQuestionStartTime(Date.now());
@@ -84,18 +80,17 @@ function QuestionFeedPageContent() {
     setShowFeedback(true);
 
     if (user?.id && currentQuestion) {
+      const supabase = getSupabaseClient();
       const individualQId = (currentQuestion as any).individualQuestionId;
-      
-      if (individualQId) {
-        const supabase = getSupabaseClient();
-        await (supabase.rpc as any)('record_answer', {
-          p_user_id: user.id,
-          p_question_id: individualQId,
-          p_is_correct: correct,
-          p_response_time_ms: responseTime,
-          p_update_fsrs: false,
-        });
-      }
+
+      // Record answer with FSRS update enabled (p_update_fsrs defaults to true)
+      await (supabase.rpc as any)('record_answer', {
+        p_user_id: user.id,
+        p_question_id: individualQId,
+        p_is_correct: correct,
+        p_response_time_ms: responseTime,
+        p_update_fsrs: true, // Enable FSRS updates for play mode
+      });
     }
 
     setTimeout(handleNext, 1200);
@@ -108,7 +103,8 @@ function QuestionFeedPageContent() {
       setShowFeedback(false);
       setIsCorrect(null);
     } else {
-      router.push('/materials');
+      // All done! Redirect to dashboard
+      router.push('/dashboard');
     }
   };
 
@@ -116,7 +112,7 @@ function QuestionFeedPageContent() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-background">
         <Loader2 className="w-12 h-12 animate-spin text-primary mb-4" />
-        <p className="text-xl font-handwritten font-bold text-info">Loading questions...</p>
+        <p className="text-xl font-handwritten font-bold text-info">Loading review...</p>
       </div>
     );
   }
@@ -125,11 +121,20 @@ function QuestionFeedPageContent() {
     return (
       <ScreenLayout 
         headerLeft={<BackButton />}
-        title="Oops!"
+        title="All Caught Up!"
       >
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <XCircle className="w-20 h-20 text-muted-foreground/30 mb-4" />
-          <p className="text-2xl font-handwritten text-info/70 mb-8">No questions found for this stack.</p>
+          <div className="relative mb-8">
+            <div className="w-32 h-32 rounded-full bg-primary/10 flex items-center justify-center border-[3px] border-foreground shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] transform -rotate-3">
+              <PartyPopper className="w-16 h-16 text-primary" />
+            </div>
+          </div>
+          <h2 className="text-4xl font-black font-handwritten text-primary mb-4">
+            You're all caught up!
+          </h2>
+          <p className="text-2xl font-handwritten text-info/70 mb-8 max-w-md">
+            No questions are due for review right now. Come back later or upload more materials!
+          </p>
           <BackButton />
         </div>
       </ScreenLayout>
@@ -220,17 +225,6 @@ function QuestionFeedPageContent() {
     >
       <div className="flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full py-8">
         <div className="space-y-10 animate-fade-in">
-          {/* Question Type Badge */}
-          <div className="flex justify-center">
-            <span className="px-6 py-2 rounded-2xl bg-primary/10 text-primary text-xl font-black font-handwritten uppercase tracking-widest border-2 border-primary/20 rotate-1 shadow-sm">
-              {currentQuestion.type === 'mcq' && 'Multiple Choice'}
-              {currentQuestion.type === 'true-false' && 'True or False'}
-              {currentQuestion.type === 'flashcard' && 'Flashcard'}
-              {currentQuestion.type === 'match-pairs' && 'Match Pairs'}
-              {currentQuestion.type === 'order-sequence' && 'Order Sequence'}
-            </span>
-          </div>
-
           {/* Question Text */}
           {currentQuestion.type !== 'flashcard' && (
             <div className="relative max-w-2xl mx-auto w-full">
@@ -270,18 +264,5 @@ function QuestionFeedPageContent() {
         </div>
       )}
     </ScreenLayout>
-  );
-}
-
-export default function QuestionFeedPage() {
-  return (
-    <Suspense fallback={
-      <div className="flex flex-col items-center justify-center min-h-screen bg-background">
-        <Loader2 className="w-12 h-12 animate-spin text-primary mb-4" />
-        <p className="text-xl font-handwritten font-bold text-info">Loading questions...</p>
-      </div>
-    }>
-      <QuestionFeedPageContent />
-    </Suspense>
   );
 }

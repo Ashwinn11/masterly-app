@@ -87,13 +87,13 @@ export function OrderSequence({ question, onComplete }: OrderSequenceProps) {
               onClick={() => handlePress(item)}
               disabled={showFeedback}
               className={cn(
-                "min-w-[90px] px-4 py-3 rounded-2xl border-2 border-dashed border-border",
-                "flex items-center justify-center gap-2 transition-all",
-                "bg-card text-foreground font-medium",
-                isSelected && !showFeedback && "border-primary border-solid bg-primary/10",
+                "min-w-[90px] px-4 py-3 rounded-2xl border-[3px] border-foreground",
+                "flex items-center justify-center gap-2 transition-all font-handwritten",
+                "bg-card text-foreground font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]",
+                isSelected && !showFeedback && "border-primary border-solid bg-primary/10 shadow-[6px_6px_0px_0px_rgba(0,0,0,0.15)] -translate-y-1",
                 showFeedback && isSelected && positionCorrect && "bg-primary border-primary border-solid text-primary-foreground",
-                showFeedback && isSelected && !positionCorrect && "bg-red-500 border-red-500 border-solid text-white",
-                !isSelected && !showFeedback && "hover:bg-muted"
+                showFeedback && isSelected && !positionCorrect && "bg-red-500 border-red-500 border-solid text-white shadow-none",
+                !isSelected && !showFeedback && "hover:bg-muted hover:-translate-y-0.5"
               )}
             >
               {isSelected && (

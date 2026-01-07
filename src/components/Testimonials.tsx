@@ -8,21 +8,21 @@ const reviews = [
   {
     name: "Sarah M.",
     role: "Pre-med Student",
-    content: "I finally feel in control of my studies. The AI flashcards save me hours every week.",
+    content: "The AI study sets save me hours every week. I love how it turns my PDFs into interactive quizzes instantly.",
     stars: 5,
     color: "bg-duolingo-green",
   },
   {
     name: "Michael R.",
     role: "Engineering Major",
-    content: "My grades went up from B's to A's in just one semester. The spaced repetition really works.",
+    content: "The new Play Mode with FSRS is a game changer. It knows exactly when I'm about to forget a concept.",
     stars: 5,
     color: "bg-duolingo-macaw",
   },
   {
     name: "Jessica L.",
     role: "Law Student",
-    content: "Better than Quizlet. The AI understands my complex legal notes perfectly.",
+    content: "Better than Quizlet. Switching between flashcards, MCQs, and matching keeps me way more engaged.",
     stars: 5,
     color: "bg-duolingo-bee",
   },
@@ -52,7 +52,7 @@ const item = {
 
 export const Testimonials = () => {
   return (
-    <section id="testimonials" className="py-24 bg-muted/50 border-t border-border/50">
+    <section id="testimonials" className="py-24 bg-background border-t-2 border-foreground/5 font-handwritten">
       <div className="container mx-auto px-4">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -61,10 +61,10 @@ export const Testimonials = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-balance tracking-tight">
+          <h2 className="text-5xl md:text-6xl font-black mb-6 text-balance tracking-tight">
             Loved by Students Everywhere
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-2xl text-info font-bold max-w-2xl mx-auto italic opacity-80">
             Join thousands of students who are crushing their exams with Masterly AI.
           </p>
         </motion.div>
@@ -74,32 +74,32 @@ export const Testimonials = () => {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
           {reviews.map((review, i) => (
             <motion.div 
               key={i} 
               variants={item}
-              whileHover={{ y: -5 }}
-              className="p-8 rounded-2xl-custom bg-white/5 backdrop-blur-sm border-2 border-white/10 shadow-card transition-colors duration-300"
+              whileHover={{ y: -8, rotate: i % 2 === 0 ? 1 : -1 }}
+              className="p-8 rounded-[32px] bg-card border-[3px] border-foreground shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] transition-all duration-300"
             >
               <div className="flex items-center gap-4 mb-6">
-                <div className={cn("w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl", review.color)}>
+                <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-sm transform -rotate-3", review.color)}>
                   {review.name.charAt(0)}
                 </div>
                 <div>
-                  <div className="font-bold text-foreground">{review.name}</div>
-                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-wide">{review.role}</div>
+                  <div className="font-black text-xl text-foreground">{review.name}</div>
+                  <div className="text-sm font-bold text-info uppercase tracking-widest">{review.role}</div>
                 </div>
               </div>
               
               <div className="flex gap-1 mb-4">
                 {[...Array(review.stars)].map((_, j) => (
-                  <Star key={j} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                  <Star key={j} className="h-5 w-5 fill-accent text-accent" />
                 ))}
               </div>
               
-              <p className="text-foreground/80 leading-relaxed font-medium">
+              <p className="text-xl text-foreground font-bold italic leading-tight">
                 "{review.content}"
               </p>
             </motion.div>

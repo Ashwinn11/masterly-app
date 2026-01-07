@@ -4,16 +4,20 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { ScreenLayout } from '@/components/ui/ScreenLayout';
 import { 
   FileText, 
   Image as ImageIcon, 
   Mic, 
   Plus,
-  Trash2,
-  BookOpen
+  BookOpen,
+  X
 } from 'lucide-react';
 import Link from 'next/link';
 import { getSupabaseClient } from '@/lib/supabase/client';
+import { cn } from '@/lib/utils';
+import { useConfirmationStore } from '@/lib/utils/confirmationUtils';
+import { toast } from 'sonner';
 
 interface Material {
   id: string;
@@ -31,16 +35,29 @@ const iconMap = {
 };
 
 const colorMap = {
-  pdf: 'text-red-500',
-  image: 'text-blue-500',
-  audio: 'text-purple-500',
-  text: 'text-green-500',
+  pdf: '#A44231', // Red
+  image: '#2196F3', // Blue
+  audio: '#9C27B0', // Purple
+  text: '#2D4F1E', // Green
+};
+
+const Tape = ({ index }: { index: number }) => {
+  const rotation = index % 2 === 0 ? 'rotate-[2deg]' : 'rotate-[-1.5deg]';
+  return (
+    <div 
+      className={cn(
+        "absolute -top-3 left-1/2 -translate-x-1/2 w-10 h-4 bg-foreground/20 rounded-sm z-20 backdrop-blur-[2px]",
+        rotation
+      )} 
+    />
+  );
 };
 
 export default function MaterialsPage() {
   const { user } = useAuth();
   const [materials, setMaterials] = useState<Material[]>([]);
   const [loading, setLoading] = useState(true);
+  const { openConfirmation } = useConfirmationStore();
 
   const loadMaterials = async () => {
     if (!user?.id) return;
@@ -48,16 +65,11 @@ export default function MaterialsPage() {
     setLoading(true);
     const supabase = getSupabaseClient();
     
-    console.log('[Materials] Loading for user:', user.id);
-    
-    // Fetch all materials for the user
     const { data: materialsData, error: materialsError } = await (supabase
       .from('materials') as any)
       .select('*')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false });
-
-    console.log('[Materials] Materials query result:', { materialsData, materialsError });
 
     if (materialsError) {
       console.error('Error loading materials:', materialsError);
@@ -65,8 +77,7 @@ export default function MaterialsPage() {
       return;
     }
 
-    if (materialsData && materialsData.length > 0) {
-      // For each material, get its question count
+    if (materialsData) {
       const materialsWithCounts = await Promise.all(
         materialsData.map(async (material: any) => {
           const { data: questionSets } = await supabase
@@ -75,7 +86,7 @@ export default function MaterialsPage() {
             .eq('material_id', material.id)
             .eq('user_id', user.id);
 
-          const questionCount = questionSets?.[0]?.question_count || 0;
+          const questionCount = (questionSets as any)?.[0]?.question_count || 0;
 
           return {
             id: material.id,
@@ -87,7 +98,6 @@ export default function MaterialsPage() {
         })
       );
 
-      console.log('[Materials] Materials with counts:', materialsWithCounts);
       setMaterials(materialsWithCounts);
     }
 
@@ -98,74 +108,87 @@ export default function MaterialsPage() {
     loadMaterials();
   }, [user?.id]);
 
-  const handleDelete = async (materialId: string) => {
+  const handleDelete = async (materialId: string, title: string) => {
     if (!user?.id) return;
     
-    const supabase = getSupabaseClient();
-    const { error } = await (supabase.rpc as any)('delete_material', {
-      p_material_id: materialId,
-      p_user_id: user.id
-    });
+    openConfirmation({
+      title: 'Delete Material?',
+      message: `Are you sure you want to delete "${title}"? This will remove all associated questions.`,
+      confirmText: 'Delete',
+      variant: 'danger',
+      onConfirm: async () => {
+        const supabase = getSupabaseClient();
+        const { error } = await (supabase.rpc as any)('delete_material', {
+          p_material_id: materialId,
+          p_user_id: user.id
+        });
 
-    if (error) {
-      console.error('Error deleting material:', error);
-    } else {
-      loadMaterials();
+        if (error) {
+          console.error('Error deleting material:', error);
+          toast.error('Failed to delete material');
+        } else {
+          toast.success('Material deleted');
+          loadMaterials();
+        }
+      }
+    });
+  };
+
+  const getRotation = (id: string) => {
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) {
+      hash = id.charCodeAt(i) + ((hash << 5) - hash);
     }
+    const rotations = [-1, -0.5, 0.5, 1, 1.5, -1.5];
+    return rotations[Math.abs(hash) % rotations.length];
   };
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      {/* Header */}
-      <div>
-        <h1 className="text-4xl font-bold text-primary mb-2">My Stacks</h1>
-        <p className="text-muted-foreground text-lg">Tap a card to start recall</p>
-      </div>
-
-      {/* Upload Button */}
-      <Button className="gap-2" asChild>
-        <Link href="/materials/upload">
-          <Plus className="w-4 h-4" />
-          Upload Material
-        </Link>
-      </Button>
-
+    <ScreenLayout title="My Stacks" subtitle="Tap a card to start recall">
       {/* Materials Grid */}
       {loading ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {[...Array(4)].map((_, i) => (
-            <Card key={i} className="animate-pulse">
-              <CardContent className="p-6 h-40" />
-            </Card>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 pt-6">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="h-48 rounded-2xl bg-muted animate-pulse" />
           ))}
         </div>
       ) : materials.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <BookOpen className="w-16 h-16 text-muted-foreground/50 mb-4" />
-          <p className="text-lg text-muted-foreground">
+        <div className="flex flex-col items-center justify-center py-24 text-center">
+          <BookOpen className="w-20 h-20 text-muted-foreground/30 mb-4" />
+          <p className="text-2xl font-handwritten text-info/50 max-w-xs">
             No materials yet. Upload your first one!
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 pt-6">
           {materials.map((material, index) => {
             const Icon = iconMap[material.file_type];
-            const colorClass = colorMap[material.file_type];
+            const color = colorMap[material.file_type];
+            const rotation = getRotation(material.id);
             
             return (
-              <div key={material.id} className="relative group">
+              <div 
+                key={material.id} 
+                className="relative group"
+                style={{ transform: `rotate(${rotation}deg)` }}
+              >
                 <Link href={`/questions?materialId=${material.id}`}>
-                  <Card 
-                    className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1 cursor-pointer"
-                    style={{ transform: `rotate(${(index % 3 - 1) * 0.5}deg)` }}
-                  >
-                    <CardContent className="p-6 flex flex-col items-center text-center space-y-3">
-                      <div className={`p-3 rounded-full bg-background ${colorClass}`}>
-                        <Icon className="w-6 h-6" />
+                  <Card className="relative overflow-visible hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-1 cursor-pointer border-[3px] border-foreground rounded-2xl h-full min-h-[160px] flex items-center justify-center bg-card">
+                    <Tape index={index} />
+                    
+                    <CardContent className="p-8 flex flex-col items-center text-center space-y-4 w-full">
+                      <div 
+                        className="p-4 rounded-full"
+                        style={{ backgroundColor: color + '15' }}
+                      >
+                        <Icon className="w-8 h-8" style={{ color }} />
                       </div>
-                      <div className="space-y-1">
-                        <h3 className="font-semibold line-clamp-2">{material.title}</h3>
-                        <p className="text-sm text-muted-foreground">
+                      
+                      <div className="space-y-1 w-full">
+                        <h3 className="text-xl font-black font-handwritten line-clamp-2 text-foreground leading-tight">
+                          {material.title}
+                        </h3>
+                        <p className="text-info font-handwritten text-lg font-bold">
                           {material.question_count} q's
                         </p>
                       </div>
@@ -173,22 +196,20 @@ export default function MaterialsPage() {
                   </Card>
                 </Link>
                 
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                <button
+                  className="absolute top-2 right-2 p-1 bg-card border-2 border-foreground rounded-full opacity-0 group-hover:opacity-60 hover:opacity-100 transition-all z-10 shadow-sm"
                   onClick={(e) => {
                     e.preventDefault();
-                    handleDelete(material.id);
+                    handleDelete(material.id, material.title);
                   }}
                 >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                  <X className="w-4 h-4" />
+                </button>
               </div>
             );
           })}
         </div>
       )}
-    </div>
+    </ScreenLayout>
   );
 }

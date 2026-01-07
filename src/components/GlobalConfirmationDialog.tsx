@@ -7,7 +7,7 @@ import { useConfirmationStore } from '@/lib/utils/confirmationUtils';
  * Global confirmation dialog component that should be rendered once at the app root level
  */
 export function GlobalConfirmationDialog() {
-  const { isOpen, title, message, confirm, cancel } = useConfirmationStore();
+  const { isOpen, title, message, confirmText, cancelText, variant, confirm, cancel } = useConfirmationStore();
 
   return (
     <ConfirmationDialog
@@ -16,9 +16,9 @@ export function GlobalConfirmationDialog() {
       onConfirm={confirm}
       title={title}
       description={message}
-      confirmText="Delete"
-      cancelText="Cancel"
-      variant="danger"
+      confirmText={confirmText}
+      cancelText={cancelText}
+      variant={variant}
     />
   );
 }

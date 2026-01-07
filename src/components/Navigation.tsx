@@ -76,7 +76,7 @@ const Navigation: React.FC<NavigationProps> = ({ className }) => {
       {/* Desktop Navigation */}
       <header
         className={cn(
-          "sticky top-0 z-50 w-full transition-all duration-300 backdrop-blur-md bg-background/95 border-b border-border shadow-sm",
+          "sticky top-0 z-50 w-full transition-all duration-300 bg-card border-b-[3px] border-foreground/10 shadow-sm",
           className
         )}
       >
@@ -103,7 +103,7 @@ const Navigation: React.FC<NavigationProps> = ({ className }) => {
             {/* CTA Button / User Menu */}
             <div className="hidden md:flex items-center gap-2">
               {loading ? (
-                <div className="h-9 w-20 animate-pulse bg-white/10 rounded-md" />
+                <div className="h-9 w-20 animate-pulse bg-muted/20 rounded-md" />
               ) : user ? (
                 <>
                   <Button variant="ghost" size="sm" asChild>
@@ -119,15 +119,15 @@ const Navigation: React.FC<NavigationProps> = ({ className }) => {
                         Account
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
-                      <DropdownMenuItem asChild>
+                    <DropdownMenuContent align="end" className="w-48 bg-card border-[3px] border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] rounded-xl">
+                      <DropdownMenuItem asChild className="font-handwritten font-bold text-lg hover:bg-muted focus:bg-muted">
                         <Link href="/profile" className="cursor-pointer">
                           <User className="mr-2 h-4 w-4" />
                           Profile
                         </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={signOut} className="cursor-pointer text-primary">
+                      <DropdownMenuSeparator className="bg-foreground/10" />
+                      <DropdownMenuItem onClick={signOut} className="cursor-pointer text-secondary font-handwritten font-bold text-lg hover:bg-muted focus:bg-muted">
                         <LogOut className="mr-2 h-4 w-4" />
                         Sign Out
                       </DropdownMenuItem>
@@ -154,7 +154,7 @@ const Navigation: React.FC<NavigationProps> = ({ className }) => {
                     <span className="sr-only">Open menu</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <SheetContent side="right" className="w-[300px] sm:w-[400px] bg-card border-l-[4px] border-foreground/10">
                   <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                   <div className="flex flex-col space-y-6 mt-8">
                     {/* Mobile Logo */}
@@ -168,7 +168,7 @@ const Navigation: React.FC<NavigationProps> = ({ className }) => {
                         <button
                           key={link.name}
                           onClick={() => scrollToSection(link.href)}
-                          className="text-lg font-medium text-foreground hover:text-primary transition-colors text-left"
+                          className="text-2xl font-black text-foreground hover:text-primary transition-colors text-left font-handwritten"
                         >
                           {link.name}
                         </button>
@@ -176,35 +176,35 @@ const Navigation: React.FC<NavigationProps> = ({ className }) => {
                     </nav>
 
                     {/* Mobile Auth Buttons */}
-                    <div className="pt-4 border-t space-y-2">
+                    <div className="pt-4 border-t border-foreground/10 space-y-4 font-handwritten">
                       {loading ? (
-                        <div className="h-10 w-full animate-pulse bg-white/10 rounded-md" />
+                        <div className="h-12 w-full animate-pulse bg-muted/20 rounded-xl" />
                       ) : user ? (
                         <>
-                          <Button variant="default" size="lg" className="w-full" asChild>
+                          <Button variant="default" size="lg" className="w-full text-xl h-14" asChild>
                             <Link href="/dashboard">
-                              <LayoutDashboard className="h-4 w-4 mr-2" />
+                              <LayoutDashboard className="h-5 w-5 mr-2" />
                               Dashboard
                             </Link>
                           </Button>
-                          <Button variant="outline" size="lg" className="w-full" asChild>
+                          <Button variant="outline" size="lg" className="w-full text-xl h-14" asChild>
                             <Link href="/profile">
-                              <User className="h-4 w-4 mr-2" />
+                              <User className="h-5 w-5 mr-2" />
                               Profile
                             </Link>
                           </Button>
                           <Button
                             variant="ghost"
                             size="lg"
-                            className="w-full text-primary hover:text-primary/90"
+                            className="w-full text-secondary hover:text-secondary/90 text-xl font-black"
                             onClick={signOut}
                           >
-                            <LogOut className="h-4 w-4 mr-2" />
+                            <LogOut className="h-5 w-5 mr-2" />
                             Sign Out
                           </Button>
                         </>
                       ) : (
-                        <Button variant="default" size="lg" className="w-full" asChild>
+                        <Button variant="default" size="lg" className="w-full text-xl h-14" asChild>
                           <Link href="/login">Get Started</Link>
                         </Button>
                       )}

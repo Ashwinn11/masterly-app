@@ -8,14 +8,14 @@ const universities = [
 
 export const SocialProof = () => {
   return (
-    <section className="py-10 border-b border-border/50 bg-background overflow-hidden">
+    <section className="py-10 border-b border-border/50 bg-background overflow-hidden font-handwritten">
       <div className="container mx-auto px-4 text-center mb-8">
-        <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
+        <p className="text-lg font-black text-info uppercase tracking-widest opacity-80">
           Trusted by students at
         </p>
       </div>
       
-      <div className="relative flex overflow-x-hidden group mask-linear-fade">
+      <div className="relative flex overflow-x-hidden group">
         <motion.div 
           className="flex gap-12 items-center whitespace-nowrap"
           animate={{ x: ["0%", "-25%"] }}
@@ -30,7 +30,7 @@ export const SocialProof = () => {
            {[...universities, ...universities, ...universities, ...universities].map((uni, i) => (
             <span 
               key={i} 
-              className="text-2xl font-black text-gray-300 hover:text-duolingo-green transition-colors duration-300 cursor-default select-none mx-6"
+              className="text-3xl font-black text-info/30 hover:text-primary transition-colors duration-300 cursor-default select-none mx-6"
             >
               {uni}
             </span>
