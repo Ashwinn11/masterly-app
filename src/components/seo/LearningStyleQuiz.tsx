@@ -4,7 +4,9 @@ import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Brain, Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { PageIndicator } from '@/components/questions/PageIndicator';
 
 interface Question {
   id: number;
@@ -157,8 +159,6 @@ export function LearningStyleQuiz({ className }: LearningStyleQuizProps) {
     setResult(null);
   };
 
-  const progress = ((currentQuestion + (result ? questions.length : 0)) / questions.length) * 100;
-
   return (
     <div className={cn('w-full', className)}>
       <Card className="p-8 border-[3px] border-foreground bg-card shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)]">
@@ -177,35 +177,39 @@ export function LearningStyleQuiz({ className }: LearningStyleQuizProps) {
                 </div>
               </div>
 
-              {/* Progress Bar */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm font-bold">
-                  <span>Question {currentQuestion + 1} of {questions.length}</span>
-                  <span>{Math.round(progress)}% complete</span>
-                </div>
-                <div className="h-3 bg-muted rounded-full overflow-hidden border-[2px] border-foreground/20">
-                  <div
-                    className="h-full bg-primary transition-all duration-500 ease-out"
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
+              {/* Progress Indicator */}
+              <div className="flex justify-center mb-6">
+                <PageIndicator 
+                  current={currentQuestion + 1} 
+                  total={questions.length} 
+                />
               </div>
 
               {/* Question */}
-              <div className="min-h-[200px]">
-                <p className="text-xl font-bold mb-6">{questions[currentQuestion].question}</p>
-                <div className="space-y-3">
-                  {questions[currentQuestion].options.map((option, index) => (
-                    <Button
-                      key={index}
-                      onClick={() => handleAnswer(index)}
-                      variant="outline"
-                      className="w-full h-auto p-4 text-left justify-start border-[2px] border-foreground/20 hover:border-primary hover:bg-primary/5 transition-all text-base font-handwritten"
-                    >
-                      {option}
-                    </Button>
-                  ))}
-                </div>
+              <div className="min-h-[300px]">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentQuestion}
+                    initial={{ x: 20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: -20, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    <p className="text-xl font-bold mb-6">{questions[currentQuestion].question}</p>
+                    <div className="space-y-3">
+                      {questions[currentQuestion].options.map((option, index) => (
+                        <Button
+                          key={index}
+                          onClick={() => handleAnswer(index)}
+                          variant="outline"
+                          className="w-full h-auto p-4 text-left justify-start border-[2px] border-foreground/20 hover:border-primary hover:bg-primary/5 transition-all text-base font-handwritten"
+                        >
+                          {option}
+                        </Button>
+                      ))}
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
               </div>
             </>
           ) : (

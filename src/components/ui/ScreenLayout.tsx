@@ -34,6 +34,7 @@ interface ScreenLayoutProps {
   headerLeft?: React.ReactNode;
   headerRight?: React.ReactNode;
   hideSidebar?: boolean;
+  showLines?: boolean;
 }
 
 export function ScreenLayout({ 
@@ -42,7 +43,8 @@ export function ScreenLayout({
   subtitle, 
   headerLeft, 
   headerRight,
-  hideSidebar = false 
+  hideSidebar = false,
+  showLines = false
 }: ScreenLayoutProps) {
   const isMobile = useIsMobile();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -107,6 +109,7 @@ export function ScreenLayout({
         {/* Content Area */}
         <div className={cn(
           "flex-1 flex flex-col p-6 sm:p-10 relative overflow-y-auto",
+          showLines && "bg-notebook-paper",
           isMobile && "p-4 pt-6"
         )}>
           {/* Header Row */}

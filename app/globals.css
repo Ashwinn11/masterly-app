@@ -218,6 +218,12 @@ All colors MUST be HSL.
     animation: fade-in 0.5s ease-out forwards;
   }
 
+  /* Notebook Paper Lines */
+  .bg-notebook-paper {
+    background-image: linear-gradient(hsla(var(--foreground) / 0.05) 1px, transparent 1px);
+    background-size: 100% 2.5rem;
+  }
+
   /* Animation delays */
   .animation-delay-100 {
     animation-delay: 100ms;

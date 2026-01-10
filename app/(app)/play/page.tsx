@@ -11,8 +11,9 @@ import { OrderSequence } from '@/components/questions/OrderSequence';
 import { Flashcard } from '@/components/questions/Flashcard';
 import { ScreenLayout } from '@/components/ui/ScreenLayout';
 import { BackButton } from '@/components/ui/BackButton';
-import { Progress } from '@/components/ui/progress';
+import { PageIndicator } from '@/components/questions/PageIndicator';
 import { Loader2, CheckCircle2, XCircle, PartyPopper } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 export default function PlayPage() {
@@ -28,7 +29,6 @@ export default function PlayPage() {
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
 
   const currentQuestion = questions[currentIndex];
-  const progress = questions.length > 0 ? ((currentIndex + 1) / questions.length) * 100 : 0;
 
   useEffect(() => {
     const loadDueQuestions = async () => {
@@ -213,36 +213,42 @@ export default function PlayPage() {
       hideSidebar={true}
       headerLeft={<BackButton />}
       headerRight={
-        <div className="flex items-center gap-4 min-w-[200px] sm:min-w-[300px]">
-          <div className="flex-1">
-            <Progress value={progress} className="h-4 border-2 border-foreground/10 bg-background" />
-          </div>
-          <span className="text-xl font-black font-handwritten text-info min-w-[60px] text-right">
-            {currentIndex + 1}/{questions.length}
-          </span>
-        </div>
+        <PageIndicator 
+          current={currentIndex + 1} 
+          total={questions.length} 
+        />
       }
+      showLines={true}
     >
       <div className="flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full py-8">
-        <div className="space-y-10 animate-fade-in">
-          {/* Question Text */}
-          {currentQuestion.type !== 'flashcard' && (
-            <div className="relative max-w-2xl mx-auto w-full">
-              <div className="p-10 rounded-[40px] border-[3px] border-foreground bg-card shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] transform -rotate-1">
-                <h2 className="text-3xl sm:text-4xl font-black font-handwritten leading-tight text-center">
-                  {currentQuestion.question}
-                </h2>
+        <AnimatePresence mode="wait">
+          <motion.div 
+            key={currentIndex}
+            initial={{ x: 20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -20, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="space-y-10"
+          >
+            {/* Question Text */}
+            {currentQuestion.type !== 'flashcard' && (
+              <div className="relative max-w-2xl mx-auto w-full">
+                <div className="p-10 rounded-[40px] border-[3px] border-foreground bg-card shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] transform -rotate-1">
+                  <h2 className="text-3xl sm:text-4xl font-black font-handwritten leading-tight text-center">
+                    {currentQuestion.question}
+                  </h2>
+                </div>
+                {/* Speech bubble tail */}
+                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-foreground" />
               </div>
-              {/* Speech bubble tail */}
-              <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-foreground" />
-            </div>
-          )}
+            )}
 
-          {/* Question Component */}
-          <div className="mt-4">
-            {renderQuestion()}
-          </div>
-        </div>
+            {/* Question Component */}
+            <div className="mt-4">
+              {renderQuestion()}
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Feedback Overlay */}
