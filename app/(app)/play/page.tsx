@@ -33,6 +33,24 @@ export default function PlayPage() {
 
   const currentQuestion = questions[currentIndex];
 
+  const loadUserStats = async () => {
+    if (!user?.id) return 0;
+    const supabase = getSupabaseClient();
+    try {
+      const { data, error } = await (supabase.rpc as any)('get_user_stats', {
+        p_user_id: user.id,
+      });
+      if (!error && data) {
+        const streak = data.current_streak || 0;
+        setCurrentStreak(streak);
+        return streak;
+      }
+    } catch (error) {
+      console.error('[PlayPage] Error loading stats:', error);
+    }
+    return 0;
+  };
+
   useEffect(() => {
     const loadDueQuestions = async () => {
       if (!user?.id) return;
@@ -66,21 +84,6 @@ export default function PlayPage() {
       setLoading(false);
     };
 
-    const loadUserStats = async () => {
-      if (!user?.id) return;
-      const supabase = getSupabaseClient();
-      try {
-        const { data, error } = await (supabase.rpc as any)('get_user_stats', {
-          p_user_id: user.id,
-        });
-        if (!error && data) {
-          setCurrentStreak(data.current_streak || 0);
-        }
-      } catch (error) {
-        console.error('[PlayPage] Error loading stats:', error);
-      }
-    };
-
     loadDueQuestions();
     loadUserStats();
   }, [user?.id]);
@@ -112,12 +115,15 @@ export default function PlayPage() {
       });
     }
 
-    // Show streak toast after first answer (increment streak since they just played)
-    if (!hasShownStreakToast && currentStreak >= 0) {
+    // Reload user stats to get updated streak from database
+    const oldStreak = currentStreak;
+    const newStreak = await loadUserStats();
+
+    // Show streak toast if streak increased and not already shown
+    if (!hasShownStreakToast && newStreak > oldStreak) {
       setHasShownStreakToast(true);
-      // Show streak with +1 since they just completed a day
       setTimeout(() => {
-        toast.streak(currentStreak + 1);
+        toast.streak(newStreak);
       }, 600); // Show after feedback starts
     }
 
