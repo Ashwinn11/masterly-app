@@ -137,7 +137,8 @@ export default function PlayPage() {
       setShowFeedback(false);
       setIsCorrect(null);
     } else {
-      // All done! Redirect to dashboard
+      // All done! Show a beautiful toast and redirect to dashboard
+      toast.completion();
       router.push('/dashboard');
     }
   };

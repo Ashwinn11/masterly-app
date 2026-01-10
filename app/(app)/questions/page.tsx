@@ -15,6 +15,7 @@ import { PageIndicator } from '@/components/questions/PageIndicator';
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { toast } from '@/components/ui/toast';
 
 function QuestionFeedPageContent() {
   const router = useRouter();
@@ -108,6 +109,7 @@ function QuestionFeedPageContent() {
       setShowFeedback(false);
       setIsCorrect(null);
     } else {
+      toast.completion();
       router.push('/materials');
     }
   };

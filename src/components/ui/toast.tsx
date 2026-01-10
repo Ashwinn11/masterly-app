@@ -1,12 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { Flame, CheckCircle, AlertCircle, Info, X } from 'lucide-react';
+import { Flame, CheckCircle, AlertCircle, Info, X, Trophy } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 // Toast types for different use cases
-export type ToastType = 'success' | 'error' | 'info' | 'streak';
+export type ToastType = 'success' | 'error' | 'info' | 'streak' | 'completion';
 
 export interface ToastProps {
   id: string;
@@ -14,7 +14,7 @@ export interface ToastProps {
   title: string;
   message?: string;
   duration?: number;
-  position?: 'top' | 'bottom';
+  position?: 'top' | 'bottom' | 'center';
 }
 
 interface ToastContextType {
@@ -59,6 +59,15 @@ toast.streak = (days: number, message?: string) =>
     duration: 4000,
   });
 
+toast.completion = (title?: string, message?: string) =>
+  toast({
+    type: 'completion',
+    title: title || 'Session Complete!',
+    message: message || "Great job! You've finished all questions for now.",
+    position: 'center',
+    duration: 4000,
+  });
+
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = React.useState<ToastProps[]>([]);
 
@@ -90,6 +99,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
   // Group toasts by position
   const topToasts = toasts.filter((t) => !t.position || t.position === 'top');
+  const centerToasts = toasts.filter((t) => t.position === 'center');
   const bottomToasts = toasts.filter((t) => t.position === 'bottom');
 
   return (
@@ -99,10 +109,23 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {/* Top toasts container */}
       <AnimatePresence mode="popLayout">
         {topToasts.length > 0 && (
-          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none max-w-md w-full">
+          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none max-w-md w-full px-4">
             {topToasts.map((toastItem) => (
               <ToastItem key={toastItem.id} toast={toastItem} onRemove={removeToast} />
             ))}
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Center toasts container */}
+      <AnimatePresence mode="popLayout">
+        {centerToasts.length > 0 && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none p-4">
+            <div className="flex flex-col gap-2 max-w-md w-full">
+              {centerToasts.map((toastItem) => (
+                <ToastItem key={toastItem.id} toast={toastItem} onRemove={removeToast} />
+              ))}
+            </div>
           </div>
         )}
       </AnimatePresence>
@@ -127,40 +150,57 @@ interface ToastItemProps {
 }
 
 function ToastItem({ toast, onRemove }: ToastItemProps) {
-  const typeStyles: Record<ToastType, { bg: string; border: string; icon: React.ReactNode; iconBg: string }> = {
+  const typeStyles: Record<ToastType, { bg: string; border: string; icon: React.ReactNode; iconBg: string; text: string; iconColor: string }> = {
     success: {
       bg: 'bg-success',
       border: 'border-success',
       icon: <CheckCircle className="w-6 h-6 text-white" />,
       iconBg: 'bg-white/20',
+      text: 'text-white',
+      iconColor: 'text-white',
     },
     error: {
       bg: 'bg-destructive',
       border: 'border-destructive',
       icon: <AlertCircle className="w-6 h-6 text-white" />,
       iconBg: 'bg-white/20',
+      text: 'text-white',
+      iconColor: 'text-white',
     },
     info: {
       bg: 'bg-info',
       border: 'border-info',
       icon: <Info className="w-6 h-6 text-white" />,
       iconBg: 'bg-white/20',
+      text: 'text-white',
+      iconColor: 'text-white',
     },
     streak: {
-      bg: 'bg-accent',
-      border: 'border-accent/80',
-      icon: <Flame className="w-7 h-7 text-foreground" />,
+      bg: 'bg-[#FDFBF7]',
+      border: 'border-foreground',
+      icon: <Flame className="w-7 h-7 text-accent" />,
+      iconBg: 'bg-accent/10',
+      text: 'text-foreground',
+      iconColor: 'text-accent',
+    },
+    completion: {
+      bg: 'bg-primary',
+      border: 'border-foreground',
+      icon: <Trophy className="w-7 h-7 text-accent" />,
       iconBg: 'bg-white/20',
+      text: 'text-white',
+      iconColor: 'text-accent',
     },
   };
 
   const style = typeStyles[toast.type || 'info'];
-  const isStreak = toast.type === 'streak';
+  const isSpecial = toast.type === 'streak' || toast.type === 'completion';
+  const isCompletion = toast.type === 'completion';
 
   const variants = {
-    initial: { opacity: 0, scale: 0.8, y: -20 },
-    animate: { opacity: 1, scale: 1, y: 0 },
-    exit: { opacity: 0, scale: 0.8, y: -20 },
+    initial: { opacity: 0, scale: 0.8, y: toast.position === 'center' ? 0 : -20, rotate: isSpecial ? -2 : 0 },
+    animate: { opacity: 1, scale: 1, y: 0, rotate: isSpecial ? -1 : 0 },
+    exit: { opacity: 0, scale: 0.8, y: toast.position === 'center' ? 0 : -20 },
   };
 
   return (
@@ -171,7 +211,7 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
       exit="exit"
       transition={{ type: 'spring', stiffness: 400, damping: 20 }}
       className={cn(
-        'pointer-events-auto relative min-w-[280px] max-w-sm',
+        'pointer-events-auto relative min-w-[280px] max-w-sm mx-auto',
         'border-[3px] rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,0.15)]',
         'overflow-hidden',
         style.bg,
@@ -183,12 +223,12 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
         onClick={() => onRemove(toast.id)}
         className={cn(
           'absolute top-2 right-2 p-1 rounded-lg transition-colors',
-          'hover:bg-black/10'
+          'hover:bg-black/5'
         )}
       >
         <X className={cn(
           'w-4 h-4',
-          isStreak ? 'text-foreground/60' : 'text-white/80'
+          isCompletion ? 'text-white/60' : isSpecial ? 'text-foreground/40' : 'text-white/80'
         )} />
       </button>
 
@@ -205,14 +245,15 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
         <div className="flex-1 min-w-0">
           <p className={cn(
             'font-handwritten font-bold text-base leading-tight',
-            isStreak ? 'text-foreground' : 'text-white'
+            style.text
           )}>
             {toast.title}
           </p>
           {toast.message && (
             <p className={cn(
               'font-handwritten text-sm mt-1',
-              isStreak ? 'text-foreground/80' : 'text-white/90'
+              style.text,
+              'opacity-80'
             )}>
               {toast.message}
             </p>
