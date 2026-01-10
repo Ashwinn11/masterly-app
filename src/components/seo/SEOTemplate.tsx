@@ -20,6 +20,7 @@ import { generateInternalLinks } from '@/lib/seo/internal-linking';
 import { StudyTimeCalculator } from './StudyTimeCalculator';
 import { LearningStyleQuiz } from './LearningStyleQuiz';
 import { CaseStudies } from './CaseStudies';
+import { cn } from '@/lib/utils';
 
 const iconMap: Record<string, any> = {
   Zap, Brain, Files, Smartphone,

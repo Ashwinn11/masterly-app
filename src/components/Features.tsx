@@ -29,7 +29,7 @@ const FeatureRow = ({
 }: {
   title: string;
   description: string;
-  animationData: unknown;
+  animationData: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any;
   imageSide?: "left" | "right";
@@ -104,12 +104,12 @@ const FeatureRow = ({
               <div className="washi-tape w-20 h-8 bottom-[-10px] right-[-10px] rotate-[-45deg] bg-secondary/30 top-auto left-auto" />
               
               <motion.div className="w-full h-full">
-                {animationData && (
+                {animationData ? (
                   <LottieAnimation
                     animationData={animationData}
                     className="w-full h-full drop-shadow-2xl"
                   />
-                )}
+                ) : null}
               </motion.div>
             </div>
           </motion.div>
