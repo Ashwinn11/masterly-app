@@ -2,23 +2,40 @@
 
 import { useAuth } from '@/hooks/useAuth';
 import { ScreenLayout } from '@/components/ui/ScreenLayout';
-import { 
-  Zap, 
-  Star, 
-  Play, 
+import {
+  Zap,
+  Star,
+  Play,
   Leaf
 } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
+import { getSupabaseClient } from '@/lib/supabase/client';
 
 export default function DashboardPage() {
   const { user, stats } = useAuth();
   const [mounted, setMounted] = useState(false);
+  const [dueCount, setDueCount] = useState<number>(0);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    const loadDueCount = async () => {
+      if (user?.id) {
+        const supabase = getSupabaseClient();
+        const { data, error } = await (supabase.rpc as any)('get_due_question_count', {
+          p_user_id: user.id
+        });
+        if (!error && data !== null) {
+          setDueCount(data);
+        }
+      }
+    };
+    loadDueCount();
+  }, [user?.id]);
   
   const firstName = user?.user_metadata?.full_name?.split(' ')[0] || 
                     user?.user_metadata?.name?.split(' ')[0] || 
@@ -62,9 +79,9 @@ export default function DashboardPage() {
             </Link>
             
             {/* Due Badge */}
-            {(stats?.due_count ?? 0) > 0 && (
+            {dueCount > 0 && (
               <div className="absolute -top-2 -right-2 bg-secondary text-secondary-foreground border-[3px] border-foreground rounded-2xl px-4 py-1 font-black font-handwritten shadow-md rotate-12 z-10">
-                {stats?.due_count ?? 0}
+                {dueCount}
               </div>
             )}
           </div>
