@@ -38,8 +38,15 @@ const faqs = [
 
 export const FAQ = () => {
   return (
-    <section id="faq" className="py-24 bg-background font-handwritten">
-      <div className="container mx-auto px-4 max-w-3xl">
+    <section id="faq" className="py-24 bg-paper-texture font-handwritten relative">
+       {/* Spiral binder visual on the left for the whole section */}
+       <div className="absolute left-4 top-0 bottom-0 w-8 hidden lg:flex flex-col justify-around py-20 opacity-20">
+        {[...Array(20)].map((_, i) => (
+          <div key={i} className="w-6 h-6 rounded-full border-2 border-foreground" />
+        ))}
+      </div>
+
+      <div className="container mx-auto px-4 max-w-4xl relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -47,25 +54,25 @@ export const FAQ = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-black mb-4">
-              Your Questions, Answered
+            <h2 className="text-5xl md:text-7xl font-black mb-6">
+              Your <span className="hand-drawn-highlight">Questions</span>, Answered
             </h2>
             <p className="text-2xl text-info font-bold italic opacity-80">
               Everything you need to know about studying smarter.
             </p>
           </div>
 
-          <Accordion type="single" collapsible className="space-y-6 mb-20">
+          <Accordion type="single" collapsible className="space-y-8 mb-24">
             {faqs.map((faq, index) => (
               <AccordionItem
                 key={index}
                 value={`item-${index}`}
-                className="bg-card rounded-[24px] px-8 border-[3px] border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.1)] transition-all duration-200"
+                className="bg-white px-8 border-crayon shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-rotate-1"
               >
-                <AccordionTrigger className="text-left text-2xl font-black hover:text-primary py-8 decoration-primary/20 decoration-4">
-                  {faq.question}
+                <AccordionTrigger className="text-left text-2xl md:text-3xl font-black hover:text-primary py-8 decoration-primary/20 hover:no-underline group">
+                  <span className="group-hover:hand-drawn-highlight transition-all">{faq.question}</span>
                 </AccordionTrigger>
-                <AccordionContent className="text-info font-bold text-xl leading-snug pb-8 opacity-90 italic">
+                <AccordionContent className="text-info font-bold text-xl md:text-2xl leading-relaxed pb-8 opacity-90 italic border-t-2 border-dashed border-foreground/5 pt-6">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
@@ -73,33 +80,35 @@ export const FAQ = () => {
           </Accordion>
         </motion.div>
 
-        {/* Secondary CTA */}
+        {/* Secondary CTA - Designed like a 'Scrapbook Page' */}
         <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          whileHover={{ scale: 1.02, rotate: 0.5 }}
-          transition={{ duration: 0.5, type: "spring" }}
+          initial={{ opacity: 0, scale: 0.9, rotate: 1 }}
+          whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
           viewport={{ once: true }}
-          className="bg-primary rounded-[3rem] border-[4px] border-foreground p-10 md:p-16 text-center text-white shadow-[12px_12px_0px_0px_rgba(0,0,0,0.2)] relative overflow-hidden group"
+          className="relative p-12 md:p-20 bg-primary text-white border-crayon shadow-2xl overflow-hidden"
         >
-          <div className="absolute inset-0 bg-[url('/icon.png')] opacity-10 mix-blend-overlay"></div>
+          {/* Washi tape decor */}
+          <div className="washi-tape bg-accent w-32 h-10 top-[-20px] left-[10%] rotate-[-5deg]" />
+          <div className="washi-tape bg-secondary w-32 h-10 bottom-[-20px] right-[10%] rotate-[-175deg] top-auto" />
           
-          <div className="relative z-10">
-            <h3 className="text-4xl md:text-6xl font-black mb-8 leading-tight">
-              Ready to Transform <br/>Your Grades?
+          <div className="absolute inset-0 bg-notebook-paper opacity-10 mix-blend-overlay"></div>
+          
+          <div className="relative z-10 text-center">
+            <h3 className="text-5xl md:text-7xl font-black mb-10 leading-tight">
+              Ready to <br/><span className="text-accent italic underline decoration-wavy decoration-accent decoration-2 underline-offset-8">Ace</span> Your Exams?
             </h3>
-            <p className="text-2xl mb-12 text-white/90 max-w-2xl mx-auto font-bold italic">
-              Join 10,000+ students who are studying smarter with AI-powered learning.
+            <p className="text-2xl md:text-3xl mb-14 text-white/90 max-w-2xl mx-auto font-bold italic leading-relaxed">
+              Join 10,000+ students who are crushing their goals with AI-powered study sessions.
             </p>
             
             <Button
               variant="secondary"
               size="lg"
-              className="bg-accent text-foreground hover:bg-accent/90 rounded-2xl px-12 h-16 text-2xl font-black shadow-[6px_6px_0px_0px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all active:translate-y-0 active:shadow-none"
+              className="bg-accent text-foreground hover:bg-accent/90 border-crayon rounded-full px-16 h-20 text-3xl font-black shadow-2xl hover:-translate-y-2 active:translate-y-0 transition-all font-handwritten"
               asChild
             >
               <a href="/login">
-                Get Started Free
+                Get Started Free!
               </a>
             </Button>
           </div>

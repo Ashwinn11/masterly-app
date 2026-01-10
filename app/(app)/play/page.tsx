@@ -15,6 +15,7 @@ import { PageIndicator } from '@/components/questions/PageIndicator';
 import { Loader2, CheckCircle2, XCircle, PartyPopper } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { toast } from '@/components/ui/toast';
 
 export default function PlayPage() {
   const router = useRouter();
@@ -27,6 +28,8 @@ export default function PlayPage() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
+  const [currentStreak, setCurrentStreak] = useState<number>(0);
+  const [hasShownStreakToast, setHasShownStreakToast] = useState<boolean>(false);
 
   const currentQuestion = questions[currentIndex];
 
@@ -63,7 +66,23 @@ export default function PlayPage() {
       setLoading(false);
     };
 
+    const loadUserStats = async () => {
+      if (!user?.id) return;
+      const supabase = getSupabaseClient();
+      try {
+        const { data, error } = await (supabase.rpc as any)('get_user_stats', {
+          p_user_id: user.id,
+        });
+        if (!error && data) {
+          setCurrentStreak(data.current_streak || 0);
+        }
+      } catch (error) {
+        console.error('[PlayPage] Error loading stats:', error);
+      }
+    };
+
     loadDueQuestions();
+    loadUserStats();
   }, [user?.id]);
 
   useEffect(() => {
@@ -91,6 +110,15 @@ export default function PlayPage() {
         p_response_time_ms: responseTime,
         p_update_fsrs: true, // Enable FSRS updates for play mode
       });
+    }
+
+    // Show streak toast after first answer (increment streak since they just played)
+    if (!hasShownStreakToast && currentStreak >= 0) {
+      setHasShownStreakToast(true);
+      // Show streak with +1 since they just completed a day
+      setTimeout(() => {
+        toast.streak(currentStreak + 1);
+      }, 600); // Show after feedback starts
     }
 
     setTimeout(handleNext, 1200);

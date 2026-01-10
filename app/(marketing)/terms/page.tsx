@@ -13,88 +13,96 @@ export default function TermsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background py-12 px-4">
-      <div className="container mx-auto max-w-4xl">
-        <BackButton className="mb-8" />
+    <div className="min-h-screen bg-paper-texture py-12 px-4 relative overflow-hidden">
+      {/* Global Background Elements */}
+      <div className="absolute inset-0 bg-notebook-paper opacity-30 pointer-events-none" />
+      
+      <div className="container mx-auto max-w-4xl relative z-10">
+        <div className="mb-8 rotate-[-1deg]">
+          <BackButton />
+        </div>
         
-        <div className="bg-card border-[3px] border-foreground rounded-[40px] shadow-[12px_12px_0px_0px_rgba(0,0,0,0.1)] p-8 md:p-16 animate-fade-in-up">
-          <h1 className="text-5xl font-black mb-4 text-primary font-handwritten">Terms of Service</h1>
-          <p className="text-xl text-info font-handwritten font-bold mb-10 opacity-70 italic">Last Updated: January 7, 2026</p>
-          
-          <div className="font-handwritten text-xl text-foreground/80 space-y-8 leading-relaxed">
-            <p className="text-2xl font-bold italic text-foreground">
-              Welcome to Masterly. By using our learning application, you agree to these Terms of Service.
-            </p>
+        <div className="bg-white border-crayon shadow-2xl p-8 md:p-16 animate-fade-in-up relative overflow-hidden">
+          {/* Spiral binder holes on the left */}
+          <div className="absolute top-0 bottom-0 left-4 w-8 flex flex-col justify-around py-12 opacity-20 hidden md:flex">
+             {[...Array(15)].map((_, i) => (
+               <div key={i} className="w-6 h-6 rounded-full border-2 border-foreground" />
+             ))}
+          </div>
 
-            <section>
-              <h2 className="text-3xl font-black text-primary mb-4 underline decoration-accent decoration-4">1. Acceptance of Terms</h2>
-              <p>
-                By accessing or using Masterly, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our application.
+          <div className="md:pl-12">
+            <h1 className="text-5xl md:text-7xl font-black mb-6 text-primary font-handwritten tracking-tight">
+              Terms of <span className="hand-drawn-highlight">Service</span>
+            </h1>
+            <p className="text-2xl text-info font-handwritten font-bold mb-12 opacity-70 italic">Last Updated: January 7, 2026</p>
+            
+            <div className="font-handwritten text-xl md:text-2xl text-foreground/80 space-y-12 leading-relaxed">
+              <p className="text-3xl font-black italic text-foreground border-l-8 border-accent pl-6 py-2 rotate-[-0.5deg]">
+                Welcome to Masterly. By using our learning application, you agree to these Terms of Service.
               </p>
-            </section>
 
-            <section>
-              <h2 className="text-3xl font-black text-primary mb-4 underline decoration-accent decoration-4">2. Description of Service</h2>
-              <p>Masterly is a learning application that provides:</p>
-              <ul className="list-disc pl-8 space-y-3 mt-4">
-                <li>Spaced repetition learning tools</li>
-                <li>Question generation from study materials</li>
-                <li>Progress tracking and analytics</li>
-                <li>Flashcard creation and review</li>
-              </ul>
-            </section>
+              <section className="space-y-4">
+                <h2 className="text-4xl font-black text-primary underline decoration-accent decoration-4 underline-offset-8">1. Acceptance of Terms</h2>
+                <p>
+                  By accessing or using Masterly, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our application.
+                </p>
+              </section>
 
-            <section>
-              <h2 className="text-3xl font-black text-primary mb-4 underline decoration-accent decoration-4">3. User Responsibilities</h2>
-              <p>As a user, you agree to:</p>
-              <ul className="list-disc pl-8 space-y-3 mt-4">
-                <li>Provide accurate account information</li>
-                <li>Maintain the security of your account</li>
-                <li>Not use the service for any illegal purpose</li>
-                <li>Not upload content that violates intellectual property rights</li>
-              </ul>
-            </section>
+              <section className="space-y-4">
+                <h2 className="text-4xl font-black text-primary underline decoration-accent decoration-4 underline-offset-8">2. Description of Service</h2>
+                <p>Masterly is a learning application that provides:</p>
+                <ul className="list-disc pl-8 space-y-4 mt-4 font-bold">
+                  <li>Spaced repetition learning tools</li>
+                  <li>Question generation from study materials</li>
+                  <li>Progress tracking and analytics</li>
+                  <li>Flashcard creation and review</li>
+                </ul>
+              </section>
 
-            <section>
-              <h2 className="text-3xl font-black text-primary mb-4 underline decoration-accent decoration-4">4. Content & IP</h2>
-              <ul className="list-disc pl-8 space-y-3 mt-4">
-                <li>You retain ownership of content you upload</li>
-                <li>You grant us license to process your content for learning purposes</li>
-                <li>The application&apos;s design and algorithms are our proprietary property</li>
-              </ul>
-            </section>
+              <section className="space-y-4">
+                <h2 className="text-4xl font-black text-primary underline decoration-accent decoration-4 underline-offset-8">3. User Responsibilities</h2>
+                <p>As a user, you agree to:</p>
+                <ul className="list-disc pl-8 space-y-4 mt-4 font-bold">
+                  <li>Provide accurate account information</li>
+                  <li>Maintain the security of your account</li>
+                  <li>Not use the service for any illegal purpose</li>
+                  <li>Not upload content that violates intellectual property rights</li>
+                </ul>
+              </section>
 
-            <section className="bg-secondary/5 p-6 rounded-3xl border-2 border-dashed border-secondary/20">
-              <h2 className="text-2xl font-black text-secondary mb-2">Important Disclaimer</h2>
-              <p className="uppercase text-lg font-bold">
-                THE SERVICE IS PROVIDED &quot;AS IS&quot; WITHOUT WARRANTIES OF ANY KIND. WE DO NOT GUARANTEE UNINTERRUPTED OR ERROR-FREE OPERATION.
-              </p>
-            </section>
+              <section className="bg-secondary/5 p-10 border-crayon-sm border-dashed border-secondary/30 transform rotate-1">
+                <h2 className="text-3xl font-black text-secondary mb-4">Important Disclaimer</h2>
+                <p className="uppercase text-xl font-black leading-tight">
+                  THE SERVICE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND. WE DO NOT GUARANTEE UNINTERRUPTED OR ERROR-FREE OPERATION.
+                </p>
+              </section>
 
-            <section>
-              <h2 className="text-3xl font-black text-primary mb-4 underline decoration-accent decoration-4">5. Indian Governing Law</h2>
-              <p>
-                These terms shall be governed by the laws of India. Any disputes shall be resolved in the competent courts of India.
-              </p>
-            </section>
+              <section className="space-y-4">
+                <h2 className="text-4xl font-black text-primary underline decoration-accent decoration-4 underline-offset-8">4. Indian Governing Law</h2>
+                <p>
+                  These terms shall be governed by the laws of India. Any disputes shall be resolved in the competent courts of India.
+                </p>
+              </section>
 
-            <div className="pt-10 border-t-2 border-foreground/5">
-              <p className="font-bold mb-4">Questions? Reach out at:</p>
-              
-              <a 
-                href="mailto:support@masterlyapp.in" 
-                className="inline-flex items-center gap-3 px-6 py-3 bg-primary text-white font-black rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-transform"
-              >
-                <Mail className="w-5 h-5" />
-                support@masterlyapp.in
-              </a>
+              <div className="pt-16 border-t-4 border-dashed border-foreground/10">
+                <p className="font-black text-2xl mb-6">Questions? Reach out at:</p>
+                
+                <a 
+                  href="mailto:support@masterlyapp.in" 
+                  className="inline-flex items-center gap-4 px-10 py-5 bg-primary text-white text-2xl font-black border-crayon shadow-xl hover:-translate-y-1 transition-transform"
+                >
+                  <Mail className="w-8 h-8" />
+                  support@masterlyapp.in
+                </a>
 
-              <div className="mt-12 p-8 bg-accent/10 rounded-[32px] border-[3px] border-accent/20 transform rotate-1">
-                <div className="flex items-center gap-4 mb-3">
-                  <GraduationCap className="w-8 h-8 text-primary" />
-                  <span className="text-2xl font-black text-foreground">Thank you for choosing Masterly!</span>
+                <div className="mt-20 p-10 bg-accent/10 border-crayon transform rotate-[-1deg] relative">
+                  <div className="washi-tape bg-primary/20 w-32 h-8 top-[-15px] left-[10%] rotate-3" />
+                  <div className="flex items-center gap-6 mb-4">
+                    <GraduationCap className="w-12 h-12 text-primary" />
+                    <span className="text-3xl font-black text-foreground">Thank you for choosing Masterly!</span>
+                  </div>
+                  <p className="text-2xl italic text-info font-bold">Happy learning! 🎓</p>
                 </div>
-                <p className="text-xl italic text-info font-bold">Happy learning! 🎓</p>
               </div>
             </div>
           </div>

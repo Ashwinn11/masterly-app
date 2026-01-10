@@ -224,6 +224,67 @@ All colors MUST be HSL.
     background-size: 100% 2.5rem;
   }
 
+  /* Paper Texture */
+  .bg-paper-texture {
+    background-color: #fdfbf7;
+    background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+  }
+
+  /* Organic Hand-Drawn Borders */
+  .border-crayon {
+    border: 3px solid hsl(var(--foreground));
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+    box-shadow: 4px 4px 0px 0px hsla(var(--foreground) / 0.1);
+  }
+
+  .border-crayon-sm {
+    border: 2px solid hsl(var(--foreground));
+    border-radius: 120px 10px 100px 10px/10px 100px 10px 120px;
+  }
+
+  /* Hand-Drawn Highlight */
+  .hand-drawn-highlight {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+  }
+
+  .hand-drawn-highlight::after {
+    content: "";
+    position: absolute;
+    left: -5%;
+    bottom: 5%;
+    width: 110%;
+    height: 40%;
+    background-color: hsla(var(--accent) / 0.3);
+    z-index: -1;
+    transform: rotate(-1.5deg);
+    border-radius: 20% 80% 30% 70% / 60% 30% 70% 40%;
+  }
+
+  /* Washi Tape Effect */
+  .washi-tape {
+    background-color: hsla(var(--secondary) / 0.3);
+    height: 30px;
+    width: 100px;
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    mask-image: url("data:image/svg+xml,%3Csvg width='120' height='40' viewBox='0 0 120 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 5L5 0L10 5L15 0L20 5L25 0L30 5L35 0L40 5L45 0L50 5L55 0L60 5L65 0L70 5L75 0L80 5L85 0L90 5L95 0L100 5L105 0L110 5L115 0L120 5V35L115 40L110 35L105 40L100 35L95 40L90 35L85 40L80 35L75 40L70 35L65 40L60 35L55 40L50 35L45 40L40 35L35 40L30 35L25 40L20 35L15 40L10 35L5 40L0 35V5Z' fill='black'/%3E%3C/svg%3E");
+    backdrop-filter: blur(1px);
+    z-index: 20;
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-1deg); }
+    50% { transform: rotate(1.5deg); }
+  }
+
+  .animate-wiggle {
+    animation: wiggle 3s ease-in-out infinite;
+  }
+
   /* Animation delays */
   .animation-delay-100 {
     animation-delay: 100ms;
