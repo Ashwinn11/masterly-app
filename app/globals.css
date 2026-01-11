@@ -309,4 +309,18 @@ All colors MUST be HSL.
   .animation-delay-2000 {
     animation-delay: 2000ms;
   }
+
+  /* Custom thin scrollbar */
+  .thin-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .thin-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .thin-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-foreground/10 rounded-full;
+  }
+  .thin-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-foreground/20;
+  }
 }

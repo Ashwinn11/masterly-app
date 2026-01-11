@@ -19,11 +19,43 @@ import {
   Type,
   Loader2,
   CheckCircle2,
-  XCircle
+  XCircle,
+  Search,
+  Check,
+  RefreshCw
 } from 'lucide-react';
 import { getSupabaseClient } from '@/lib/supabase/client';
 import { ProcessingModal } from '@/components/ui/ProcessingModal';
 import { cn, getFriendlyErrorMessage } from '@/lib/utils';
+
+const LANGUAGE_OPTIONS = [
+  { label: "English", value: "en-US" },
+  { label: "Spanish", value: "es-ES" },
+  { label: "French", value: "fr-FR" },
+  { label: "German", value: "de-DE" },
+  { label: "Italian", value: "it-IT" },
+  { label: "Portuguese", value: "pt-BR" },
+  { label: "Russian", value: "ru-RU" },
+  { label: "Japanese", value: "ja-JP" },
+  { label: "Korean", value: "ko-KR" },
+  { label: "Chinese", value: "zh-CN" },
+  { label: "Arabic", value: "ar-SA" },
+  { label: "Hindi", value: "hi-IN" },
+  { label: "Tamil", value: "ta-IN" },
+  { label: "Telugu", value: "te-IN" },
+  { label: "Kannada", value: "kn-IN" },
+  { label: "Malayalam", value: "ml-IN" },
+  { label: "Bengali", value: "bn-IN" },
+  { label: "Marathi", value: "mr-IN" },
+  { label: "Gujarati", value: "gu-IN" },
+  { label: "Dutch", value: "nl-NL" },
+  { label: "Polish", value: "pl-PL" },
+  { label: "Turkish", value: "tr-TR" },
+  { label: "Swedish", value: "sv-SE" },
+  { label: "Danish", value: "da-DK" },
+  { label: "Norwegian", value: "no-NO" },
+  { label: "Finnish", value: "fi-FI" },
+];
 
 type UploadMode = 'file' | 'text' | 'record';
 
@@ -38,6 +70,13 @@ export default function UploadPage() {
   const [status, setStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle');
   const [error, setError] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState('en-US');
+  const [languageSearchQuery, setLanguageSearchQuery] = useState('');
+
+  const filteredLanguages = LANGUAGE_OPTIONS.filter(lang => 
+    lang.label.toLowerCase().includes(languageSearchQuery.toLowerCase())
+  );
+  const currentLanguageLabel = LANGUAGE_OPTIONS.find(l => l.value === selectedLanguage)?.label || "English";
 
   useEffect(() => {
     if (status === 'processing' || status === 'error') {
@@ -67,6 +106,10 @@ export default function UploadPage() {
     }
     return () => clearInterval(interval);
   }, [isRecording]);
+
+  useEffect(() => {
+    setLanguageSearchQuery('');
+  }, [mode, isRecording]);
 
   const startRecording = async () => {
     try {
@@ -127,6 +170,7 @@ export default function UploadPage() {
         body: {
           fileData: base64Data,
           fileName: `recording-${Date.now()}.webm`,
+          languageCode: selectedLanguage,
         },
       });
 
@@ -253,6 +297,7 @@ export default function UploadPage() {
           fileData: base64Data,
           fileName: file.name,
           mimeType: file.type,
+          languageCode: fileType === 'audio' ? selectedLanguage : undefined,
         },
       });
 
@@ -420,20 +465,65 @@ export default function UploadPage() {
                 </div>
 
                 {file && (
-                  <div className="flex items-center gap-3 p-3 rounded-xl border-[2px] border-foreground/10 bg-muted/30">
-                    {file.type === 'application/pdf' ? (
-                      <div className="p-2 bg-secondary/10 rounded-lg"><FileText className="w-6 h-6 text-secondary" /></div>
-                    ) : file.type.startsWith('image/') ? (
-                      <div className="p-2 bg-info/10 rounded-lg"><ImageIcon className="w-6 h-6 text-info" /></div>
-                    ) : (
-                      <div className="p-2 bg-primary/10 rounded-lg"><Mic className="w-6 h-6 text-primary" /></div>
-                    )}
-                    <div className="flex-1">
-                      <p className="font-handwritten text-lg font-black">{file.name}</p>
-                      <p className="font-handwritten text-sm opacity-60">
-                        {(file.size / 1024 / 1024).toFixed(2)} MB
-                      </p>
+                  <div className="flex flex-col gap-4 w-full">
+                    <div className="flex items-center gap-3 p-3 rounded-xl border-[2px] border-foreground/10 bg-muted/30">
+                      {file.type === 'application/pdf' ? (
+                        <div className="p-2 bg-secondary/10 rounded-lg"><FileText className="w-6 h-6 text-secondary" /></div>
+                      ) : file.type.startsWith('image/') ? (
+                        <div className="p-2 bg-info/10 rounded-lg"><ImageIcon className="w-6 h-6 text-info" /></div>
+                      ) : (
+                        <div className="p-2 bg-primary/10 rounded-lg"><Mic className="w-6 h-6 text-primary" /></div>
+                      )}
+                      <div className="flex-1 text-left">
+                        <p className="font-handwritten text-lg font-black">{file.name}</p>
+                        <p className="font-handwritten text-sm opacity-60">
+                          {(file.size / 1024 / 1024).toFixed(2)} MB
+                        </p>
+                      </div>
                     </div>
+
+                    {file.type.startsWith('audio/') && (
+                      <div className="w-full space-y-3 bg-background/50 p-4 rounded-xl border-2 border-foreground/5 text-left">
+                        <div className="flex flex-col gap-2">
+                          <Label className="font-handwritten text-base font-bold text-foreground/70">Transcription Language</Label>
+                          <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                            <Input
+                              placeholder="Search language..."
+                              value={languageSearchQuery}
+                              onChange={(e) => setLanguageSearchQuery(e.target.value)}
+                              className="pl-9 font-handwritten h-10 border-foreground/10"
+                            />
+                          </div>
+                          <div className="max-h-[140px] overflow-y-auto border-2 border-foreground/5 rounded-xl bg-background/80 divide-y divide-foreground/5 thin-scrollbar">
+                            {filteredLanguages.length > 0 ? (
+                              filteredLanguages.map((lang) => (
+                                <button
+                                  key={lang.value}
+                                  onClick={() => setSelectedLanguage(lang.value)}
+                                  className={cn(
+                                    "w-full flex items-center justify-between px-4 py-2 hover:bg-primary/5 transition-colors text-left font-handwritten text-sm",
+                                    selectedLanguage === lang.value && "bg-primary/10 text-primary font-bold"
+                                  )}
+                                >
+                                  <span>{lang.label}</span>
+                                  {selectedLanguage === lang.value && <Check className="w-4 h-4" />}
+                                </button>
+                              ))
+                            ) : (
+                              <div className="px-4 py-4 text-center text-muted-foreground font-handwritten text-sm">
+                                No languages found
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-center pt-1 border-t border-foreground/5">
+                          <div className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-xs font-handwritten font-black shadow-sm flex gap-2">
+                            Language: <span className="text-white">{currentLanguageLabel}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -496,6 +586,48 @@ export default function UploadPage() {
                       </div>
                       <p className="text-xl font-handwritten font-black mb-1 text-green-600">Recording Complete</p>
                       <p className="text-base font-handwritten mb-4 text-info">Duration: {formatTime(recordingTime)}</p>
+
+                      <div className="w-full max-w-md space-y-3 mb-6 bg-background/50 p-4 rounded-xl border-2 border-foreground/5 text-left">
+                        <div className="flex flex-col gap-2">
+                          <Label className="font-handwritten text-base font-bold text-foreground/70">Transcription Language</Label>
+                          <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                            <Input
+                              placeholder="Search language..."
+                              value={languageSearchQuery}
+                              onChange={(e) => setLanguageSearchQuery(e.target.value)}
+                              className="pl-9 font-handwritten h-10 border-foreground/10"
+                            />
+                          </div>
+                          <div className="max-h-[140px] overflow-y-auto border-2 border-foreground/5 rounded-xl bg-background/80 divide-y divide-foreground/5 thin-scrollbar">
+                            {filteredLanguages.length > 0 ? (
+                              filteredLanguages.map((lang) => (
+                                <button
+                                  key={lang.value}
+                                  onClick={() => setSelectedLanguage(lang.value)}
+                                  className={cn(
+                                    "w-full flex items-center justify-between px-4 py-2 hover:bg-primary/5 transition-colors text-left font-handwritten text-sm",
+                                    selectedLanguage === lang.value && "bg-primary/10 text-primary font-bold"
+                                  )}
+                                >
+                                  <span>{lang.label}</span>
+                                  {selectedLanguage === lang.value && <Check className="w-4 h-4" />}
+                                </button>
+                              ))
+                            ) : (
+                              <div className="px-4 py-4 text-center text-muted-foreground font-handwritten text-sm">
+                                No languages found
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-center pt-1 border-t border-foreground/5">
+                          <div className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-xs font-handwritten font-black shadow-sm flex gap-2">
+                            Language: <span className="text-white">{currentLanguageLabel}</span>
+                          </div>
+                        </div>
+                      </div>
+
                       <div className="flex gap-4">
                         <Button onClick={() => { setRecordedBlob(null); setRecordingTime(0); }} variant="outline" disabled={uploading} className="h-12 font-handwritten text-lg font-bold">
                           Record Again
