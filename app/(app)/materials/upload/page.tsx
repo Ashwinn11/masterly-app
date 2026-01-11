@@ -238,14 +238,12 @@ export default function UploadPage() {
         'image/jpeg', 
         'image/png', 
         'image/jpg',
-        'audio/mpeg',
-        'audio/mp3',
-        'audio/wav',
-        'audio/m4a',
-        'audio/mp4'
+        'text/plain',
+        'text/markdown',
+        '' // For some systems where .md doesn't have a mime type
       ];
-      if (!validTypes.includes(selectedFile.type)) {
-        setError('Please upload a PDF, image (JPG, PNG), or audio file (MP3, WAV, M4A)');
+      if (!validTypes.includes(selectedFile.type) && !selectedFile.name.endsWith('.md') && !selectedFile.name.endsWith('.txt')) {
+        setError('Please upload a PDF, image (JPG, PNG), or text file (.txt, .md)');
         return;
       }
       if (selectedFile.size > 10 * 1024 * 1024) {
@@ -272,41 +270,47 @@ export default function UploadPage() {
         reader.readAsDataURL(file);
       });
 
-      const base64Data = fileData.split(',')[1];
       const supabase = getSupabaseClient();
 
-      let functionName: string;
-      let fileType: 'pdf' | 'image' | 'audio';
+      let extractedText: string;
+      let fileType: 'pdf' | 'image' | 'audio' | 'text';
 
-      if (file.type === 'application/pdf') {
-        functionName = 'process-pdf';
-        fileType = 'pdf';
-      } else if (file.type.startsWith('image/')) {
-        functionName = 'process-image';
-        fileType = 'image';
-      } else if (file.type.startsWith('audio/')) {
-        functionName = 'process-audio';
-        fileType = 'audio';
+      // Handle plain text files locally
+      if (file.type === 'text/plain' || file.type === 'text/markdown' || file.name.endsWith('.txt') || file.name.endsWith('.md')) {
+        extractedText = await file.text();
+        fileType = 'text';
       } else {
-        throw new Error('Unsupported file type');
+        const base64Data = fileData.split(',')[1];
+        let functionName: string;
+
+        if (file.type === 'application/pdf') {
+          functionName = 'process-pdf';
+          fileType = 'pdf';
+        } else if (file.type.startsWith('image/')) {
+          functionName = 'process-image';
+          fileType = 'image';
+        } else {
+          throw new Error('Unsupported file type');
+        }
+
+        // Process file to extract text via Edge Function
+        const { data, error: functionError } = await supabase.functions.invoke(functionName, {
+          body: {
+            fileData: base64Data,
+            fileName: file.name,
+            mimeType: file.type,
+          },
+        });
+
+        if (functionError) throw new Error(functionError.message || 'Failed to process file');
+        if (!data.success) throw new Error(data.error || 'Failed to process file');
+        
+        extractedText = data.text;
       }
-
-      // Step 1: Process file to extract text
-      const { data, error: functionError } = await supabase.functions.invoke(functionName, {
-        body: {
-          fileData: base64Data,
-          fileName: file.name,
-          mimeType: file.type,
-          languageCode: fileType === 'audio' ? selectedLanguage : undefined,
-        },
-      });
-
-      if (functionError) throw new Error(functionError.message || 'Failed to process file');
-      if (!data.success) throw new Error(data.error || 'Failed to process file');
 
       // Step 2: Generate questions FIRST
       const { data: questionsData, error: questionsError } = await (supabase.functions.invoke('generate-questions', {
-        body: { text: data.text },
+        body: { text: extractedText },
       }) as any);
 
       if (questionsError || !questionsData.success) throw new Error('Failed to generate questions');
@@ -323,7 +327,7 @@ export default function UploadPage() {
           user_id: user.id,
           title: file.name.replace(/\.[^/.]+$/, ''),
           file_type: fileType,
-          extracted_text: data.text,
+          extracted_text: extractedText,
         })
         .select()
         .single();
@@ -427,7 +431,7 @@ export default function UploadPage() {
               <CardHeader className="pb-4">
                 <CardTitle className="font-handwritten text-2xl">Select File</CardTitle>
                 <CardDescription className="font-handwritten text-base italic">
-                  PDF, JPG, PNG, MP3, WAV, M4A (max 10MB)
+                  PDF, JPG, PNG, TXT, MD (max 10MB)
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -437,7 +441,7 @@ export default function UploadPage() {
                   <input
                     id="file"
                     type="file"
-                    accept=".pdf,.jpg,.jpeg,.png,.mp3,.wav,.m4a"
+                    accept=".pdf,.jpg,.jpeg,.png,.txt,.md"
                     onChange={handleFileChange}
                     disabled={uploading}
                     className="hidden"
@@ -459,7 +463,7 @@ export default function UploadPage() {
                       Click to browse files
                     </p>
                     <p className="text-sm font-handwritten text-info/70 text-center">
-                      PDF, JPG, PNG, MP3, WAV, M4A (max 10MB)
+                      PDF, JPG, PNG, TXT, MD (max 10MB)
                     </p>
                   </label>
                 </div>
@@ -472,7 +476,7 @@ export default function UploadPage() {
                       ) : file.type.startsWith('image/') ? (
                         <div className="p-2 bg-info/10 rounded-lg"><ImageIcon className="w-6 h-6 text-info" /></div>
                       ) : (
-                        <div className="p-2 bg-primary/10 rounded-lg"><Mic className="w-6 h-6 text-primary" /></div>
+                        <div className="p-2 bg-accent/10 rounded-lg"><FileText className="w-6 h-6 text-accent" /></div>
                       )}
                       <div className="flex-1 text-left">
                         <p className="font-handwritten text-lg font-black">{file.name}</p>
@@ -481,49 +485,6 @@ export default function UploadPage() {
                         </p>
                       </div>
                     </div>
-
-                    {file.type.startsWith('audio/') && (
-                      <div className="w-full space-y-3 bg-background/50 p-4 rounded-xl border-2 border-foreground/5 text-left">
-                        <div className="flex flex-col gap-2">
-                          <Label className="font-handwritten text-base font-bold text-foreground/70">Transcription Language</Label>
-                          <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                            <Input
-                              placeholder="Search language..."
-                              value={languageSearchQuery}
-                              onChange={(e) => setLanguageSearchQuery(e.target.value)}
-                              className="pl-9 font-handwritten h-10 border-foreground/10"
-                            />
-                          </div>
-                          <div className="max-h-[140px] overflow-y-auto border-2 border-foreground/5 rounded-xl bg-background/80 divide-y divide-foreground/5 thin-scrollbar">
-                            {filteredLanguages.length > 0 ? (
-                              filteredLanguages.map((lang) => (
-                                <button
-                                  key={lang.value}
-                                  onClick={() => setSelectedLanguage(lang.value)}
-                                  className={cn(
-                                    "w-full flex items-center justify-between px-4 py-2 hover:bg-primary/5 transition-colors text-left font-handwritten text-sm",
-                                    selectedLanguage === lang.value && "bg-primary/10 text-primary font-bold"
-                                  )}
-                                >
-                                  <span>{lang.label}</span>
-                                  {selectedLanguage === lang.value && <Check className="w-4 h-4" />}
-                                </button>
-                              ))
-                            ) : (
-                              <div className="px-4 py-4 text-center text-muted-foreground font-handwritten text-sm">
-                                No languages found
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-center pt-1 border-t border-foreground/5">
-                          <div className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-xs font-handwritten font-black shadow-sm flex gap-2">
-                            Language: <span className="text-white">{currentLanguageLabel}</span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 )}
 
