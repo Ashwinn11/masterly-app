@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
-import { getSupabaseClient } from '@/lib/supabase/client';
-import { Question } from '@/types/question';
-import { MCQ } from '@/components/questions/MCQ';
-import { MatchPairs } from '@/components/questions/MatchPairs';
-import { OrderSequence } from '@/components/questions/OrderSequence';
-import { Flashcard } from '@/components/questions/Flashcard';
-import { ScreenLayout } from '@/components/ui/ScreenLayout';
-import { BackButton } from '@/components/ui/BackButton';
-import { PageIndicator } from '@/components/questions/PageIndicator';
-import { Loader2, CheckCircle2, XCircle, PartyPopper } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
-import { toast } from '@/components/ui/toast';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+import { getSupabaseClient } from "@/lib/supabase/client";
+import { Question } from "@/types/question";
+import { MCQ } from "@/components/questions/MCQ";
+import { MatchPairs } from "@/components/questions/MatchPairs";
+import { OrderSequence } from "@/components/questions/OrderSequence";
+import { Flashcard } from "@/components/questions/Flashcard";
+import { ScreenLayout } from "@/components/ui/ScreenLayout";
+import { BackButton } from "@/components/ui/BackButton";
+import { PageIndicator } from "@/components/questions/PageIndicator";
+import { Loader2, CheckCircle2, XCircle, PartyPopper } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { toast } from "@/components/ui/toast";
 
 export default function PlayPage() {
   const router = useRouter();
@@ -29,7 +29,8 @@ export default function PlayPage() {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [currentStreak, setCurrentStreak] = useState<number>(0);
-  const [hasShownStreakToast, setHasShownStreakToast] = useState<boolean>(false);
+  const [hasShownStreakToast, setHasShownStreakToast] =
+    useState<boolean>(false);
 
   const currentQuestion = questions[currentIndex];
 
@@ -37,7 +38,7 @@ export default function PlayPage() {
     if (!user?.id) return 0;
     const supabase = getSupabaseClient();
     try {
-      const { data, error } = await (supabase.rpc as any)('get_user_stats', {
+      const { data, error } = await (supabase.rpc as any)("get_user_stats", {
         p_user_id: user.id,
       });
       if (!error && data) {
@@ -46,7 +47,7 @@ export default function PlayPage() {
         return streak;
       }
     } catch (error) {
-      console.error('[PlayPage] Error loading stats:', error);
+      console.error("[PlayPage] Error loading stats:", error);
     }
     return 0;
   };
@@ -58,13 +59,15 @@ export default function PlayPage() {
       setLoading(true);
       const supabase = getSupabaseClient();
 
-      const { data, error } = await (supabase.rpc as any)('get_due_questions_for_play', {
-        p_user_id: user.id,
-        p_limit: 20,
-      });
+      const { data, error } = await (supabase.rpc as any)(
+        "get_due_questions_for_play",
+        {
+          p_user_id: user.id,
+        },
+      );
 
       if (error) {
-        console.error('Error loading due questions:', error);
+        console.error("Error loading due questions:", error);
       } else if (data) {
         // Transform the data to match Question format
         const transformedQuestions = data.map((item: any) => ({
@@ -106,7 +109,7 @@ export default function PlayPage() {
       const individualQId = (currentQuestion as any).individualQuestionId;
 
       // Record answer with FSRS update enabled (p_update_fsrs defaults to true)
-      await (supabase.rpc as any)('record_answer', {
+      await (supabase.rpc as any)("record_answer", {
         p_user_id: user.id,
         p_question_id: individualQId,
         p_is_correct: correct,
@@ -139,7 +142,7 @@ export default function PlayPage() {
     } else {
       // All done! Show a beautiful toast and redirect to dashboard
       toast.completion();
-      router.push('/dashboard');
+      router.push("/dashboard");
     }
   };
 
@@ -147,17 +150,16 @@ export default function PlayPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-background">
         <Loader2 className="w-12 h-12 animate-spin text-primary mb-4" />
-        <p className="text-xl font-handwritten font-bold text-info">Loading review...</p>
+        <p className="text-xl font-handwritten font-bold text-info">
+          Loading review...
+        </p>
       </div>
     );
   }
 
   if (questions.length === 0) {
     return (
-      <ScreenLayout 
-        headerLeft={<BackButton />}
-        title="All Caught Up!"
-      >
+      <ScreenLayout headerLeft={<BackButton />} title="All Caught Up!">
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <div className="relative mb-8">
             <div className="w-32 h-32 rounded-full bg-primary/10 flex items-center justify-center border-[3px] border-foreground shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] transform -rotate-3">
@@ -168,7 +170,8 @@ export default function PlayPage() {
             You're all caught up!
           </h2>
           <p className="text-2xl font-handwritten text-info/70 mb-8 max-w-md">
-            No questions are due for review right now. Come back later or upload more materials!
+            No questions are due for review right now. Come back later or upload
+            more materials!
           </p>
           <BackButton />
         </div>
@@ -178,60 +181,78 @@ export default function PlayPage() {
 
   const renderQuestion = () => {
     switch (currentQuestion.type) {
-      case 'mcq':
+      case "mcq":
         return (
           <MCQ
             question={currentQuestion}
-            onAnswer={(index) => handleAnswer(index === currentQuestion.correctAnswer, index)}
+            onAnswer={(index) =>
+              handleAnswer(index === currentQuestion.correctAnswer, index)
+            }
             selectedOption={selectedOption}
             showFeedback={showFeedback}
             isCorrect={isCorrect}
           />
         );
-      case 'true-false':
+      case "true-false":
         return (
           <div className="space-y-4 max-w-xl mx-auto w-full">
             <button
-              onClick={() => handleAnswer(true === currentQuestion.correctAnswer, 0)}
+              onClick={() =>
+                handleAnswer(true === currentQuestion.correctAnswer, 0)
+              }
               disabled={showFeedback}
               className={cn(
                 "w-full h-24 text-3xl font-black font-handwritten rounded-2xl border-[3px] border-foreground transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]",
-                !showFeedback && "hover:bg-muted hover:-translate-y-1 active:translate-y-0 active:shadow-none",
-                showFeedback && true === currentQuestion.correctAnswer && "bg-green-500/20 border-green-600 text-green-700 shadow-none translate-y-1 translate-x-1",
-                showFeedback && selectedOption === 0 && !isCorrect && "bg-red-500/20 border-red-600 text-red-700 shadow-none translate-y-1 translate-x-1"
+                !showFeedback &&
+                  "hover:bg-muted hover:-translate-y-1 active:translate-y-0 active:shadow-none",
+                showFeedback &&
+                  true === currentQuestion.correctAnswer &&
+                  "bg-green-500/20 border-green-600 text-green-700 shadow-none translate-y-1 translate-x-1",
+                showFeedback &&
+                  selectedOption === 0 &&
+                  !isCorrect &&
+                  "bg-red-500/20 border-red-600 text-red-700 shadow-none translate-y-1 translate-x-1",
               )}
             >
               True
             </button>
             <button
-              onClick={() => handleAnswer(false === currentQuestion.correctAnswer, 1)}
+              onClick={() =>
+                handleAnswer(false === currentQuestion.correctAnswer, 1)
+              }
               disabled={showFeedback}
               className={cn(
                 "w-full h-24 text-3xl font-black font-handwritten rounded-2xl border-[3px] border-foreground transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]",
-                !showFeedback && "hover:bg-muted hover:-translate-y-1 active:translate-y-0 active:shadow-none",
-                showFeedback && false === currentQuestion.correctAnswer && "bg-green-500/20 border-green-600 text-green-700 shadow-none translate-y-1 translate-x-1",
-                showFeedback && selectedOption === 1 && !isCorrect && "bg-red-500/20 border-red-600 text-red-700 shadow-none translate-y-1 translate-x-1"
+                !showFeedback &&
+                  "hover:bg-muted hover:-translate-y-1 active:translate-y-0 active:shadow-none",
+                showFeedback &&
+                  false === currentQuestion.correctAnswer &&
+                  "bg-green-500/20 border-green-600 text-green-700 shadow-none translate-y-1 translate-x-1",
+                showFeedback &&
+                  selectedOption === 1 &&
+                  !isCorrect &&
+                  "bg-red-500/20 border-red-600 text-red-700 shadow-none translate-y-1 translate-x-1",
               )}
             >
               False
             </button>
           </div>
         );
-      case 'match-pairs':
+      case "match-pairs":
         return (
           <MatchPairs
             question={currentQuestion}
             onComplete={(correct) => handleAnswer(correct, undefined)}
           />
         );
-      case 'order-sequence':
+      case "order-sequence":
         return (
           <OrderSequence
             question={currentQuestion}
             onComplete={(correct) => handleAnswer(correct)}
           />
         );
-      case 'flashcard':
+      case "flashcard":
         return (
           <Flashcard
             question={currentQuestion}
@@ -239,7 +260,11 @@ export default function PlayPage() {
           />
         );
       default:
-        return <p className="text-xl font-handwritten text-info">Question type not supported yet</p>;
+        return (
+          <p className="text-xl font-handwritten text-info">
+            Question type not supported yet
+          </p>
+        );
     }
   };
 
@@ -248,16 +273,13 @@ export default function PlayPage() {
       hideSidebar={true}
       headerLeft={<BackButton />}
       headerRight={
-        <PageIndicator 
-          current={currentIndex + 1} 
-          total={questions.length} 
-        />
+        <PageIndicator current={currentIndex + 1} total={questions.length} />
       }
       showLines={true}
     >
       <div className="flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full py-8">
         <AnimatePresence mode="wait">
-          <motion.div 
+          <motion.div
             key={currentIndex}
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -266,7 +288,7 @@ export default function PlayPage() {
             className="space-y-10"
           >
             {/* Question Text */}
-            {currentQuestion.type !== 'flashcard' && (
+            {currentQuestion.type !== "flashcard" && (
               <div className="relative max-w-2xl mx-auto w-full">
                 <div className="p-10 rounded-[40px] border-[3px] border-foreground bg-card shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] transform -rotate-1">
                   <h2 className="text-3xl sm:text-4xl font-black font-handwritten leading-tight text-center">
@@ -279,23 +301,25 @@ export default function PlayPage() {
             )}
 
             {/* Question Component */}
-            <div className="mt-4">
-              {renderQuestion()}
-            </div>
+            <div className="mt-4">{renderQuestion()}</div>
           </motion.div>
         </AnimatePresence>
       </div>
 
       {/* Feedback Overlay */}
       {showFeedback && (
-        <div className={cn(
-          "fixed inset-0 flex items-center justify-center pointer-events-none z-50",
-          "animate-in zoom-in duration-300"
-        )}>
-          <div className={cn(
-            "p-4 sm:p-8 rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] border-[3px] border-foreground transition-all transform",
-            isCorrect ? "bg-green-500 rotate-3" : "bg-red-500 -rotate-3"
-          )}>
+        <div
+          className={cn(
+            "fixed inset-0 flex items-center justify-center pointer-events-none z-50",
+            "animate-in zoom-in duration-300",
+          )}
+        >
+          <div
+            className={cn(
+              "p-4 sm:p-8 rounded-3xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] border-[3px] border-foreground transition-all transform",
+              isCorrect ? "bg-green-500 rotate-3" : "bg-red-500 -rotate-3",
+            )}
+          >
             {isCorrect ? (
               <CheckCircle2 className="w-12 h-12 sm:w-20 sm:h-20 text-white" />
             ) : (
