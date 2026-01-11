@@ -353,6 +353,32 @@ export type Database = {
           updated_at?: string | null;
         };
       };
+      profiles: {
+        Row: {
+          id: string;
+          full_name: string | null;
+          avatar_url: string | null;
+          username: string | null;
+          onboarding_completed: boolean;
+          updated_at: string | null;
+        };
+        Insert: {
+          id: string;
+          full_name?: string | null;
+          avatar_url?: string | null;
+          username?: string | null;
+          onboarding_completed?: boolean;
+          updated_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          full_name?: string | null;
+          avatar_url?: string | null;
+          username?: string | null;
+          onboarding_completed?: boolean;
+          updated_at?: string | null;
+        };
+      };
     };
     Views: {
       [_ in never]: never;
