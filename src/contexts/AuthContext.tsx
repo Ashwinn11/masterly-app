@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (statsRes.error) {
         console.error('Error fetching stats:', statsRes.error);
       } else {
-        setStats((statsRes.data as UserStats) || null);
+        setStats((statsRes.data as unknown as UserStats) || null);
       }
     } catch (error) {
       console.error('Unexpected error fetching auth data:', error);
