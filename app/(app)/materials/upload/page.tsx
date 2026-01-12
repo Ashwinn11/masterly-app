@@ -26,7 +26,9 @@ import {
 } from 'lucide-react';
 import { getSupabaseClient } from '@/lib/supabase/client';
 import { ProcessingModal } from '@/components/ui/ProcessingModal';
+import { UploadLimitModal } from '@/components/ui/UploadLimitModal';
 import { cn, getFriendlyErrorMessage } from '@/lib/utils';
+import { uploadLimitService } from '@/lib/uploadLimitService';
 
 const LANGUAGE_OPTIONS = [
   { label: "English", value: "en-US" },
@@ -72,6 +74,8 @@ export default function UploadPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('en-US');
   const [languageSearchQuery, setLanguageSearchQuery] = useState('');
+  const [remainingUploads, setRemainingUploads] = useState<number | null>(null);
+  const [limitModalOpen, setLimitModalOpen] = useState(false);
 
   const filteredLanguages = LANGUAGE_OPTIONS.filter(lang => 
     lang.label.toLowerCase().includes(languageSearchQuery.toLowerCase())
@@ -84,12 +88,40 @@ export default function UploadPage() {
     }
   }, [status]);
 
+  // Fetch upload stats when page loads
+  useEffect(() => {
+    const fetchUploadStats = async () => {
+      if (user?.id) {
+        try {
+          const remaining = await uploadLimitService.getRemainingUploads(user.id);
+          setRemainingUploads(remaining);
+        } catch (error) {
+          console.error('[Upload] Error fetching upload stats:', error);
+        }
+      }
+    };
+
+    fetchUploadStats();
+  }, [user?.id]);
+
   const handleCloseModal = () => {
     if (status === 'error') {
       setModalOpen(false);
       setStatus('idle');
       setError('');
     }
+  };
+
+  // Check if user can upload (has remaining uploads)
+  const checkUploadLimit = async (): Promise<boolean> => {
+    if (!user?.id) return false;
+    
+    const canUpload = await uploadLimitService.canUserUpload(user.id);
+    if (!canUpload) {
+      setLimitModalOpen(true);
+      return false;
+    }
+    return true;
   };
   
   const [isRecording, setIsRecording] = useState(false);
@@ -348,6 +380,11 @@ export default function UploadPage() {
         throw new Error('Failed to save questions');
       }
 
+      // Increment upload count after successful upload
+      await uploadLimitService.incrementUploadCount(user.id);
+      const newRemaining = await uploadLimitService.getRemainingUploads(user.id);
+      setRemainingUploads(newRemaining);
+
       setStatus('success');
       setTimeout(() => router.push('/materials'), 1500);
     } catch (err: any) {
@@ -406,6 +443,11 @@ export default function UploadPage() {
         throw new Error('Failed to save questions');
       }
 
+      // Increment upload count after successful upload
+      await uploadLimitService.incrementUploadCount(user.id);
+      const newRemaining = await uploadLimitService.getRemainingUploads(user.id);
+      setRemainingUploads(newRemaining);
+
       setStatus('success');
       setTimeout(() => router.push('/materials'), 1500);
     } catch (err: any) {
@@ -419,6 +461,50 @@ export default function UploadPage() {
   return (
     <ScreenLayout title="Upload" subtitle="Upload files or paste text to generate AI flashcards">
       <div className="max-w-3xl mx-auto w-full space-y-4">
+        {/* Upload Limit Indicator */}
+        {remainingUploads !== null && (
+          <Card className={cn(
+            "border-[3px] rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]",
+            remainingUploads === 0 ? "border-red-500 bg-red-50" : 
+            remainingUploads === 1 ? "border-yellow-500 bg-yellow-50" : 
+            "border-blue-500 bg-blue-50"
+          )}>
+            <CardContent className="p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={cn(
+                  "w-12 h-12 rounded-full flex items-center justify-center font-black text-xl",
+                  remainingUploads === 0 ? "bg-red-500 text-white" :
+                  remainingUploads === 1 ? "bg-yellow-500 text-white" :
+                  "bg-blue-500 text-white"
+                )}>
+                  {remainingUploads}
+                </div>
+                <div>
+                  <p className="font-handwritten text-lg font-black">
+                    {remainingUploads === 0 ? "No Free Uploads Left" :
+                     remainingUploads === 1 ? "1 Free Upload Remaining" :
+                     `${remainingUploads} Free Uploads Remaining`}
+                  </p>
+                  <p className="font-handwritten text-sm text-muted-foreground">
+                    {remainingUploads === 0 ? 
+                      "Download our iOS app to upgrade to Pro for unlimited uploads!" :
+                      "Get unlimited uploads with Pro on iOS"}
+                  </p>
+                </div>
+              </div>
+              {remainingUploads === 0 && (
+                <Button
+                  onClick={() => setLimitModalOpen(true)}
+                  variant="default"
+                  className="font-handwritten font-black"
+                >
+                  Learn More
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
         <Tabs value={mode} onValueChange={(v) => setMode(v as UploadMode)} className="w-full">
           <TabsList className="grid w-full grid-cols-3 bg-background/50 p-1 border-2 border-foreground/10 rounded-xl h-14">
             <TabsTrigger value="file" className="font-handwritten text-lg text-foreground/40 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:opacity-100 rounded-lg transition-all">Upload File</TabsTrigger>
@@ -453,7 +539,7 @@ export default function UploadPage() {
                     className={cn(
                       "flex flex-col items-center justify-center p-8 rounded-2xl border-[3px] border-dashed border-foreground/20 bg-muted/10 cursor-pointer transition-all",
                       "hover:border-primary hover:bg-primary/5 hover:scale-[1.02]",
-                      uploading && "opacity-50 cursor-not-allowed pointer-events-none"
+                      (uploading || remainingUploads === 0) && "opacity-50 cursor-not-allowed pointer-events-none"
                     )}
                   >
                     <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-3">
@@ -491,7 +577,7 @@ export default function UploadPage() {
                 <div className="flex gap-4">
                   <Button
                     onClick={handleFileUpload}
-                    disabled={!file || uploading}
+                    disabled={!file || uploading || remainingUploads === 0}
                     className="flex-1 h-12 text-lg font-black font-handwritten"
                   >
                     {uploading ? (
@@ -533,7 +619,7 @@ export default function UploadPage() {
                       ) : (
                         <>
                           <p className="text-xl font-handwritten font-black mb-4">Ready to Record</p>
-                          <Button onClick={startRecording} size="lg" className="h-12 px-6 font-handwritten text-lg font-black rounded-xl gap-2">
+                          <Button onClick={startRecording} disabled={remainingUploads === 0} size="lg" className="h-12 px-6 font-handwritten text-lg font-black rounded-xl gap-2">
                             <Mic className="w-6 h-6" />
                             Start Recording
                           </Button>
@@ -601,7 +687,7 @@ export default function UploadPage() {
                 <div className="flex gap-4">
                   <Button
                     onClick={handleRecordingUpload}
-                    disabled={!recordedBlob || uploading}
+                    disabled={!recordedBlob || uploading || remainingUploads === 0}
                     className="flex-1 h-14 text-xl font-black font-handwritten"
                   >
                     {uploading ? (
@@ -631,7 +717,7 @@ export default function UploadPage() {
                     placeholder="Paste your study material here..."
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    disabled={uploading}
+                    disabled={uploading || remainingUploads === 0}
                     rows={8}
                     className="resize-none border-2 border-foreground/10 rounded-xl bg-background/50 font-handwritten text-lg p-4 leading-relaxed"
                   />
@@ -643,7 +729,7 @@ export default function UploadPage() {
                 <div className="flex gap-4">
                   <Button
                     onClick={handleTextUpload}
-                    disabled={text.length < 50 || uploading}
+                    disabled={text.length < 50 || uploading || remainingUploads === 0}
                     className="flex-1 h-12 text-lg font-black font-handwritten"
                   >
                     {uploading ? (
@@ -664,6 +750,12 @@ export default function UploadPage() {
         message={status === 'success' ? 'All set!' : 'Working on it...'}
         error={error}
         onClose={handleCloseModal}
+      />
+
+      <UploadLimitModal
+        isOpen={limitModalOpen}
+        onClose={() => setLimitModalOpen(false)}
+        remainingUploads={remainingUploads || 0}
       />
     </ScreenLayout>
   );
