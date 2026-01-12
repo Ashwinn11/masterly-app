@@ -31,6 +31,7 @@ export default function PlayPage() {
   const [currentStreak, setCurrentStreak] = useState<number>(0);
   const [hasShownStreakToast, setHasShownStreakToast] =
     useState<boolean>(false);
+  const [correctAnswers, setCorrectAnswers] = useState<number>(0);
 
   const currentQuestion = questions[currentIndex];
 
@@ -98,6 +99,10 @@ export default function PlayPage() {
   const handleAnswer = async (correct: boolean, option?: number) => {
     if (showFeedback) return;
 
+    if (correct) {
+      setCorrectAnswers((prev) => prev + 1);
+    }
+
     const responseTime = Date.now() - questionStartTime;
 
     setIsCorrect(correct);
@@ -141,7 +146,11 @@ export default function PlayPage() {
       setIsCorrect(null);
     } else {
       // All done! Show a beautiful toast and redirect to dashboard
-      toast.completion();
+      toast.completion({
+        correct: correctAnswers,
+        total: questions.length,
+        streak: currentStreak,
+      });
       router.push("/dashboard");
     }
   };

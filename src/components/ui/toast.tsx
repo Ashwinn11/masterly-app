@@ -23,6 +23,11 @@ export interface ToastProps {
   message?: string;
   duration?: number;
   position?: "top" | "bottom" | "center";
+  stats?: {
+    correct: number;
+    total: number;
+    streak?: number;
+  };
 }
 
 interface ToastContextType {
@@ -69,13 +74,14 @@ toast.streak = (days: number, message?: string) =>
     duration: 4000,
   });
 
-toast.completion = (title?: string, message?: string) =>
+toast.completion = (stats?: ToastProps["stats"], title?: string, message?: string) =>
   toast({
     type: "completion",
     title: title || "Session Complete!",
     message: message || "Great job! You've finished all questions for now.",
     position: "center",
-    duration: 2000,
+    duration: 4000,
+    stats,
   });
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
@@ -134,7 +140,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {/* Center toasts container */}
       <AnimatePresence mode="popLayout">
         {centerToasts.length > 0 && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none p-4">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none p-4 backdrop-blur-[2px] bg-black/5">
             <div className="flex flex-col gap-2 max-w-md w-full">
               {centerToasts.map((toastItem) => (
                 <ToastItem
@@ -218,7 +224,7 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
     completion: {
       bg: "bg-[#DBEAFE]", // Blue for completion celebration
       border: "border-foreground",
-      icon: <PartyPopper className="w-7 h-7 text-foreground" />, // Celebratory party popper
+      icon: <PartyPopper className="w-8 h-8 text-foreground" />, // Celebratory party popper
       iconBg: "bg-foreground/10", // Subtle foreground background
       text: "text-foreground",
       iconColor: "text-foreground",
@@ -240,6 +246,8 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
     exit: { opacity: 0, scale: 0.8, y: toast.position === "center" ? 0 : -20 },
   };
 
+  const percentage = toast.stats ? Math.round((toast.stats.correct / toast.stats.total) * 100) : 0;
+
   return (
     <motion.div
       variants={variants}
@@ -248,9 +256,9 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
       exit="exit"
       transition={{ type: "spring", stiffness: 400, damping: 20 }}
       className={cn(
-        "pointer-events-auto relative min-w-[280px] max-w-sm mx-auto",
-        "border-[3px] rounded-2xl shadow-[6px_6px_0px_0px_rgba(0,0,0,0.15)]",
-        "overflow-hidden",
+        "pointer-events-auto relative min-w-[300px] max-w-sm mx-auto",
+        "border-[3px] rounded-[32px] shadow-[8px_8px_0px_0px_rgba(0,0,0,0.15)]",
+        "overflow-hidden transition-all",
         style.bg,
         style.border,
       )}
@@ -259,55 +267,78 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
       <button
         onClick={() => onRemove(toast.id)}
         className={cn(
-          "absolute top-2 right-2 p-1 rounded-lg transition-colors",
+          "absolute top-4 right-4 p-1 rounded-lg transition-colors z-10",
           "hover:bg-black/5",
         )}
       >
         <X
           className={cn(
-            "w-4 h-4",
-            isCompletion
-              ? "text-white/60"
-              : isSpecial
+            "w-5 h-5",
+            isSpecial
                 ? "text-foreground/40"
                 : "text-white/80",
           )}
         />
       </button>
 
-      <div className="flex items-start gap-3 p-4">
-        {/* Icon */}
-        <div
-          className={cn(
-            "flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center",
-            style.iconBg,
-          )}
-        >
-          {style.icon}
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          <p
+      <div className="flex flex-col p-6">
+        <div className="flex items-center gap-4">
+          {/* Icon */}
+          <div
             className={cn(
-              "font-handwritten font-bold text-base leading-tight",
-              style.text,
+              "flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center",
+              style.iconBg,
             )}
           >
-            {toast.title}
-          </p>
-          {toast.message && (
+            {style.icon}
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 min-w-0">
             <p
               className={cn(
-                "font-handwritten text-sm mt-1",
+                "font-handwritten font-black text-xl leading-tight",
                 style.text,
-                "opacity-80",
               )}
             >
-              {toast.message}
+              {toast.title}
             </p>
-          )}
+            {toast.message && (
+              <p
+                className={cn(
+                  "font-handwritten text-base mt-0.5",
+                  style.text,
+                  "opacity-80",
+                )}
+              >
+                {toast.message}
+              </p>
+            )}
+          </div>
         </div>
+
+        {/* Stats Section for Completion */}
+        {isCompletion && toast.stats && (
+            <div className="mt-6 pt-6 border-t-2 border-foreground/10 flex items-center justify-between gap-4">
+                <div className="flex flex-col items-center flex-1">
+                    <span className="text-2xl font-black font-handwritten text-foreground">
+                        {toast.stats.correct}/{toast.stats.total}
+                    </span>
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-foreground/50">Correct</span>
+                </div>
+
+                <div className="w-16 h-16 rounded-full border-[3px] border-foreground flex items-center justify-center bg-foreground/5 relative">
+                    <span className="text-xl font-black font-handwritten text-foreground">{percentage}%</span>
+                </div>
+
+                <div className="flex flex-col items-center flex-1">
+                    <span className="text-2xl font-black font-handwritten text-foreground">
+                        {toast.stats.streak || 0}
+                    </span>
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-foreground/50">Streak</span>
+                </div>
+            </div>
+        )}
       </div>
     </motion.div>
   );

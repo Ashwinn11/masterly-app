@@ -109,7 +109,6 @@ function QuestionFeedPageContent() {
       setShowFeedback(false);
       setIsCorrect(null);
     } else {
-      toast.completion();
       router.push('/materials');
     }
   };
