@@ -77,6 +77,11 @@ export const Footer = () => {
             </h4>
             <ul className="space-y-6 text-2xl font-bold text-info italic">
               <li>
+                <Link href="/help" className="hover:text-primary hover:translate-x-2 transition-all inline-block">
+                  Help & Support
+                </Link>
+              </li>
+              <li>
                 <Link href="/terms" className="hover:text-primary hover:translate-x-2 transition-all inline-block">
                   Terms of Service
                 </Link>
