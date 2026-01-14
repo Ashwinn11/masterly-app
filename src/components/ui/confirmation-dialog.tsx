@@ -41,18 +41,18 @@ export function ConfirmationDialog({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="bg-card border border-border rounded-lg w-full max-w-md shadow-2xl animate-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-center p-6 border-b border-border relative">
+          <div className="flex items-center justify-center gap-3">
             {variant !== 'default' && (
               <div className={`p-2 rounded-full ${variant === 'danger' ? 'bg-red-500/10' : 'bg-orange-500/10'}`}>
                 <AlertTriangle className={`h-5 w-5 ${variant === 'danger' ? 'text-red-500' : 'text-orange-500'}`} />
               </div>
             )}
-            <h2 className="text-lg font-semibold text-white">{title}</h2>
+            <h2 className="text-lg font-semibold text-foreground">{title}</h2>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 hover:text-foreground transition-colors p-1 rounded-lg hover:bg-muted"
           >
             <X className="h-5 w-5" />
           </button>

@@ -38,6 +38,7 @@ export default function ProfilePage() {
     openConfirmation({
       title: 'Delete Account?',
       message: 'This will permanently delete all your data and progress. This action cannot be undone.',
+      variant: 'danger',
       onConfirm: async () => {
         try {
           await deleteAccount();
@@ -105,21 +106,6 @@ export default function ProfilePage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 font-handwritten">
-              <div className="flex items-center justify-between p-5 rounded-2xl border-[2px] border-foreground/10 bg-background/50">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-accent/10 text-accent">
-                    <Smartphone className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h4 className="text-xl font-black text-foreground">Device Sync</h4>
-                    <p className="text-lg opacity-60 italic">Manage iOS devices</p>
-                  </div>
-                </div>
-                <div className="px-3 py-1 rounded-full bg-green-500/10 text-green-600 border border-green-500/20 text-sm font-bold">
-                  Connected
-                </div>
-              </div>
-
               <button
                 onClick={handleDeleteAccount}
                 className="w-full flex items-center justify-between p-5 rounded-2xl border-[2px] border-secondary/20 bg-secondary/5 text-secondary hover:bg-secondary/10 transition-colors"

@@ -85,7 +85,7 @@ export const FAQ = () => {
           initial={{ opacity: 0, scale: 0.9, rotate: 1 }}
           whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
           viewport={{ once: true }}
-          className="relative p-12 md:p-20 bg-primary text-white border-crayon shadow-2xl overflow-hidden"
+          className="relative p-12 md:p-20 bg-primary text-white border-crayon shadow-2xl overflow-hidden selection:bg-foreground selection:text-background"
         >
           {/* Washi tape decor */}
           <div className="washi-tape bg-accent w-32 h-10 top-[-20px] left-[10%] rotate-[-5deg]" />
@@ -95,7 +95,7 @@ export const FAQ = () => {
           
           <div className="relative z-10 text-center">
             <h3 className="text-5xl md:text-7xl font-black mb-10 leading-tight">
-              Ready to <br/><span className="text-accent italic underline decoration-wavy decoration-accent decoration-2 underline-offset-8">Ace</span> Your Exams?
+              Ready to <br/><span className="italic underline decoration-wavy decoration-accent decoration-2 underline-offset-8">Ace</span> Your Exams?
             </h3>
             <p className="text-2xl md:text-3xl mb-14 text-white/90 max-w-2xl mx-auto font-bold italic leading-relaxed">
               Join 10,000+ students who are crushing their goals with AI-powered study sessions.

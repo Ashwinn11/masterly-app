@@ -25,6 +25,7 @@ export function SideNav({ onItemClick }: { onItemClick?: () => void }) {
       title: 'Sign Out?',
       message: 'Are you sure you want to leave? Your progress is saved!',
       confirmText: 'Sign Out',
+      variant: 'warning',
       onConfirm: signOut
     });
   };

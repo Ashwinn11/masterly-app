@@ -99,7 +99,7 @@ const Navigation: React.FC<NavigationProps> = ({ className }) => {
                 <div className="h-10 w-24 animate-pulse bg-muted/20 rounded-xl" />
               ) : user ? (
                 <>
-                  <Button variant="ghost" size="sm" className="font-handwritten font-black text-lg" asChild>
+                  <Button variant="default" size="sm" className="font-handwritten font-black text-lg" asChild>
                     <Link href="/dashboard">
                       <LayoutDashboard className="h-5 w-5 mr-2" />
                       Dashboard
