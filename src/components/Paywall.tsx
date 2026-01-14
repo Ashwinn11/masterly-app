@@ -98,8 +98,25 @@ export function Paywall({
     
     setSelectedVariantId(variantId);
     try {
-      // Trigger the "subscribe intent" callback
-      // This will mark onboarding as completed in the background
+      // If user has an existing subscription, update it instead of creating new checkout
+      if (currentVariantId) {
+        const response = await fetch('/api/lemonsqueezy/update-plan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ variantId }),
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || 'Failed to update plan');
+        }
+
+        // Close paywall and let parent refresh
+        onClose?.();
+        return;
+      }
+
+      // For new subscribers, create checkout
       onSubscribe?.();
 
       await createCheckout({
@@ -110,7 +127,7 @@ export function Paywall({
         },
       });
     } catch (error) {
-      console.error('Checkout error:', error);
+      console.error('Subscription error:', error);
       setSelectedVariantId(null);
     }
   };
@@ -206,6 +223,15 @@ export function Paywall({
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           {subtitle}
         </p>
+        
+        {/* Proration Notice for Upgrades */}
+        {currentVariantId && (
+          <div className="mt-4 p-4 bg-blue-50 border-2 border-blue-200 rounded-xl max-w-2xl mx-auto">
+            <p className="text-sm font-handwritten font-black text-blue-900">
+              💡 Upgrading? You'll only pay the prorated difference for the time remaining in your current billing cycle.
+            </p>
+          </div>
+        )}
         
         {/* Discount badge */}
         {discountCode && (

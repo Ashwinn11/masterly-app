@@ -155,12 +155,42 @@ export function useLemonSqueezy() {
         }
     };
 
+    const updatePlan = async (variantId: string) => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch('/api/lemonsqueezy/update-plan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ variantId }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to update plan');
+            }
+
+            return data;
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+            setError(errorMessage);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return {
         createCheckout,
         fetchProducts,
         getPortalUrl,
         cancelSubscription,
         resumeSubscription,
+        updatePlan,
         isLoading,
         error,
     };

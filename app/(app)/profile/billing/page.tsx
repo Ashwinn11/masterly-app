@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
 import { 
   CreditCard, 
   Calendar, 
@@ -20,6 +19,7 @@ import { useConfirmationStore } from '@/lib/utils/confirmationUtils';
 import { useAuth } from '@/hooks/useAuth';
 import { getSupabaseClient } from '@/lib/supabase/client';
 import { ScreenLayout } from '@/components/ui/ScreenLayout';
+import { Paywall } from '@/components/Paywall';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -32,6 +32,7 @@ export default function BillingPage() {
   const [subscription, setSubscription] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showPaywall, setShowPaywall] = useState(false);
 
   useEffect(() => {
     async function fetchSubscription() {
@@ -90,14 +91,43 @@ export default function BillingPage() {
     }
   };
 
-  const handleUpgrade = async () => {
-    // Currently redirects to portal as it handles proration best
-    try {
-      await getPortalUrl();
-    } catch (err: any) {
-      setError('Failed to open upgrade portal');
-    }
+  const handleUpgrade = () => {
+    setShowPaywall(true);
   };
+
+  if (showPaywall) {
+    return (
+      <ScreenLayout>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-xl">
+          <div className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-card border-4 border-foreground rounded-[2.5rem] shadow-[20px_20px_0px_0px_rgba(0,0,0,0.1)]">
+            <Paywall 
+              onClose={async () => {
+                setShowPaywall(false);
+                // Refetch subscription to show updated plan
+                const supabase = getSupabaseClient();
+                const now = new Date().toISOString();
+                const { data } = await (supabase as any)
+                  .from('subscriptions')
+                  .select('*')
+                  .eq('user_id', user.id)
+                  .or(`status.in.(active,on_trial,past_due,paused),and(status.eq.cancelled,ends_at.gt.${now})`)
+                  .order('created_at', { ascending: false })
+                  .maybeSingle();
+                
+                if (data) {
+                  setSubscription(data);
+                }
+              }}
+              showCloseButton={true}
+              currentVariantId={subscription?.variant_id}
+              title="Upgrade Your Plan"
+              subtitle="Choose a new plan to continue your Pro journey"
+            />
+          </div>
+        </div>
+      </ScreenLayout>
+    );
+  }
 
   if (isLoading) {
     return (
