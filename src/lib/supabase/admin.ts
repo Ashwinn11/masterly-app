@@ -18,7 +18,8 @@ export const createAdminClient = () => {
         },
         global: {
             headers: {
-                Authorization: `Bearer ${supabaseServiceKey}`
+                Authorization: `Bearer ${supabaseServiceKey}`,
+                apikey: supabaseServiceKey
             }
         }
     });
