@@ -91,13 +91,10 @@ export default function BillingPage() {
     }
   };
 
-  const handleUpgrade = async () => {
-    try {
-      await getPortalUrl();
-    } catch (err: any) {
-      setError(err.message || "Failed to open billing portal");
-    }
+  const handleUpgrade = () => {
+    setShowPaywall(true);
   };
+
 
   if (showPaywall) {
     return (
