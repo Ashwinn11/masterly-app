@@ -39,8 +39,15 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'You are already on this plan' }, { status: 400 });
         }
 
-        // Update the subscription in Lemon Squeezy
-        const result = await updateUserSubscription(subscription.subscription_id, variantId);
+        console.log(`[Update Plan] Changing subscription ${subscription.subscription_id} from variant ${subscription.variant_id} to ${variantId}`);
+
+        // Determine if this is an upgrade or downgrade based on price
+        // For upgrades, we want to invoice immediately
+        // For downgrades, let it happen at next renewal
+        const isUpgrade = true; // We'll invoice immediately for all changes to ensure proper proration
+
+        // Update the subscription in Lemon Squeezy with invoice_immediately
+        const result = await updateUserSubscription(subscription.subscription_id, variantId, isUpgrade);
 
         if (!result) {
             return NextResponse.json({ error: 'Failed to update subscription in Lemon Squeezy' }, { status: 500 });
@@ -63,6 +70,8 @@ export async function POST(request: NextRequest) {
         if (updateError) {
             console.error('Error updating subscription in DB:', updateError);
         }
+
+        console.log(`[Update Plan] Successfully updated to variant ${variantId}`);
 
         return NextResponse.json({
             success: true,

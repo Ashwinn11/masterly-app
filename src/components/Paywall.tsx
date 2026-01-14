@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLemonSqueezy } from '@/hooks/useLemonSqueezy';
 import { Button } from '@/components/ui/button';
+import { PlanChangeModal } from '@/components/PlanChangeModal';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, Sparkles, Zap, Crown } from 'lucide-react';
 import Link from 'next/link';
@@ -78,6 +79,8 @@ export function Paywall({
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
   const [discountCode] = useState('MWODUWNW');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [pendingVariantId, setPendingVariantId] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadProducts() {
@@ -93,20 +96,55 @@ export function Paywall({
     loadProducts();
   }, []);
 
+  const getPlanName = (variantId: string) => {
+    if (variantId === process.env.NEXT_PUBLIC_LS_VARIANT_WEEKLY) return 'Weekly Pro';
+    if (variantId === process.env.NEXT_PUBLIC_LS_VARIANT_MONTHLY) return 'Monthly Pro';
+    if (variantId === process.env.NEXT_PUBLIC_LS_VARIANT_YEARLY) return 'Yearly Pro';
+    return 'Pro';
+  };
+
+  const handleConfirmUpdate = async () => {
+    if (!pendingVariantId) return;
+
+    const response = await fetch('/api/lemonsqueezy/update-plan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ variantId: pendingVariantId }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to update plan');
+    }
+
+    // Close modal and paywall
+    setShowConfirmModal(false);
+    setPendingVariantId(null);
+    onClose?.();
+  };
+
   const handleSubscribe = async (variantId: string) => {
     if (variantId === currentVariantId) return;
     
     setSelectedVariantId(variantId);
+    
     try {
-      // For both new and existing subscribers, use checkout
-      // Lemon Squeezy will detect existing subscription and show proration
+      // If user has an existing subscription, show confirmation modal
+      if (currentVariantId) {
+        setPendingVariantId(variantId);
+        setShowConfirmModal(true);
+        return;
+      }
+
+      // For new subscribers, create checkout
       onSubscribe?.();
 
       await createCheckout({
         variantId,
         customData: {
-          discount_code: currentVariantId ? undefined : discountCode, // No discount for upgrades
-          source: currentVariantId ? 'upgrade' : 'paywall',
+          discount_code: discountCode,
+          source: 'paywall',
         },
       });
     } catch (error) {
@@ -351,6 +389,16 @@ export function Paywall({
           Subscriptions renew automatically.
         </p>
       </div>
+
+      <PlanChangeModal
+        isOpen={showConfirmModal}
+        onClose={() => {
+          setShowConfirmModal(false);
+          setPendingVariantId(null);
+        }}
+        onConfirm={handleConfirmUpdate}
+        planName={getPlanName(pendingVariantId || "")}
+      />
     </div>
   );
 }

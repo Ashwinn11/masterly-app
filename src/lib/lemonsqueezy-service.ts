@@ -157,12 +157,14 @@ export async function resumeUserSubscription(subscriptionId: string) {
  */
 export async function updateUserSubscription(
     subscriptionId: string,
-    variantId: string
+    variantId: string,
+    invoiceImmediately: boolean = true
 ) {
     configureLemonSqueezy();
 
     const result = await updateSubscription(subscriptionId, {
         variantId: parseInt(variantId),
+        invoiceImmediately: invoiceImmediately,
     });
 
     return result.data?.data;
