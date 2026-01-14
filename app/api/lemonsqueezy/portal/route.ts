@@ -35,7 +35,12 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Subscription not found in Lemon Squeezy' }, { status: 404 });
         }
 
-        const portalUrl = lsSubscription.attributes.urls.customer_portal;
+        // In Test Mode, the 'customer_portal_update_subscription' URL is sometimes more reliable
+        // than the generic portal URL for direct access without session issues.
+        const portalUrl = lsSubscription.attributes.urls.customer_portal_update_subscription ||
+            lsSubscription.attributes.urls.customer_portal;
+
+        console.log(`[Portal] Redirecting to: ${portalUrl}`);
 
         return NextResponse.json({
             portalUrl,

@@ -93,24 +93,35 @@ export async function getSubscriptionDetails(subscriptionId: string) {
     configureLemonSqueezy();
 
     try {
-        // Try as provided (usually string)
-        const subscription = await getSubscription(subscriptionId);
-        return subscription.data?.data;
+        // The LS SDK can be picky about strings vs numbers for IDs
+        // We try the string first, then the number if it fails with 404
+        const response = await getSubscription(subscriptionId);
+        return response.data?.data;
     } catch (error: any) {
-        // If it failed, try as a number just in case
-        if (!isNaN(Number(subscriptionId))) {
+        // If it's a 404, try converting the ID to a number and retry once
+        if (error.response?.status === 404 && !isNaN(Number(subscriptionId))) {
             try {
-                const subscription = await getSubscription(Number(subscriptionId));
-                return subscription.data?.data;
-            } catch (innerError) {
-                // Ignore and fall through to original error
+                const retryResponse = await getSubscription(Number(subscriptionId));
+                return retryResponse.data?.data;
+            } catch (retryError) {
+                // If it still fails, fall through to the original error handling
             }
         }
 
-        console.error(`[LS] Error fetching subscription ${subscriptionId}:`, error);
-        if (error.response?.status === 404 || error.message?.includes('Not Found')) {
-            console.error(`[LS] Subscription ${subscriptionId} not found in Lemon Squeezy Store ${storeId}. Check if this is a Test vs Live ID mismatch or if the API key belongs to a different store.`);
+        console.error(`[LS] Detailed error for sub_${subscriptionId}:`, {
+            status: error.response?.status,
+            message: error.message
+        });
+
+        const isNotFound =
+            error.response?.status === 404 ||
+            error.message?.includes('Not Found');
+
+        if (isNotFound) {
+            console.warn(`[LS] Subscription ${subscriptionId} not found. Check if you are mixing Test Mode data with Live Mode keys.`);
+            return null;
         }
+
         throw error;
     }
 }

@@ -105,10 +105,36 @@ export function useLemonSqueezy() {
         }
     };
 
+    const cancelSubscription = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch('/api/lemonsqueezy/cancel', {
+                method: 'POST',
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to cancel subscription');
+            }
+
+            return data;
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+            setError(errorMessage);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return {
         createCheckout,
         fetchProducts,
         getPortalUrl,
+        cancelSubscription,
         isLoading,
         error,
     };

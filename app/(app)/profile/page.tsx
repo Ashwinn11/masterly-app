@@ -28,6 +28,7 @@ import {
   Loader2
 } from 'lucide-react';
 import Link from 'next/link';
+import { ManageSubscriptionModal } from '@/components/ManageSubscriptionModal';
 
 function ProfilePageContent() {
   const { user, fullName, stats, deleteAccount } = useAuth() as any;
@@ -38,6 +39,7 @@ function ProfilePageContent() {
   const [subscription, setSubscription] = useState<any>(null);
   const [isLoadingSub, setIsLoadingSub] = useState(true);
   const [showPaywall, setShowPaywall] = useState(false);
+  const [showManageModal, setShowManageModal] = useState(false);
 
   useEffect(() => {
     async function checkSubscription() {
@@ -89,11 +91,7 @@ function ProfilePageContent() {
   };
 
   const handleManageSubscription = async () => {
-    try {
-      await getPortalUrl();
-    } catch (err) {
-      console.error('Failed to open portal:', err);
-    }
+    setShowManageModal(true);
   };
 
   if (showPaywall) {
@@ -296,6 +294,15 @@ function ProfilePageContent() {
           </Card>
         </div>
       </div>
+      <ManageSubscriptionModal 
+        isOpen={showManageModal}
+        onClose={() => setShowManageModal(false)}
+        subscription={subscription}
+        onUpdate={() => {
+          // Re-fetch subscription if needed or just update status
+          setSubscription((prev: any) => ({ ...prev, status: 'cancelled' }));
+        }}
+      />
     </ScreenLayout>
   );
 }
