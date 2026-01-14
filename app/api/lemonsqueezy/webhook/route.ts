@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { getWebhookSecret } from '@/lib/lemonsqueezy';
-import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 /**
@@ -54,58 +53,63 @@ export async function POST(request: NextRequest) {
 
         const supabase = createAdminClient();
 
+        let handlerResult = null;
+
         // Handle different webhook events
         switch (eventName) {
             case 'order_created':
                 console.log('Processing order_created...');
-                await handleOrderCreated(supabase, data, userId);
+                handlerResult = await handleOrderCreated(supabase, data, userId);
                 break;
 
             case 'subscription_created': {
                 console.log('Processing subscription_created...');
-                const subResult = await handleSubscriptionCreated(supabase, data, userId);
-                console.log('Subscription insert result:', subResult);
+                handlerResult = await handleSubscriptionCreated(supabase, data, userId);
                 break;
             }
-            // ... (rest of switch)
 
             case 'subscription_updated':
-                await handleSubscriptionUpdated(supabase, data);
+                handlerResult = await handleSubscriptionUpdated(supabase, data);
                 break;
 
             case 'subscription_cancelled':
-                await handleSubscriptionCancelled(supabase, data);
+                handlerResult = await handleSubscriptionCancelled(supabase, data);
                 break;
 
             case 'subscription_resumed':
-                await handleSubscriptionResumed(supabase, data);
+                handlerResult = await handleSubscriptionResumed(supabase, data);
                 break;
 
             case 'subscription_expired':
-                await handleSubscriptionExpired(supabase, data);
+                handlerResult = await handleSubscriptionExpired(supabase, data);
                 break;
 
             case 'subscription_paused':
-                await handleSubscriptionPaused(supabase, data);
+                handlerResult = await handleSubscriptionPaused(supabase, data);
                 break;
 
             case 'subscription_unpaused':
-                await handleSubscriptionUnpaused(supabase, data);
+                handlerResult = await handleSubscriptionUnpaused(supabase, data);
                 break;
 
             case 'subscription_payment_success':
-                await handleSubscriptionPaymentSuccess(supabase, data);
+                handlerResult = await handleSubscriptionPaymentSuccess(supabase, data);
                 break;
 
             case 'subscription_payment_failed':
-                await handleSubscriptionPaymentFailed(supabase, data);
+                handlerResult = await handleSubscriptionPaymentFailed(supabase, data);
                 break;
 
             default:
                 console.log('Unhandled event:', eventName);
         }
 
-        return NextResponse.json({ received: true });
+        return NextResponse.json({
+            received: true,
+            eventName,
+            userId,
+            db_error: handlerResult
+        });
     } catch (error) {
         console.error('Webhook error:', error);
         return NextResponse.json(
@@ -118,7 +122,7 @@ export async function POST(request: NextRequest) {
 async function handleOrderCreated(supabase: any, data: any, userId: string | null) {
     if (!userId) {
         console.warn('handleOrderCreated: No userId found in payload');
-        return;
+        return { message: 'No userId found in payload' };
     }
 
     // Store order in database
@@ -131,22 +135,26 @@ async function handleOrderCreated(supabase: any, data: any, userId: string | nul
         created_at: data.attributes.created_at,
     });
 
-    if (error) console.error('Error inserting order:', error);
+    if (error) {
+        console.error('Error inserting order:', error);
+        return error;
+    }
+    return null;
 }
 
 async function handleSubscriptionCreated(supabase: any, data: any, userId: string | null) {
     if (!userId) {
         console.warn('handleSubscriptionCreated: No userId found in payload');
-        return;
+        return { message: 'No userId found in payload' };
     }
 
     // Store subscription in database
     const { error } = await supabase.from('subscriptions').upsert({
         user_id: userId,
-        subscription_id: data.id,
+        subscription_id: String(data.id),
         status: data.attributes.status,
-        variant_id: data.attributes.variant_id,
-        product_id: data.attributes.product_id,
+        variant_id: String(data.attributes.variant_id),
+        product_id: String(data.attributes.product_id),
         renews_at: data.attributes.renews_at,
         ends_at: data.attributes.ends_at,
         trial_ends_at: data.attributes.trial_ends_at,
@@ -156,67 +164,79 @@ async function handleSubscriptionCreated(supabase: any, data: any, userId: strin
         onConflict: 'subscription_id'
     });
 
-    if (error) console.error('Error inserting subscription:', error);
+    if (error) {
+        console.error('Error inserting subscription:', error);
+        return error;
+    }
+    return null;
 }
 
 async function handleSubscriptionUpdated(supabase: any, data: any) {
-    await supabase.from('subscriptions').update({
+    const { error } = await supabase.from('subscriptions').update({
         status: data.attributes.status,
         variant_id: data.attributes.variant_id,
         renews_at: data.attributes.renews_at,
         ends_at: data.attributes.ends_at,
         updated_at: data.attributes.updated_at,
     }).eq('subscription_id', data.id);
+    return error;
 }
 
 async function handleSubscriptionCancelled(supabase: any, data: any) {
-    await supabase.from('subscriptions').update({
+    const { error } = await supabase.from('subscriptions').update({
         status: 'cancelled',
         ends_at: data.attributes.ends_at,
         updated_at: data.attributes.updated_at,
     }).eq('subscription_id', data.id);
+    return error;
 }
 
 async function handleSubscriptionResumed(supabase: any, data: any) {
-    await supabase.from('subscriptions').update({
+    const { error } = await supabase.from('subscriptions').update({
         status: 'active',
         ends_at: null,
         updated_at: data.attributes.updated_at,
     }).eq('subscription_id', data.id);
+    return error;
 }
 
 async function handleSubscriptionExpired(supabase: any, data: any) {
-    await supabase.from('subscriptions').update({
+    const { error } = await supabase.from('subscriptions').update({
         status: 'expired',
         updated_at: data.attributes.updated_at,
     }).eq('subscription_id', data.id);
+    return error;
 }
 
 async function handleSubscriptionPaused(supabase: any, data: any) {
-    await supabase.from('subscriptions').update({
+    const { error } = await supabase.from('subscriptions').update({
         status: 'paused',
         updated_at: data.attributes.updated_at,
     }).eq('subscription_id', data.id);
+    return error;
 }
 
 async function handleSubscriptionUnpaused(supabase: any, data: any) {
-    await supabase.from('subscriptions').update({
+    const { error } = await supabase.from('subscriptions').update({
         status: 'active',
         updated_at: data.attributes.updated_at,
     }).eq('subscription_id', data.id);
+    return error;
 }
 
 async function handleSubscriptionPaymentSuccess(supabase: any, data: any) {
-    await supabase.from('subscriptions').update({
+    const { error } = await supabase.from('subscriptions').update({
         status: 'active',
         renews_at: data.attributes.renews_at,
         updated_at: data.attributes.updated_at,
     }).eq('subscription_id', data.id);
+    return error;
 }
 
 async function handleSubscriptionPaymentFailed(supabase: any, data: any) {
-    await supabase.from('subscriptions').update({
+    const { error } = await supabase.from('subscriptions').update({
         status: 'past_due',
         updated_at: data.attributes.updated_at,
     }).eq('subscription_id', data.id);
+    return error;
 }

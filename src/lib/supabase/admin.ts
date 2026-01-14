@@ -3,10 +3,11 @@ import type { Database } from './types';
 
 export const createAdminClient = () => {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceKey) {
-        throw new Error('Supabase environment variables are missing');
+        console.error('Admin Client Error: SUPABASE_SERVICE_ROLE_KEY is missing');
+        throw new Error('Supabase Service Role Key is missing. Check your production environment variables.');
     }
 
     return createClient<Database>(supabaseUrl, supabaseServiceKey, {

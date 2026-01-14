@@ -57,7 +57,7 @@ export async function updateSession(request: NextRequest) {
       .from('profiles')
       .select('onboarding_completed')
       .eq('id', user.id)
-      .single();
+      .maybeSingle();
 
     if (profile && !profile.onboarding_completed) {
       // Don't redirect if already on onboarding page
@@ -73,7 +73,7 @@ export async function updateSession(request: NextRequest) {
       .from('profiles')
       .select('onboarding_completed')
       .eq('id', user.id)
-      .single();
+      .maybeSingle();
 
     if (profile && profile.onboarding_completed) {
       const url = request.nextUrl.clone();

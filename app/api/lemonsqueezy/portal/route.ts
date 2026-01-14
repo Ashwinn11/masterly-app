@@ -20,8 +20,7 @@ export async function GET(request: NextRequest) {
             .eq('user_id', user.id)
             .in('status', ['active', 'on_trial', 'past_due', 'paused'])
             .order('created_at', { ascending: false })
-            .limit(1)
-            .single();
+            .maybeSingle();
 
         if (subError || !subscription) {
             return NextResponse.json({ error: 'No active subscription found' }, { status: 404 });

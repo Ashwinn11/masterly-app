@@ -13,7 +13,7 @@ class UploadLimitService {
                 .from('profiles')
                 .select('upload_count')
                 .eq('id', userId)
-                .single() as { data: { upload_count?: number } | null; error: any };
+                .maybeSingle() as { data: { upload_count?: number } | null; error: any };
 
             if (error) {
                 console.error('[UploadLimit] Error fetching upload count:', error);

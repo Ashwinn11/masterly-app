@@ -31,8 +31,7 @@ export async function getUserSubscription(): Promise<UserSubscription | null> {
         .eq('user_id', user.id)
         .in('status', ['active', 'on_trial'])
         .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
+        .maybeSingle();
 
     if (error || !data) {
         return null;
