@@ -101,6 +101,7 @@ function ProfilePageContent() {
           <Paywall 
             onClose={() => setShowPaywall(false)}
             showCloseButton={true}
+            currentVariantId={subscription?.variant_id}
           />
         </div>
       </div>
@@ -154,10 +155,10 @@ function ProfilePageContent() {
                       {subscription.status === 'active' ? 'Pro Plan Active' : `Plan ${subscription.status}`}
                     </h4>
                     <p className="text-lg opacity-70">
-                      {subscription.renews_at 
+                      {subscription.status === 'cancelled' || !!subscription.ends_at
+                        ? `Expires on ${new Date(subscription.ends_at || subscription.renews_at).toLocaleDateString()}`
+                        : subscription.renews_at
                         ? `Renews on ${new Date(subscription.renews_at).toLocaleDateString()}`
-                        : subscription.ends_at
-                        ? `Ends on ${new Date(subscription.ends_at).toLocaleDateString()}`
                         : 'Manage your plan details below'}
                     </p>
                   </div>

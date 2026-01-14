@@ -14,6 +14,7 @@ interface PaywallProps {
   showCloseButton?: boolean;
   title?: string;
   subtitle?: string;
+  currentVariantId?: string | null;
 }
 
 // Plan types for mapping
@@ -69,7 +70,8 @@ export function Paywall({
   onSubscribe,
   showCloseButton = true,
   title = "Unlock Masterly Pro",
-  subtitle = "Join 10,000+ students mastering their studies"
+  subtitle = "Join 10,000+ students mastering their studies",
+  currentVariantId
 }: PaywallProps) {
   const { createCheckout, fetchProducts, isLoading: isActionLoading } = useLemonSqueezy();
   const [products, setProducts] = useState<any[]>([]);
@@ -92,6 +94,8 @@ export function Paywall({
   }, []);
 
   const handleSubscribe = async (variantId: string) => {
+    if (variantId === currentVariantId) return;
+    
     setSelectedVariantId(variantId);
     try {
       // Trigger the "subscribe intent" callback
@@ -159,7 +163,8 @@ export function Paywall({
         features: config.features,
         popular: config.popular,
         badge: config.badge,
-        description: product.attributes.description
+        description: product.attributes.description,
+        isCurrent: vId === currentVariantId
       };
     })
     .filter(Boolean);
@@ -228,7 +233,15 @@ export function Paywall({
                 : 'border-border hover:border-primary/50'
             }`}
           >
-            {p.badge && (
+            {p.isCurrent && (
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                <span className="px-4 py-1 rounded-full text-xs font-black bg-green-500 text-white shadow-lg whitespace-nowrap">
+                  Your Current Plan
+                </span>
+              </div>
+            )}
+
+            {!p.isCurrent && p.badge && (
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                 <span className={`px-4 py-1 rounded-full text-xs font-bold whitespace-nowrap ${
                   p.popular
@@ -275,12 +288,17 @@ export function Paywall({
 
             <CardFooter>
               <Button
-                className="w-full text-lg font-bold py-6 group"
+                className={`w-full text-lg font-bold py-6 group ${p.isCurrent ? 'bg-muted text-muted-foreground border-2 border-foreground/10 cursor-default hover:bg-muted' : ''}`}
                 variant={p.popular ? 'default' : 'outline'}
-                onClick={() => handleSubscribe(p.variantId)}
-                disabled={isActionLoading}
+                onClick={() => !p.isCurrent && handleSubscribe(p.variantId)}
+                disabled={isActionLoading || p.isCurrent}
               >
-                {isActionLoading && selectedVariantId === p.variantId ? (
+                {p.isCurrent ? (
+                  <span className="flex items-center gap-2">
+                    <Check className="h-4 w-4" />
+                    Current Plan
+                  </span>
+                ) : isActionLoading && selectedVariantId === p.variantId ? (
                   <span className="flex items-center gap-2">
                     <motion.span 
                       animate={{ rotate: 360 }}

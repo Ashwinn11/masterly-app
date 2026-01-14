@@ -6,6 +6,7 @@ import { X, CreditCard, Calendar, ShieldCheck, ArrowUpCircle, XCircle, AlertTria
 import { Button } from '@/components/ui/button';
 import { useLemonSqueezy } from '@/hooks/useLemonSqueezy';
 import { useConfirmationStore } from '@/lib/utils/confirmationUtils';
+import { cn } from '@/lib/utils';
 
 interface ManageSubscriptionModalProps {
   isOpen: boolean;
@@ -122,14 +123,19 @@ export function ManageSubscriptionModal({ isOpen, onClose, subscription, onUpdat
               <div className="flex items-center gap-2 text-sm">
                 <Calendar className="w-4 h-4 text-primary" />
                 <span className="font-bold">Status:</span>
-                <span className="px-2 py-0.5 bg-green-500 text-white text-[10px] uppercase font-black rounded-full">
+                <span className={cn(
+                  "px-2 py-0.5 text-white text-[10px] uppercase font-black rounded-full",
+                  subscription.status === 'active' ? "bg-green-500" : "bg-orange-500"
+                )}>
                   {subscription.status}
                 </span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <CreditCard className="w-4 h-4 text-primary" />
-                <span className="font-bold">Renews on:</span>
-                <span>{subscription.renews_at ? new Date(subscription.renews_at).toLocaleDateString() : 'N/A'}</span>
+                <span className="font-bold">
+                  {subscription.status === 'cancelled' ? 'Expires on:' : 'Renews on:'}
+                </span>
+                <span>{new Date(subscription.ends_at || subscription.renews_at).toLocaleDateString()}</span>
               </div>
             </div>
           </div>
@@ -137,16 +143,21 @@ export function ManageSubscriptionModal({ isOpen, onClose, subscription, onUpdat
           {/* Actions */}
           <div className="grid grid-cols-1 gap-3">
             <Button 
-              onClick={() => {
-                onClose();
-                // We'll expose this later or just use the portal for upgrades
-                // as it's safer for now
+              onClick={async () => {
+                // For upgrades, the LS Portal is the BEST way because it handles
+                // proration (refunding the unused time of the old plan) automatically.
+                try {
+                  await getPortalUrl();
+                } catch (err: any) {
+                  setError('Failed to open upgrade portal');
+                }
               }}
+              disabled={isLoading}
               variant="default"
               className="h-14 font-handwritten text-lg font-black bg-gradient-to-r from-primary to-accent border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all flex gap-2"
             >
               <ArrowUpCircle className="w-5 h-5" />
-              Upgrade Plan
+              Upgrade or Change Plan
             </Button>
 
             <Button 
@@ -159,15 +170,17 @@ export function ManageSubscriptionModal({ isOpen, onClose, subscription, onUpdat
               Update Payment Method
             </Button>
 
-            <Button 
-              onClick={handleCancelClick}
-              disabled={isLoading}
-              variant="ghost"
-              className="h-14 font-handwritten text-lg font-black text-red-500 hover:bg-red-50 hover:text-red-600 flex gap-2"
-            >
-              <XCircle className="w-5 h-5" />
-              Cancel Subscription
-            </Button>
+            {subscription.status !== 'cancelled' && (
+              <Button 
+                onClick={handleCancelClick}
+                disabled={isLoading}
+                variant="ghost"
+                className="h-14 font-handwritten text-lg font-black text-red-500 hover:bg-red-50 hover:text-red-600 flex gap-2"
+              >
+                <XCircle className="w-5 h-5" />
+                Cancel Subscription
+              </Button>
+            )}
           </div>
         </div>
 

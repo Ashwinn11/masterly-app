@@ -68,9 +68,9 @@ class UploadLimitService {
             const supabase = getSupabaseClient();
             const { data, error } = await supabase
                 .from('subscriptions')
-                .select('status')
+                .select('status, ends_at')
                 .eq('user_id', userId)
-                .in('status', ['active', 'on_trial'])
+                .or('status.in.(active,on_trial,past_due,paused),and(status.eq.cancelled,ends_at.gt.now())')
                 .maybeSingle();
 
             if (error) {
