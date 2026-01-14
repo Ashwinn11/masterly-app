@@ -37,11 +37,18 @@ export async function POST(request: NextRequest) {
         }
 
         return NextResponse.json({ checkoutUrl });
-    } catch (error) {
-        console.error('Checkout creation error:', error);
+    } catch (error: any) {
+        // Log the full error for debugging (check the terminal)
+        console.error('Checkout creation error detail:', error);
+
+        // Extract the most helpful error message from Lemon Squeezy if available
+        const message = error.response?.data?.errors?.[0]?.detail ||
+            error.message ||
+            'Internal server error';
+
         return NextResponse.json(
-            { error: 'Internal server error', details: error instanceof Error ? error.message : String(error) },
-            { status: 500 }
+            { error: message, details: error.response?.data || error.message },
+            { status: error.response?.status || 500 }
         );
     }
 }

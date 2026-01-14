@@ -10,13 +10,18 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { getSupabaseClient } from '@/lib/supabase/client';
+import { useConfirmationStore } from '@/lib/utils/confirmationUtils';
+import { Loader2 } from 'lucide-react';
 
-export default function DashboardPage() {
+function DashboardContent() {
   const { user, stats } = useAuth();
   const [mounted, setMounted] = useState(false);
   const [dueCount, setDueCount] = useState<number>(0);
+  const searchParams = useSearchParams();
+  const { openConfirmation } = useConfirmationStore();
 
   useEffect(() => {
     setMounted(true);
@@ -36,6 +41,22 @@ export default function DashboardPage() {
     };
     loadDueCount();
   }, [user?.id]);
+  
+  // Handle billing success redirect
+  useEffect(() => {
+    if (searchParams?.get('billing_success') === 'true') {
+      openConfirmation({
+        title: '🎉 You are now Pro!',
+        message: 'Welcome to Masterly Pro! All premium features have been unlocked for your account. Study materials are now unlimited.',
+        confirmText: 'Awesome!',
+        variant: 'default',
+        onConfirm: () => {
+          // Clean up URL
+          window.history.replaceState({}, '', '/dashboard');
+        }
+      });
+    }
+  }, [searchParams, openConfirmation]);
   
   const firstName = user?.user_metadata?.full_name?.split(' ')[0] || 
                     user?.user_metadata?.name?.split(' ')[0] || 
@@ -103,5 +124,13 @@ export default function DashboardPage() {
         </div>
       </div>
     </ScreenLayout>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center p-24"><Loader2 className="w-12 h-12 animate-spin text-primary" /></div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }

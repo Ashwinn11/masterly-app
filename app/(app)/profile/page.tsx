@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useLemonSqueezy } from '@/hooks/useLemonSqueezy';
 import { ScreenLayout } from '@/components/ui/ScreenLayout';
@@ -28,10 +29,11 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
-export default function ProfilePage() {
+function ProfilePageContent() {
   const { user, fullName, stats, deleteAccount } = useAuth() as any;
   const { openConfirmation } = useConfirmationStore();
   const { getPortalUrl, isLoading: isLSLoading } = useLemonSqueezy();
+  const searchParams = useSearchParams();
   
   const [subscription, setSubscription] = useState<any>(null);
   const [isLoadingSub, setIsLoadingSub] = useState(true);
@@ -296,5 +298,13 @@ export default function ProfilePage() {
         </div>
       </div>
     </ScreenLayout>
+  );
+}
+
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center p-24"><Loader2 className="w-12 h-12 animate-spin text-primary" /></div>}>
+      <ProfilePageContent />
+    </Suspense>
   );
 }

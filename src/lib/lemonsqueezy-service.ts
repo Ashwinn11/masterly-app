@@ -22,6 +22,10 @@ export async function createCheckoutSession(
 ) {
     configureLemonSqueezy();
 
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const redirectUrl = `${baseUrl}/dashboard?billing_success=true`;
+    const isTestMode = process.env.NODE_ENV !== 'production';
+
     // Extract discount_code if present
     const { discount_code, ...restCustomData } = customData || {};
 
@@ -34,11 +38,15 @@ export async function createCheckoutSession(
                 ...restCustomData,
             },
         },
+        productOptions: {
+            redirectUrl: redirectUrl,
+        },
         checkoutOptions: {
             embed: false,
             media: true,
             logo: true,
         },
+        testMode: isTestMode,
     });
 
     return checkout.data?.data.attributes.url;

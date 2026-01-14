@@ -38,20 +38,34 @@ export async function POST(request: NextRequest) {
         const event = JSON.parse(rawBody);
         const eventName = event.meta?.event_name;
         const data = event.data;
+        const meta = event.meta;
 
-        console.log('Lemon Squeezy webhook event:', eventName);
+        console.log('--- Lemon Squeezy Webhook Received ---');
+        console.log('Event:', eventName);
+        console.log('Payload Data ID:', data?.id);
+
+        // Extract user_id from either meta or data.attributes (LS structures can vary)
+        const userId = meta?.custom_data?.user_id ||
+            data?.attributes?.custom_data?.user_id ||
+            event?.meta?.custom_data?.user_id;
+
+        console.log('Detected User ID:', userId);
 
         const supabase = await createClient();
 
         // Handle different webhook events
         switch (eventName) {
             case 'order_created':
-                await handleOrderCreated(supabase, data);
+                console.log('Processing order_created...');
+                await handleOrderCreated(supabase, data, userId);
                 break;
 
             case 'subscription_created':
-                await handleSubscriptionCreated(supabase, data);
+                console.log('Processing subscription_created...');
+                const subResult = await handleSubscriptionCreated(supabase, data, userId);
+                console.log('Subscription insert result:', subResult);
                 break;
+            // ... (rest of switch)
 
             case 'subscription_updated':
                 await handleSubscriptionUpdated(supabase, data);
@@ -99,13 +113,14 @@ export async function POST(request: NextRequest) {
     }
 }
 
-async function handleOrderCreated(supabase: any, data: any) {
-    const userId = data.attributes.custom_data?.user_id;
-
-    if (!userId) return;
+async function handleOrderCreated(supabase: any, data: any, userId: string | null) {
+    if (!userId) {
+        console.warn('handleOrderCreated: No userId found in payload');
+        return;
+    }
 
     // Store order in database
-    await supabase.from('orders').insert({
+    const { error } = await supabase.from('orders').insert({
         user_id: userId,
         order_id: data.id,
         status: data.attributes.status,
@@ -113,15 +128,18 @@ async function handleOrderCreated(supabase: any, data: any) {
         currency: data.attributes.currency,
         created_at: data.attributes.created_at,
     });
+
+    if (error) console.error('Error inserting order:', error);
 }
 
-async function handleSubscriptionCreated(supabase: any, data: any) {
-    const userId = data.attributes.custom_data?.user_id;
-
-    if (!userId) return;
+async function handleSubscriptionCreated(supabase: any, data: any, userId: string | null) {
+    if (!userId) {
+        console.warn('handleSubscriptionCreated: No userId found in payload');
+        return;
+    }
 
     // Store subscription in database
-    await supabase.from('subscriptions').upsert({
+    const { error } = await supabase.from('subscriptions').upsert({
         user_id: userId,
         subscription_id: data.id,
         status: data.attributes.status,
@@ -132,7 +150,11 @@ async function handleSubscriptionCreated(supabase: any, data: any) {
         trial_ends_at: data.attributes.trial_ends_at,
         created_at: data.attributes.created_at,
         updated_at: data.attributes.updated_at,
+    }, {
+        onConflict: 'subscription_id'
     });
+
+    if (error) console.error('Error inserting subscription:', error);
 }
 
 async function handleSubscriptionUpdated(supabase: any, data: any) {
