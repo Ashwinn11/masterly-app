@@ -195,7 +195,7 @@ export default function BillingPage() {
     p.relationships?.variants?.data?.some((v: any) => v.id === subscription?.variant_id)
   );
   
-  const planPrice = currentProduct?.attributes?.price_formatted || '---';
+  const planPrice = (currentProduct?.attributes?.price_formatted || '---').split('/')[0];
 
   const billingPeriod = 
     subscription.variant_id === process.env.NEXT_PUBLIC_LS_VARIANT_WEEKLY ? 'week' :
