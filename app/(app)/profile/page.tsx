@@ -1,12 +1,15 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useLemonSqueezy } from '@/hooks/useLemonSqueezy';
 import { ScreenLayout } from '@/components/ui/ScreenLayout';
-import { BackButton } from '@/components/ui/BackButton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useConfirmationStore } from '@/lib/utils/confirmationUtils';
+import { Paywall } from '@/components/Paywall';
+import { getSupabaseClient } from '@/lib/supabase/client';
 import { 
   User, 
   Mail, 
@@ -19,14 +22,49 @@ import {
   Shield,
   HelpCircle,
   Trash2,
-  ExternalLink
+  ExternalLink,
+  Crown,
+  Loader2
 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ProfilePage() {
   const { user, fullName, stats, deleteAccount } = useAuth() as any;
   const { openConfirmation } = useConfirmationStore();
+  const { getPortalUrl, isLoading: isLSLoading } = useLemonSqueezy();
   
+  const [subscription, setSubscription] = useState<any>(null);
+  const [isLoadingSub, setIsLoadingSub] = useState(true);
+  const [showPaywall, setShowPaywall] = useState(false);
+
+  useEffect(() => {
+    async function checkSubscription() {
+      if (!user?.id) return;
+      
+      try {
+        const supabase = getSupabaseClient();
+        const { data, error } = await (supabase as any)
+          .from('subscriptions')
+          .select('*')
+          .eq('user_id', user.id)
+          .in('status', ['active', 'on_trial', 'past_due', 'paused'])
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
+
+        if (data) {
+          setSubscription(data);
+        }
+      } catch (err) {
+        console.error('Error checking subscription:', err);
+      } finally {
+        setIsLoadingSub(false);
+      }
+    }
+
+    checkSubscription();
+  }, [user?.id]);
+
   const firstName = user?.user_metadata?.full_name?.split(' ')[0] || 
                     user?.user_metadata?.name?.split(' ')[0] || 
                     'User';
@@ -48,6 +86,27 @@ export default function ProfilePage() {
       }
     });
   };
+
+  const handleManageSubscription = async () => {
+    try {
+      await getPortalUrl();
+    } catch (err) {
+      console.error('Failed to open portal:', err);
+    }
+  };
+
+  if (showPaywall) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-xl">
+        <div className="relative w-full max-w-6xl max-h-[90vh] overflow-y-auto bg-card border-4 border-foreground rounded-[2.5rem] shadow-[20px_20px_0px_0px_rgba(0,0,0,0.1)]">
+          <Paywall 
+            onClose={() => setShowPaywall(false)}
+            showCloseButton={true}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <ScreenLayout title="Profile" subtitle="Your progress & settings">
@@ -72,6 +131,78 @@ export default function ProfilePage() {
                 </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Subscription Card */}
+        <Card className="border-[3px] border-foreground rounded-[32px] shadow-[6px_6px_0px_0px_rgba(0,0,0,0.05)] overflow-hidden">
+          <CardHeader>
+            <CardTitle className="text-3xl font-black font-handwritten flex items-center gap-3">
+              <Crown className="w-7 h-7 text-yellow-500" />
+              Subscription
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="font-handwritten">
+            {isLoadingSub ? (
+              <div className="flex items-center justify-center p-8">
+                <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : subscription ? (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between p-6 rounded-2xl bg-primary/5 border-2 border-primary/20">
+                  <div>
+                    <h4 className="text-2xl font-black text-primary mb-1 capitalize">
+                      {subscription.status === 'active' ? 'Pro Plan Active' : `Plan ${subscription.status}`}
+                    </h4>
+                    <p className="text-lg opacity-70">
+                      {subscription.renews_at 
+                        ? `Renews on ${new Date(subscription.renews_at).toLocaleDateString()}`
+                        : subscription.ends_at
+                        ? `Ends on ${new Date(subscription.ends_at).toLocaleDateString()}`
+                        : 'Manage your plan details below'}
+                    </p>
+                  </div>
+                  <div className="hidden sm:block">
+                    <Star className="w-12 h-12 text-yellow-500 fill-yellow-500/20" />
+                  </div>
+                </div>
+                
+                <Button 
+                  onClick={handleManageSubscription}
+                  disabled={isLSLoading}
+                  className="w-full py-8 text-xl font-black rounded-2xl border-[3px] border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-y-[0px] active:shadow-none transition-all"
+                >
+                  {isLSLoading ? (
+                    <><Loader2 className="w-6 h-6 mr-2 animate-spin" />Opening Portal...</>
+                  ) : (
+                    <><Smartphone className="w-6 h-6 mr-2" />Manage Subscription</>
+                  )}
+                </Button>
+                <p className="text-center text-sm opacity-50 italic">
+                  Change your billing, upgrade, or cancel in the secure portal.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                <div className="flex items-center gap-4 p-6 rounded-2xl bg-muted/30 border-2 border-foreground/5">
+                  <div className="p-3 bg-primary/10 rounded-xl">
+                    <Sparkles className="w-8 h-8 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="text-2xl font-black">Free Plan</h4>
+                    <p className="text-lg opacity-70">Upgrade for unlimited uploads & AI features</p>
+                  </div>
+                </div>
+                
+                <Button 
+                  onClick={() => setShowPaywall(true)}
+                  className="w-full py-8 text-xl font-black bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 rounded-2xl border-[3px] border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all"
+                >
+                  <Crown className="w-6 h-6 mr-2" />
+                  Go Premium
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
 

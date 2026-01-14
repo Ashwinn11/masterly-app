@@ -487,8 +487,8 @@ export default function UploadPage() {
                   </p>
                   <p className="font-handwritten text-sm text-muted-foreground">
                     {remainingUploads === 0 ? 
-                      "Download our iOS app to upgrade to Pro for unlimited uploads!" :
-                      "Get unlimited uploads with Pro on iOS"}
+                      "Upgrade to Masterly Pro for unlimited uploads!" :
+                      "Get unlimited uploads with Masterly Pro"}
                   </p>
                 </div>
               </div>
@@ -496,9 +496,9 @@ export default function UploadPage() {
                 <Button
                   onClick={() => setLimitModalOpen(true)}
                   variant="default"
-                  className="font-handwritten font-black"
+                  className="font-handwritten font-black px-6 py-2 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 border-2 border-foreground"
                 >
-                  Learn More
+                  Go Premium
                 </Button>
               )}
             </CardContent>

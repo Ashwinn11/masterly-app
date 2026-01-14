@@ -47,8 +47,12 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Public pages that should be accessible even if onboarding is not completed
+  const publicPaths = ['/terms', '/privacy', '/login'];
+  const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
+
   // If user is authenticated, check onboarding status
-  if (user && pathname !== '/onboarding') {
+  if (user && pathname !== '/onboarding' && !isPublicPath && !pathname.startsWith('/api')) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('onboarding_completed')

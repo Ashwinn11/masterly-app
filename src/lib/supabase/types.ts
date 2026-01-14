@@ -82,6 +82,36 @@ export type Database = {
         }
         Relationships: []
       }
+      orders: {
+        Row: {
+          created_at: string | null
+          currency: string
+          id: string
+          order_id: string
+          status: string
+          total: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          currency: string
+          id?: string
+          order_id: string
+          status: string
+          total: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          currency?: string
+          id?: string
+          order_id?: string
+          status?: string
+          total?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -193,6 +223,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      subscriptions: {
+        Row: {
+          created_at: string | null
+          ends_at: string | null
+          id: string
+          product_id: string
+          renews_at: string | null
+          status: string
+          subscription_id: string
+          trial_ends_at: string | null
+          updated_at: string | null
+          user_id: string
+          variant_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          ends_at?: string | null
+          id?: string
+          product_id: string
+          renews_at?: string | null
+          status: string
+          subscription_id: string
+          trial_ends_at?: string | null
+          updated_at?: string | null
+          user_id: string
+          variant_id: string
+        }
+        Update: {
+          created_at?: string | null
+          ends_at?: string | null
+          id?: string
+          product_id?: string
+          renews_at?: string | null
+          status?: string
+          subscription_id?: string
+          trial_ends_at?: string | null
+          updated_at?: string | null
+          user_id?: string
+          variant_id?: string
+        }
+        Relationships: []
       }
       user_progress: {
         Row: {
