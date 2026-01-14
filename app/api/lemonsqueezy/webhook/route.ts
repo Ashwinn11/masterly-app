@@ -60,11 +60,12 @@ export async function POST(request: NextRequest) {
                 await handleOrderCreated(supabase, data, userId);
                 break;
 
-            case 'subscription_created':
+            case 'subscription_created': {
                 console.log('Processing subscription_created...');
                 const subResult = await handleSubscriptionCreated(supabase, data, userId);
                 console.log('Subscription insert result:', subResult);
                 break;
+            }
             // ... (rest of switch)
 
             case 'subscription_updated':
