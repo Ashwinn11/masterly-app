@@ -25,21 +25,21 @@ import {
   Trash2,
   ExternalLink,
   Crown,
-  Loader2
+  Loader2,
+  ChevronRight
 } from 'lucide-react';
 import Link from 'next/link';
-import { ManageSubscriptionModal } from '@/components/ManageSubscriptionModal';
+import { useRouter } from 'next/navigation';
 
 function ProfilePageContent() {
   const { user, fullName, stats, deleteAccount } = useAuth() as any;
   const { openConfirmation } = useConfirmationStore();
-  const { getPortalUrl, isLoading: isLSLoading } = useLemonSqueezy();
+  const router = useRouter();
   const searchParams = useSearchParams();
   
   const [subscription, setSubscription] = useState<any>(null);
   const [isLoadingSub, setIsLoadingSub] = useState(true);
   const [showPaywall, setShowPaywall] = useState(false);
-  const [showManageModal, setShowManageModal] = useState(false);
 
   useEffect(() => {
     async function checkSubscription() {
@@ -47,11 +47,12 @@ function ProfilePageContent() {
       
       try {
         const supabase = getSupabaseClient();
+        const now = new Date().toISOString();
         const { data, error } = await (supabase as any)
           .from('subscriptions')
           .select('*')
           .eq('user_id', user.id)
-          .in('status', ['active', 'on_trial', 'past_due', 'paused'])
+          .or(`status.in.(active,on_trial,past_due,paused),and(status.eq.cancelled,ends_at.gt.${now})`)
           .order('created_at', { ascending: false })
           .maybeSingle();
 
@@ -90,8 +91,8 @@ function ProfilePageContent() {
     });
   };
 
-  const handleManageSubscription = async () => {
-    setShowManageModal(true);
+  const handleManageSubscription = () => {
+    router.push('/profile/billing');
   };
 
   if (showPaywall) {
@@ -169,14 +170,11 @@ function ProfilePageContent() {
                 
                 <Button 
                   onClick={handleManageSubscription}
-                  disabled={isLSLoading}
                   className="w-full py-8 text-xl font-black rounded-2xl border-[3px] border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-y-[0px] active:shadow-none transition-all"
                 >
-                  {isLSLoading ? (
-                    <><Loader2 className="w-6 h-6 mr-2 animate-spin" />Opening Portal...</>
-                  ) : (
-                    <><Smartphone className="w-6 h-6 mr-2" />Manage Subscription</>
-                  )}
+                  <Smartphone className="w-6 h-6 mr-2" />
+                  Manage Plan & Billing
+                  <ChevronRight className="ml-auto w-6 h-6" />
                 </Button>
                 <p className="text-center text-sm opacity-50 italic">
                   Change your billing, upgrade, or cancel in the secure portal.
@@ -295,19 +293,6 @@ function ProfilePageContent() {
           </Card>
         </div>
       </div>
-      <ManageSubscriptionModal 
-        isOpen={showManageModal}
-        onClose={() => setShowManageModal(false)}
-        subscription={subscription}
-        onUpdate={() => {
-          // Immediately update local state so UI reflects "Cancelled but Active"
-          setSubscription((prev: any) => ({ 
-            ...prev, 
-            status: 'cancelled',
-            ends_at: prev.renews_at 
-          }));
-        }}
-      />
     </ScreenLayout>
   );
 }

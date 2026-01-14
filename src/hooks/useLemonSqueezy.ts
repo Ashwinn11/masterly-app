@@ -130,11 +130,37 @@ export function useLemonSqueezy() {
         }
     };
 
+    const resumeSubscription = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch('/api/lemonsqueezy/resume', {
+                method: 'POST',
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to resume subscription');
+            }
+
+            return data;
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+            setError(errorMessage);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return {
         createCheckout,
         fetchProducts,
         getPortalUrl,
         cancelSubscription,
+        resumeSubscription,
         isLoading,
         error,
     };

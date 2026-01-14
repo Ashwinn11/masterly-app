@@ -138,6 +138,21 @@ export async function cancelUserSubscription(subscriptionId: string) {
 }
 
 /**
+ * Resume a cancelled subscription
+ */
+export async function resumeUserSubscription(subscriptionId: string) {
+    configureLemonSqueezy();
+
+    // To resume a cancelled subscription in Lemon Squeezy, 
+    // we set cancelled: false in the updateSubscription call
+    const result = await updateSubscription(subscriptionId, {
+        cancelled: false,
+    });
+
+    return result.data?.data;
+}
+
+/**
  * Update a subscription (e.g., change plan)
  */
 export async function updateUserSubscription(

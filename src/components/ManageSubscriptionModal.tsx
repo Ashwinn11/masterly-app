@@ -187,7 +187,7 @@ export function ManageSubscriptionModal({ isOpen, onClose, subscription, onUpdat
         {/* Footer */}
         <div className="p-6 bg-muted/30 border-t-4 border-foreground text-center">
           <p className="font-handwritten text-sm opacity-60">
-            For more help, contact support@masterly.in
+            For more help, contact support@masterlyapp.in
           </p>
         </div>
       </motion.div>

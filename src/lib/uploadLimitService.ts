@@ -66,11 +66,12 @@ class UploadLimitService {
     async hasActiveSubscription(userId: string): Promise<boolean> {
         try {
             const supabase = getSupabaseClient();
+            const now = new Date().toISOString();
             const { data, error } = await supabase
                 .from('subscriptions')
                 .select('status, ends_at')
                 .eq('user_id', userId)
-                .or('status.in.(active,on_trial,past_due,paused),and(status.eq.cancelled,ends_at.gt.now())')
+                .or(`status.in.(active,on_trial,past_due,paused),and(status.eq.cancelled,ends_at.gt.${now})`)
                 .maybeSingle();
 
             if (error) {

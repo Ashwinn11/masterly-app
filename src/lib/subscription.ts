@@ -25,11 +25,12 @@ export async function getUserSubscription(): Promise<UserSubscription | null> {
         return null;
     }
 
+    const now = new Date().toISOString();
     const { data, error } = await supabase
         .from('subscriptions')
         .select('*')
         .eq('user_id', user.id)
-        .or('status.in.(active,on_trial,past_due,paused),and(status.eq.cancelled,ends_at.gt.now())')
+        .or(`status.in.(active,on_trial,past_due,paused),and(status.eq.cancelled,ends_at.gt.${now})`)
         .order('created_at', { ascending: false })
         .maybeSingle();
 
