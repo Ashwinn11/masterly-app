@@ -16,6 +16,7 @@ interface PaywallProps {
   title?: string;
   subtitle?: string;
   currentVariantId?: string | null;
+  currentSubscription?: any; // Full subscription object for proration
 }
 
 // Plan types for mapping
@@ -72,7 +73,8 @@ export function Paywall({
   showCloseButton = true,
   title = "Unlock Masterly Pro",
   subtitle = "Join 10,000+ students mastering their studies",
-  currentVariantId
+  currentVariantId,
+  currentSubscription
 }: PaywallProps) {
   const { createCheckout, fetchProducts, isLoading: isActionLoading } = useLemonSqueezy();
   const [products, setProducts] = useState<any[]>([]);
@@ -81,6 +83,7 @@ export function Paywall({
   const [discountCode] = useState('MWODUWNW');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingVariantId, setPendingVariantId] = useState<string | null>(null);
+  const [pendingPlanData, setPendingPlanData] = useState<{ price: number; interval: string; intervalCount: number } | null>(null);
 
   useEffect(() => {
     async function loadProducts() {
@@ -121,18 +124,24 @@ export function Paywall({
     // Close modal and paywall
     setShowConfirmModal(false);
     setPendingVariantId(null);
+    setPendingPlanData(null);
     onClose?.();
   };
 
-  const handleSubscribe = async (variantId: string) => {
+  const handleSubscribe = async (variantId: string, variantPrice?: number, variantInterval?: string, variantIntervalCount?: number) => {
     if (variantId === currentVariantId) return;
     
     setSelectedVariantId(variantId);
     
     try {
-      // If user has an existing subscription, show confirmation modal
-      if (currentVariantId) {
+      // If user has an existing subscription, show confirmation modal with pricing
+      if (currentVariantId && variantPrice) {
         setPendingVariantId(variantId);
+        setPendingPlanData({
+          price: variantPrice / 100, // Convert cents to dollars
+          interval: variantInterval || 'month',
+          intervalCount: variantIntervalCount || 1,
+        });
         setShowConfirmModal(true);
         return;
       }
@@ -187,6 +196,10 @@ export function Paywall({
 
       const config = UI_PLAN_CONFIG[type];
       
+      // Get the variant details for proration
+      const variant = product.relationships?.variants?.data?.find((v: any) => v.id === vId);
+      const variantAttributes = variant?.attributes || {};
+      
       return {
         id: product.id,
         variantId: vId,
@@ -202,7 +215,11 @@ export function Paywall({
         popular: config.popular,
         badge: config.badge,
         description: product.attributes.description,
-        isCurrent: vId === currentVariantId
+        isCurrent: vId === currentVariantId,
+        // Add raw data for proration
+        rawPrice: product.attributes.price, // in cents
+        rawInterval: variantAttributes.interval || config.interval,
+        rawIntervalCount: variantAttributes.interval_count || 1
       };
     })
     .filter(Boolean);
@@ -395,9 +412,15 @@ export function Paywall({
         onClose={() => {
           setShowConfirmModal(false);
           setPendingVariantId(null);
+          setPendingPlanData(null);
         }}
         onConfirm={handleConfirmUpdate}
         planName={getPlanName(pendingVariantId || "")}
+        currentSubscription={currentSubscription}
+        newVariantId={pendingVariantId || ""}
+        newPlanPrice={pendingPlanData?.price || 0}
+        newPlanInterval={pendingPlanData?.interval || "month"}
+        newPlanIntervalCount={pendingPlanData?.intervalCount || 1}
       />
     </div>
   );

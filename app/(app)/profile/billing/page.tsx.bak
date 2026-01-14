@@ -122,7 +122,6 @@ export default function BillingPage() {
           }}
           showCloseButton={true}
           currentVariantId={subscription?.variant_id}
-          currentSubscription={subscription}
           title="Upgrade Your Plan"
           subtitle="Choose a new plan to continue your Pro journey"
         />
