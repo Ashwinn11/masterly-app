@@ -26,6 +26,8 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'No active subscription found' }, { status: 404 });
         }
 
+        console.log(`[Portal] Fetching portal URL for sub_id: ${subscription.subscription_id}`);
+
         // Fetch the latest details from Lemon Squeezy to get the portal URL
         const lsSubscription = await getSubscriptionDetails(subscription.subscription_id);
 
@@ -42,8 +44,17 @@ export async function GET(request: NextRequest) {
             renewsAt: subscription.renews_at,
             endsAt: subscription.ends_at
         });
-    } catch (error) {
+    } catch (error: any) {
         console.error('Portal fetch error:', error);
+
+        // Handle Lemon Squeezy "Not Found" specifically
+        if (error.response?.status === 404 || error.message?.includes('Not Found')) {
+            return NextResponse.json(
+                { error: 'Subscription not found in Lemon Squeezy. This usually happens if the subscription was created in Test Mode but the API is running in Live Mode (or vice-versa).' },
+                { status: 404 }
+            );
+        }
+
         return NextResponse.json(
             { error: 'Internal server error', details: error instanceof Error ? error.message : String(error) },
             { status: 500 }

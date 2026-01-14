@@ -32,6 +32,10 @@ class UploadLimitService {
      */
     async incrementUploadCount(userId: string): Promise<boolean> {
         try {
+            // If user is Pro, don't increment the free count
+            const isPro = await this.hasActiveSubscription(userId);
+            if (isPro) return true;
+
             const supabase = getSupabaseClient();
             // First, get the current count
             const currentCount = await this.getUserUploadCount(userId);
@@ -57,11 +61,39 @@ class UploadLimitService {
     }
 
     /**
+     * Check if user has an active subscription
+     */
+    async hasActiveSubscription(userId: string): Promise<boolean> {
+        try {
+            const supabase = getSupabaseClient();
+            const { data, error } = await supabase
+                .from('subscriptions')
+                .select('status')
+                .eq('user_id', userId)
+                .in('status', ['active', 'on_trial'])
+                .maybeSingle();
+
+            if (error) {
+                console.error('[UploadLimit] Error checking subscription:', error);
+                return false;
+            }
+
+            return !!data;
+        } catch (error) {
+            console.error('[UploadLimit] Error in hasActiveSubscription:', error);
+            return false;
+        }
+    }
+
+    /**
      * Check if user has reached the free upload limit
      * Returns true if user can upload, false if limit reached
-     * For web, we don't check subscription status yet (no paywall integration)
      */
     async canUserUpload(userId: string): Promise<boolean> {
+        // If user is Pro, they can always upload
+        const isPro = await this.hasActiveSubscription(userId);
+        if (isPro) return true;
+
         const uploadCount = await this.getUserUploadCount(userId);
         return uploadCount < FREE_UPLOAD_LIMIT;
     }
@@ -70,6 +102,10 @@ class UploadLimitService {
      * Get remaining free uploads for a user
      */
     async getRemainingUploads(userId: string): Promise<number> {
+        // If user is Pro, return a high number to represent unlimited
+        const isPro = await this.hasActiveSubscription(userId);
+        if (isPro) return 999;
+
         const uploadCount = await this.getUserUploadCount(userId);
         const remaining = Math.max(0, FREE_UPLOAD_LIMIT - uploadCount);
         return remaining;

@@ -83,11 +83,36 @@ export async function getProductById(productId: string) {
  * Get subscription details
  */
 export async function getSubscriptionDetails(subscriptionId: string) {
+    if (!subscriptionId) {
+        console.error('[LS] getSubscriptionDetails: No subscriptionId provided');
+        return null;
+    }
+
+    const storeId = getStoreId();
+    console.log(`[LS] Fetching subscription details for ID: ${subscriptionId} (Store ID: ${storeId})`);
     configureLemonSqueezy();
 
-    const subscription = await getSubscription(subscriptionId);
+    try {
+        // Try as provided (usually string)
+        const subscription = await getSubscription(subscriptionId);
+        return subscription.data?.data;
+    } catch (error: any) {
+        // If it failed, try as a number just in case
+        if (!isNaN(Number(subscriptionId))) {
+            try {
+                const subscription = await getSubscription(Number(subscriptionId));
+                return subscription.data?.data;
+            } catch (innerError) {
+                // Ignore and fall through to original error
+            }
+        }
 
-    return subscription.data?.data;
+        console.error(`[LS] Error fetching subscription ${subscriptionId}:`, error);
+        if (error.response?.status === 404 || error.message?.includes('Not Found')) {
+            console.error(`[LS] Subscription ${subscriptionId} not found in Lemon Squeezy Store ${storeId}. Check if this is a Test vs Live ID mismatch or if the API key belongs to a different store.`);
+        }
+        throw error;
+    }
 }
 
 /**

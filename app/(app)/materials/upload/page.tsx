@@ -462,7 +462,7 @@ export default function UploadPage() {
     <ScreenLayout title="Upload" subtitle="Upload files or paste text to generate AI flashcards">
       <div className="max-w-3xl mx-auto w-full space-y-4">
         {/* Upload Limit Indicator */}
-        {remainingUploads !== null && (
+        {remainingUploads !== null && remainingUploads < 100 && (
           <Card className={cn(
             "border-[3px] rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]",
             remainingUploads === 0 ? "border-red-500 bg-red-50" : 
@@ -501,6 +501,23 @@ export default function UploadPage() {
                   Go Premium
                 </Button>
               )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Pro Active Indicator */}
+        {remainingUploads !== null && remainingUploads >= 100 && (
+          <Card className="border-[3px] border-primary/30 rounded-2xl bg-primary/5 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white">
+                  <CheckCircle2 className="w-7 h-7" />
+                </div>
+                <div>
+                  <p className="font-handwritten text-lg font-black text-primary">Masterly Pro Active</p>
+                  <p className="font-handwritten text-sm text-primary/70">Enjoy unlimited uploads and premium features!</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         )}
