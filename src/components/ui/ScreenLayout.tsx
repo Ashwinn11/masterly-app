@@ -50,12 +50,12 @@ export function ScreenLayout({
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   return (
-    <div className="relative min-h-[85vh] flex flex-col items-center py-4 px-2 sm:px-4">
+    <div className="relative min-h-screen flex flex-col items-center bg-background">
       <DoodleBackground />
       
       {/* Mobile Header */}
       {isMobile && !hideSidebar && (
-        <div className="w-full flex items-center justify-between mb-4 px-2 bg-background/40 backdrop-blur-sm rounded-xl p-2 border-2 border-foreground/5">
+        <div className="w-full flex items-center justify-between mb-0 px-4 py-3 bg-background/40 backdrop-blur-sm border-b-2 border-foreground/5 sticky top-0 z-50">
           <Link href="/dashboard" className="flex items-center gap-2 group">
             <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-110 transition-transform">
               <img src="/icon.png" alt="Masterly AI" className="w-full h-full object-cover" />
@@ -79,8 +79,8 @@ export function ScreenLayout({
       )}
 
       <div className={cn(
-        "w-full max-w-[1700px] bg-background/80 backdrop-blur-sm border-[3px] border-foreground rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] flex flex-row overflow-hidden min-h-[700px] animate-fade-in relative",
-        isMobile && "flex-col min-h-[80vh]"
+        "w-full h-full bg-background/80 backdrop-blur-sm border-foreground flex flex-row overflow-hidden min-h-screen animate-fade-in relative",
+        isMobile && "flex-col"
       )}>
         
         {/* Navigation / Binder Column (Desktop) */}

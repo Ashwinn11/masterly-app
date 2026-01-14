@@ -98,32 +98,15 @@ export function Paywall({
     
     setSelectedVariantId(variantId);
     try {
-      // If user has an existing subscription, update it instead of creating new checkout
-      if (currentVariantId) {
-        const response = await fetch('/api/lemonsqueezy/update-plan', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ variantId }),
-        });
-
-        if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.error || 'Failed to update plan');
-        }
-
-        // Close paywall and let parent refresh
-        onClose?.();
-        return;
-      }
-
-      // For new subscribers, create checkout
+      // For both new and existing subscribers, use checkout
+      // Lemon Squeezy will detect existing subscription and show proration
       onSubscribe?.();
 
       await createCheckout({
         variantId,
         customData: {
-          discount_code: discountCode,
-          source: 'paywall',
+          discount_code: currentVariantId ? undefined : discountCode, // No discount for upgrades
+          source: currentVariantId ? 'upgrade' : 'paywall',
         },
       });
     } catch (error) {
