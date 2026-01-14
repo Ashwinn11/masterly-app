@@ -300,8 +300,12 @@ function ProfilePageContent() {
         onClose={() => setShowManageModal(false)}
         subscription={subscription}
         onUpdate={() => {
-          // Re-fetch subscription if needed or just update status
-          setSubscription((prev: any) => ({ ...prev, status: 'cancelled' }));
+          // Immediately update local state so UI reflects "Cancelled but Active"
+          setSubscription((prev: any) => ({ 
+            ...prev, 
+            status: 'cancelled',
+            ends_at: prev.renews_at 
+          }));
         }}
       />
     </ScreenLayout>

@@ -34,9 +34,14 @@ export async function POST(request: NextRequest) {
         }
 
         // Update the status in our database
+        // Important: We set ends_at to the current renews_at date so they keep access
         const { error: updateError } = await (supabase as any)
             .from('subscriptions')
-            .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+            .update({
+                status: 'cancelled',
+                ends_at: subscription.renews_at,
+                updated_at: new Date().toISOString()
+            })
             .eq('id', subscription.id);
 
         if (updateError) {
