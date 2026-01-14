@@ -16,9 +16,19 @@ interface PaywallProps {
   subtitle?: string;
 }
 
-// Map to link Lemon Squeezy Variant IDs to UI-specific data like icons and features
-const UI_TIER_CONFIG: Record<string, { interval: string, features: string[], badge?: string, popular?: boolean }> = {
-  '1138639': { // Weekly
+// Plan types for mapping
+type PlanType = 'weekly' | 'monthly' | 'yearly';
+
+// Get Variant IDs from environment variables
+const VARIANT_IDS: Record<PlanType, string> = {
+  weekly: process.env.NEXT_PUBLIC_LS_VARIANT_WEEKLY || '',
+  monthly: process.env.NEXT_PUBLIC_LS_VARIANT_MONTHLY || '',
+  yearly: process.env.NEXT_PUBLIC_LS_VARIANT_YEARLY || '',
+};
+
+// Map Plan types to UI-specific data
+const UI_PLAN_CONFIG: Record<PlanType, { interval: string, features: string[], badge?: string, popular?: boolean }> = {
+  weekly: {
     interval: 'week',
     badge: 'Short Term',
     features: [
@@ -29,7 +39,7 @@ const UI_TIER_CONFIG: Record<string, { interval: string, features: string[], bad
       'No Daily Limits',
     ],
   },
-  '1138644': { // Monthly
+  monthly: {
     interval: 'month',
     popular: true,
     badge: 'Best Value',
@@ -41,7 +51,7 @@ const UI_TIER_CONFIG: Record<string, { interval: string, features: string[], bad
       'Priority Support',
     ],
   },
-  '1138642': { // Yearly
+  yearly: {
     interval: 'year',
     badge: 'Save 48%',
     features: [
@@ -120,18 +130,20 @@ export function Paywall({
     );
   }
 
-  // Display order for variants
-  const displayOrder = ['1138639', '1138644', '1138642'];
+  // Display order for plan types
+  const planOrder: PlanType[] = ['weekly', 'monthly', 'yearly'];
   
   // Sort and filter products based on our display order and config
-  const displayProducts = displayOrder
-    .map(vId => {
+  const displayProducts = planOrder
+    .map(type => {
+      const vId = VARIANT_IDS[type];
+      if (!vId) return null;
+
       // Find the variant in our fetched data
-      // Lemon Squeezy SDK returns products, we need to find the one with the variant
       const product = products.find(p => p.relationships?.variants?.data?.some((v: any) => v.id === vId));
       if (!product) return null;
 
-      const config = UI_TIER_CONFIG[vId];
+      const config = UI_PLAN_CONFIG[type];
       
       return {
         id: product.id,
