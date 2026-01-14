@@ -26,13 +26,28 @@ import Link from 'next/link';
 export default function BillingPage() {
   const router = useRouter();
   const { user } = useAuth() as any;
-  const { getPortalUrl, cancelSubscription, resumeSubscription, isLoading: isLSLoading } = useLemonSqueezy();
+  const { getPortalUrl, cancelSubscription, resumeSubscription, isLoading: isLSLoading, fetchProducts } = useLemonSqueezy();
   const { openConfirmation } = useConfirmationStore();
   
   const [subscription, setSubscription] = useState<any>(null);
+  const [products, setProducts] = useState<any[]>([]); // Added products state
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showPaywall, setShowPaywall] = useState(false);
+
+  useEffect(() => {
+    async function fetchProductsData() {
+        if (fetchProducts) {
+            try {
+                const data = await fetchProducts();
+                setProducts(data);
+            } catch (err) {
+                console.error("Failed to load products", err);
+            }
+        }
+    }
+    fetchProductsData();
+  }, []);
 
   useEffect(() => {
     async function fetchSubscription() {
@@ -99,6 +114,7 @@ export default function BillingPage() {
     }
   };
 
+
   if (showPaywall) {
     return (
       <ScreenLayout>
@@ -122,6 +138,7 @@ export default function BillingPage() {
           }}
           showCloseButton={true}
           currentVariantId={subscription?.variant_id}
+          currentSubscription={subscription}
           title="Upgrade Your Plan"
           subtitle="Choose a new plan to continue your Pro journey"
         />
@@ -173,10 +190,28 @@ export default function BillingPage() {
     subscription.variant_id === process.env.NEXT_PUBLIC_LS_VARIANT_MONTHLY ? 'Monthly Pro' :
     subscription.variant_id === process.env.NEXT_PUBLIC_LS_VARIANT_YEARLY ? 'Yearly Pro' : 'Masterly Pro';
 
-  const planPrice = 
-    subscription.variant_id === process.env.NEXT_PUBLIC_LS_VARIANT_WEEKLY ? '$4.99' :
-    subscription.variant_id === process.env.NEXT_PUBLIC_LS_VARIANT_MONTHLY ? '$9.99' :
-    subscription.variant_id === process.env.NEXT_PUBLIC_LS_VARIANT_YEARLY ? '$99' : '---';
+  const { getPortalUrl, isLoading: isActionLoading, fetchProducts } = useLemonSqueezy();
+  const [products, setProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function loadData() {
+      if (fetchProducts) {
+        try {
+          const data = await fetchProducts();
+          setProducts(data);
+        } catch (err) {
+          console.error("Failed to load products", err);
+        }
+      }
+    }
+    loadData();
+  }, []);
+
+  const currentProduct = products.find(p => 
+    p.relationships?.variants?.data?.some((v: any) => v.id === subscription?.variant_id)
+  );
+  
+  const planPrice = currentProduct?.attributes?.price_formatted || '---';
 
   const billingPeriod = 
     subscription.variant_id === process.env.NEXT_PUBLIC_LS_VARIANT_WEEKLY ? 'week' :
@@ -304,7 +339,7 @@ export default function BillingPage() {
                 className="h-20 font-handwritten text-xl font-black border-4 border-foreground flex gap-3 bg-white"
               >
                 <CreditCard className="w-7 h-7" />
-                Update Payment
+                Update Payment Method
               </Button>
             </div>
 
