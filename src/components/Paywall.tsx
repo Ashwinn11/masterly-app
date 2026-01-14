@@ -354,7 +354,7 @@ export function Paywall({
               <Button
                 className={`w-full text-lg font-bold py-6 group ${p.isCurrent ? 'bg-muted text-muted-foreground border-2 border-foreground/10 cursor-default hover:bg-muted' : ''}`}
                 variant={p.popular ? 'default' : 'outline'}
-                onClick={() => !p.isCurrent && handleSubscribe(p.variantId)}
+                onClick={() => !p.isCurrent && handleSubscribe(p.variantId, p.rawPrice, p.rawInterval, p.rawIntervalCount)}
                 disabled={isActionLoading || p.isCurrent}
               >
                 {p.isCurrent ? (
