@@ -106,6 +106,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({
             received: true,
+            version: 'V2-VALIDATED',
             eventName,
             userId,
             db_error: handlerResult
