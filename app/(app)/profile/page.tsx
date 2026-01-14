@@ -52,7 +52,7 @@ function ProfilePageContent() {
           .in('status', ['active', 'on_trial', 'past_due', 'paused'])
           .order('created_at', { ascending: false })
           .limit(1)
-          .single();
+          .maybeSingle();
 
         if (data) {
           setSubscription(data);

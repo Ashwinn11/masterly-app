@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { getWebhookSecret } from '@/lib/lemonsqueezy';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 /**
  * Verify the webhook signature
@@ -51,7 +52,7 @@ export async function POST(request: NextRequest) {
 
         console.log('Detected User ID:', userId);
 
-        const supabase = await createClient();
+        const supabase = createAdminClient();
 
         // Handle different webhook events
         switch (eventName) {
