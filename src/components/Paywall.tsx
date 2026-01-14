@@ -271,8 +271,8 @@ export function Paywall({
           </div>
         )}
         
-        {/* Discount badge */}
-        {discountCode && (
+        {/* Discount badge - Only for new users */}
+        {discountCode && !currentVariantId && (
           <motion.div 
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -326,16 +326,20 @@ export function Paywall({
 
             <CardContent className="space-y-6">
               <div className="text-center space-y-1">
-                <div className="flex items-center justify-center gap-2">
-                   <span className="text-sm line-through text-muted-foreground font-bold">
-                     {p.price.split('/')[0]}
-                   </span>
-                   <span className="px-2 py-0.5 rounded bg-green-500/10 text-green-500 text-[10px] font-black uppercase tracking-wider">
-                     25% OFF
-                   </span>
-                </div>
+                {!currentVariantId && (
+                  <div className="flex items-center justify-center gap-2">
+                     <span className="text-sm line-through text-muted-foreground font-bold">
+                       {p.price.split('/')[0]}
+                     </span>
+                     <span className="px-2 py-0.5 rounded bg-green-500/10 text-green-500 text-[10px] font-black uppercase tracking-wider">
+                       25% OFF
+                     </span>
+                  </div>
+                )}
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-5xl font-black text-primary">{p.discountedPrice}</span>
+                  <span className="text-5xl font-black text-primary">
+                    {currentVariantId ? p.price.split('/')[0] : p.discountedPrice}
+                  </span>
                   <span className="text-muted-foreground font-bold">/{p.interval}</span>
                 </div>
               </div>

@@ -61,18 +61,20 @@ export function calculateProration(
     // Calculate unused credit from current plan
     const credit = currentDailyRate * daysRemaining;
 
-    // Calculate cost of new plan for remaining days
-    const newPlanCost = newDailyRate * daysRemaining;
+    // LEMON SQUEEZY BEHAVIOR:
+    // When upgrading with invoice_immediately=true, they start a NEW full cycle immediately.
+    // So the charge is: (Full New Plan Price) - (Unused Credit)
+    // The new cycle starts today and runs for the full new interval.
 
-    // Calculate final charge (can be negative for downgrades)
-    const charge = Math.max(0, newPlanCost - credit);
+    // Calculate final charge
+    const charge = Math.max(0, newPlan.price - credit);
 
     const isUpgrade = newPlan.price > currentPlan.price;
 
     return {
         charge: Math.round(charge * 100) / 100, // Round to 2 decimals
         credit: Math.round(credit * 100) / 100,
-        newPlanCost: Math.round(newPlanCost * 100) / 100,
+        newPlanCost: newPlan.price, // Display full price as the base cost
         daysRemaining,
         isUpgrade,
     };

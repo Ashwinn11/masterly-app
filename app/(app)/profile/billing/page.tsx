@@ -91,8 +91,12 @@ export default function BillingPage() {
     }
   };
 
-  const handleUpgrade = () => {
-    setShowPaywall(true);
+  const handleUpgrade = async () => {
+    try {
+      await getPortalUrl();
+    } catch (err: any) {
+      setError(err.message || "Failed to open billing portal");
+    }
   };
 
 
