@@ -23,35 +23,35 @@ interface OnboardingStep {
 const STEPS: OnboardingStep[] = [
   {
     id: 1,
-    title: 'Upload Anything',
-    description: "Scan your textbook, upload a PDF, or paste your notes. Our AI turns them into smart study material instantly.",
-    icon: <PartyPopper className="w-16 h-16" />,
-    color: 'text-primary',
-    bgColor: 'bg-primary/10',
+    title: "Studying Harder, Not Smarter?",
+    description: "You're spending hours making flashcards, re-reading notes, and cramming... but still forgetting everything by exam day.",
+    icon: <Brain className="w-16 h-16" />,
+    color: "text-red-600",
+    bgColor: "bg-red-50",
   },
   {
     id: 2,
-    title: 'Learn Through Play',
-    description: 'Master any subject with 5 AI game modes: MCQs, Match Pairs, Card Sequencing, True/False, and Flashcards.',
-    icon: <Brain className="w-16 h-16" />,
-    color: 'text-accent',
-    bgColor: 'bg-accent/10',
+    title: "The Real Cost of Forgetting",
+    description: "Every hour you study without a system, you lose 80% within a week. That's your time, your grades, and your future slipping away.",
+    icon: <Flame className="w-16 h-16" />,
+    color: "text-orange-600",
+    bgColor: "bg-orange-50",
   },
   {
     id: 3,
-    title: 'Remember Forever',
-    description: 'Our advanced FSRS algorithm schedules reviews perfectly. Spend 5 minutes daily and never forget what you learn.',
-    icon: <Flame className="w-16 h-16" />,
-    color: 'text-secondary',
-    bgColor: 'bg-secondary/10',
+    title: "What If You Never Forgot?",
+    description: "Imagine: Upload your notes once. Play 5 minutes daily. Remember everything forever. Top grades without the stress.",
+    icon: <Sparkles className="w-16 h-16" />,
+    color: "text-green-600",
+    bgColor: "bg-green-50",
   },
   {
     id: 4,
-    title: "Don't Hit Limits",
-    description: 'Free users are limited to 3 uploads. Go Pro to unlock unlimited games, any-format uploads, and masters your exams.',
+    title: "10,000+ Students Already Winning",
+    description: "They stopped wasting time. They started using science-backed spaced repetition. Now they ace exams while you're still cramming.",
     icon: <Star className="w-16 h-16" />,
-    color: 'text-accent',
-    bgColor: 'bg-accent/10',
+    color: "text-primary",
+    bgColor: "bg-primary/10",
   },
 ];
 
@@ -152,7 +152,7 @@ export default function OnboardingPage() {
               </p>
             </div>
 
-            {/* Pain Points for the Paywall Step (Step 4) */}
+            {/* Pain Points for the Last Step (Step 4) */}
             {currentStep === 3 && (
               <div className="w-full max-w-md mx-auto space-y-2 pt-2 text-left">
                 {[
