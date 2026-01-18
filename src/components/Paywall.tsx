@@ -10,7 +10,7 @@ import { Check, Sparkles, Zap, Crown } from 'lucide-react';
 import Link from 'next/link';
 
 interface PaywallProps {
-  onClose?: () => void;
+  onClose?: () => void | Promise<void>;
   onSubscribe?: () => void;
   showCloseButton?: boolean;
   title?: string;
@@ -84,6 +84,7 @@ export function Paywall({
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingVariantId, setPendingVariantId] = useState<string | null>(null);
   const [pendingPlanData, setPendingPlanData] = useState<{ price: number; interval: string; intervalCount: number } | null>(null);
+  const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
     async function loadProducts() {
@@ -229,24 +230,41 @@ export function Paywall({
       {/* Close button */}
       {showCloseButton && (
         <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
+          onClick={async () => {
+            setIsClosing(true);
+            try {
+              await onClose?.();
+            } catch (error) {
+              console.error('Error closing paywall:', error);
+              setIsClosing(false);
+            }
+          }}
+          disabled={isClosing}
+          className="absolute top-4 right-4 z-50 text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Close"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
+          {isClosing ? (
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="w-6 h-6 border-2 border-muted-foreground border-t-transparent rounded-full"
+            />
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          )}
         </button>
       )}
 
