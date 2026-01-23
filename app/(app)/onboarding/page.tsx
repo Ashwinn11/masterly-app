@@ -3,10 +3,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { PartyPopper, Brain, Flame, ArrowRight, CheckCircle2, Star, Sparkles } from 'lucide-react';
+import { PartyPopper, Brain, Flame, ArrowRight, CheckCircle2, Star, Sparkles, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DecorativeBackground } from '@/components/DecorativeBackground';
-import { Paywall } from '@/components/Paywall';
 import { markOnboardingCompleted } from '@/lib/onboarding';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
@@ -14,51 +13,66 @@ import { cn } from '@/lib/utils';
 interface OnboardingStep {
   id: number;
   title: string;
+  titleHighlight?: string; // Word to highlight in title
   description: string;
+  descriptionHighlights?: string[]; // Phrases to highlight
   icon: React.ReactNode;
   color: string;
   bgColor: string;
+  socialProof?: string;
+  badge?: string;
 }
 
 const STEPS: OnboardingStep[] = [
   {
     id: 1,
-    title: "Studying Harder, Not Smarter?",
-    description: "You're spending hours making flashcards, re-reading notes, and cramming... but still forgetting everything by exam day.",
+    title: "You're Studying Wrong",
+    titleHighlight: "Wrong",
+    description: "Re-reading notes? Highlighting textbooks? You'll forget 80% by next week. Your brain needs active recall, not passive reading.",
+    descriptionHighlights: ["80%", "active recall"],
     icon: <Brain className="w-16 h-16" />,
     color: "text-red-600",
     bgColor: "bg-red-50",
+    socialProof: "Join 10,000+ students who stopped wasting time",
   },
   {
     id: 2,
-    title: "The Real Cost of Forgetting",
-    description: "Every hour you study without a system, you lose 80% within a week. That's your time, your grades, and your future slipping away.",
+    title: "The Real Problem",
+    titleHighlight: "Problem",
+    description: "Traditional studying is boring and ineffective. Your brain shuts down. You cram for hours but blank out on exams. Sound familiar?",
+    descriptionHighlights: ["boring", "blank out"],
     icon: <Flame className="w-16 h-16" />,
     color: "text-orange-600",
     bgColor: "bg-orange-50",
+    badge: "Most common student complaint",
   },
   {
     id: 3,
-    title: "What If You Never Forgot?",
-    description: "Imagine: Upload your notes once. Play 5 minutes daily. Remember everything forever. Top grades without the stress.",
+    title: "Here's the Solution",
+    titleHighlight: "Solution",
+    description: "Masterly turns studying into a game. 5 interactive modes make your brain work. Swipe, match, quiz—memories stick when learning is fun.",
+    descriptionHighlights: ["game", "5 interactive modes", "fun"],
     icon: <Sparkles className="w-16 h-16" />,
     color: "text-green-600",
     bgColor: "bg-green-50",
+    badge: "4.8★ Rating",
   },
   {
     id: 4,
-    title: "10,000+ Students Already Winning",
-    description: "They stopped wasting time. They started using science-backed spaced repetition. Now they ace exams while you're still cramming.",
+    title: "Start Free Today",
+    titleHighlight: "Free",
+    description: "3 free uploads. No credit card. See results in 5 minutes. Most students upgrade after their first session.",
+    descriptionHighlights: ["3 free uploads", "5 minutes"],
     icon: <Star className="w-16 h-16" />,
     color: "text-primary",
     bgColor: "bg-primary/10",
+    socialProof: "Join 10,000+ students improving their grades",
   },
 ];
 
 export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isFinishing, setIsFinishing] = useState(false);
-  const [showPaywall, setShowPaywall] = useState(false);
   const router = useRouter();
   const { user, refreshProfile } = useAuth();
 
@@ -68,28 +82,22 @@ export default function OnboardingPage() {
     if (currentStep < STEPS.length - 1) {
       setCurrentStep(prev => prev + 1);
     } else {
-      // On last step, show paywall
-      setShowPaywall(true);
+      // On last step, complete onboarding and go to dashboard
+      await handleFinish();
     }
   };
 
-  const handleFinish = async (purchased: boolean = false, shouldRedirect: boolean = true) => {
+  const handleFinish = async () => {
     if (!user) return;
     setIsFinishing(true);
     try {
       // Mark onboarding as completed in Supabase
       await markOnboardingCompleted(user.id);
       await refreshProfile();
-      
-      // Only redirect if explicitly told to (e.g., when closing paywall without purchase)
-      if (shouldRedirect) {
-        router.push('/dashboard');
-      }
+      router.push('/dashboard');
     } catch (error) {
       console.error('[Onboarding] Failed to finish:', error);
-      if (shouldRedirect) {
-        router.push('/dashboard');
-      }
+      router.push('/dashboard');
     } finally {
       setIsFinishing(false);
     }
@@ -97,21 +105,7 @@ export default function OnboardingPage() {
 
   const step = STEPS[currentStep];
 
-  // If on last step and paywall is shown, render paywall
-  if (showPaywall) {
-    return (
-      <div className="relative min-h-screen flex flex-col items-center justify-center p-6 bg-background overflow-hidden">
-        <DecorativeBackground />
-        <Paywall
-          onClose={() => handleFinish(false, true)}
-          onSubscribe={() => handleFinish(true, false)}
-          showCloseButton={true}
-          title="Unlock Masterly Pro"
-          subtitle="Join 10,000+ students mastering their studies"
-        />
-      </div>
-    );
-  }
+
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center p-6 bg-background overflow-hidden">
@@ -127,6 +121,19 @@ export default function OnboardingPage() {
             transition={{ type: 'spring', damping: 20, stiffness: 100 }}
             className="flex flex-col items-center text-center space-y-8"
           >
+            {/* Badge (if exists) */}
+            {step.badge && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="inline-flex items-center px-4 py-1.5 rounded-full border-2 border-foreground/20 bg-card shadow-sm"
+              >
+                <span className={cn("text-xs md:text-sm font-bold uppercase tracking-wider", step.color)}>
+                  {step.badge}
+                </span>
+              </motion.div>
+            )}
+
             {/* Icon Container */}
             <div 
               className={cn(
@@ -143,63 +150,73 @@ export default function OnboardingPage() {
 
             {/* Content */}
             <div className="space-y-2 md:space-y-4">
-              <h1 className={cn("text-3xl md:text-5xl font-black tracking-tight", step.color)}>
-                {step.title}
+              <h1 className="text-3xl md:text-5xl font-black tracking-tight">
+                {step.titleHighlight ? (
+                  <>
+                    {step.title.split(step.titleHighlight).map((part, idx, arr) => (
+                      <React.Fragment key={idx}>
+                        <span className="text-foreground">{part}</span>
+                        {idx < arr.length - 1 && (
+                          <span className={step.color}>{step.titleHighlight}</span>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </>
+                ) : (
+                  <span className={step.color}>{step.title}</span>
+                )}
                 <div className={cn("h-1 w-2/3 mx-auto mt-2 rounded-full", step.bgColor.replace('/10', '/30'))} />
               </h1>
-              <p className="text-lg md:text-xl font-medium text-muted-foreground leading-relaxed px-4 italic">
-                "{step.description}"
+              
+              <p className="text-lg md:text-xl font-medium leading-relaxed px-4">
+                {step.descriptionHighlights && step.descriptionHighlights.length > 0 ? (
+                  <>
+                    {(() => {
+                      let remaining = step.description;
+                      const parts: { text: string; highlighted: boolean }[] = [];
+                      
+                      step.descriptionHighlights.forEach((highlight) => {
+                        const index = remaining.toLowerCase().indexOf(highlight.toLowerCase());
+                        if (index !== -1) {
+                          if (index > 0) {
+                            parts.push({ text: remaining.substring(0, index), highlighted: false });
+                          }
+                          parts.push({ text: remaining.substring(index, index + highlight.length), highlighted: true });
+                          remaining = remaining.substring(index + highlight.length);
+                        }
+                      });
+                      
+                      if (remaining) {
+                        parts.push({ text: remaining, highlighted: false });
+                      }
+                      
+                      return parts.map((part, idx) => (
+                        <span
+                          key={idx}
+                          className={part.highlighted ? "font-bold text-primary" : "text-muted-foreground"}
+                        >
+                          {part.text}
+                        </span>
+                      ));
+                    })()}
+                  </>
+                ) : (
+                  <span className="text-muted-foreground">{step.description}</span>
+                )}
               </p>
             </div>
 
-            {/* Pain Points for the Last Step (Step 4) */}
-            {currentStep === 3 && (
-              <div className="w-full max-w-md mx-auto space-y-2 pt-2 text-left">
-                {[
-                  { icon: <CheckCircle2 className="w-5 h-5 text-red-500" />, text: "Exam in 2 days, hit upload limit" },
-                  { icon: <CheckCircle2 className="w-5 h-5 text-orange-500" />, text: "Wasting hours making flashcards manually" },
-                  { icon: <CheckCircle2 className="w-5 h-5 text-red-500" />, text: "Forgetting 80% within a week" },
-                  { icon: <CheckCircle2 className="w-5 h-5 text-orange-500" />, text: "Studying harder but grades aren't improving" },
-                ].map((item, idx) => (
-                  <motion.div 
-                    key={idx}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5 + (idx * 0.1) }}
-                    className="flex items-center gap-3 bg-card p-2 md:p-3 rounded-xl border-2 border-foreground/5 shadow-sm"
-                  >
-                    {item.icon}
-                    <span className="text-base md:text-lg font-bold">{item.text}</span>
-                  </motion.div>
-                ))}
-                
-                {/* Highlighted Discount Badge */}
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ 
-                    opacity: 1, 
-                    scale: 1,
-                    y: [0, -4, 0]
-                  }}
-                  transition={{ 
-                    delay: 1,
-                    y: {
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }
-                  }}
-                  className="flex flex-col items-center pt-2"
-                >
-                  <div className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-4 py-1.5 rounded-full font-black text-sm uppercase tracking-widest shadow-lg flex items-center gap-2 border-2 border-white/20">
-                    <Sparkles className="w-4 h-4 fill-current" />
-                    Limited Time: 25% OFF
-                  </div>
-                  <p className="text-[10px] text-muted-foreground uppercase font-black mt-1 tracking-tighter opacity-70">
-                    Introductory Offer Applied Automatically
-                  </p>
-                </motion.div>
-              </div>
+            {/* Social Proof */}
+            {step.socialProof && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="flex items-center gap-2 text-sm md:text-base text-muted-foreground italic"
+              >
+                <Users className="w-4 h-4 text-primary" />
+                <span>{step.socialProof}</span>
+              </motion.div>
             )}
 
             {/* Pagination Dots */}
@@ -225,8 +242,10 @@ export default function OnboardingPage() {
                 disabled={isFinishing}
                 className="w-full text-lg py-7 rounded-2xl border-[3px] border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none transition-all"
               >
-                {isLastStep ? (
-                  <>Unlock Masterly Pro <Star className="ml-2 w-5 h-5" /></>
+                {isFinishing ? (
+                  <>Loading...</>
+                ) : isLastStep ? (
+                  <>Start Free <ArrowRight className="ml-2 w-5 h-5" /></>
                 ) : (
                   <>Next <ArrowRight className="ml-2 w-5 h-5" /></>
                 )}
@@ -238,7 +257,7 @@ export default function OnboardingPage() {
                   disabled={isFinishing}
                   className="text-muted-foreground font-bold hover:text-foreground transition-colors py-1 text-sm uppercase tracking-wider"
                 >
-                  Skip to PRO
+                  Skip
                 </button>
               )}
             </div>
