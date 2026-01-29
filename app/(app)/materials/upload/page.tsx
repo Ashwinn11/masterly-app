@@ -209,10 +209,14 @@ export default function UploadPage() {
       if (functionError) throw new Error(functionError.message || 'Failed to process recording');
       if (!data.success) throw new Error(data.error || 'Failed to process recording');
 
+      // Refresh session to avoid 401 timeout on next request
+      const { error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) console.warn("Session refresh warning:", sessionError);
+
       // Generate questions FIRST
-      const { data: questionsData, error: questionsError } = await (supabase.functions.invoke('generate-questions', {
+      const { data: questionsData, error: questionsError } = await supabase.functions.invoke('generate-questions', {
         body: { text: data.text },
-      }) as any);
+      });
 
       if (questionsError || !questionsData.success) throw new Error('Failed to generate questions');
       
