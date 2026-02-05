@@ -224,7 +224,7 @@ export default function MaterialsPage() {
                   </div>
 
                   <Link
-                    href={`/questions?materialId=${material.id}`}
+                    href={`/play?materialId=${material.id}`}
                     className="block h-full"
                   >
                     <div

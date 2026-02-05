@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { getSupabaseClient } from "@/lib/supabase/client";
 import { Question } from "@/types/question";
@@ -20,6 +20,9 @@ import { toast } from "@/components/ui/toast";
 export default function PlayPage() {
   const router = useRouter();
   const { user } = useAuth();
+
+  const searchParams = useSearchParams();
+  const materialId = searchParams?.get("materialId");
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,43 +57,40 @@ export default function PlayPage() {
   };
 
   useEffect(() => {
-    const loadDueQuestions = async () => {
+    const loadQuestions = async () => {
       if (!user?.id) return;
 
       setLoading(true);
       const supabase = getSupabaseClient();
 
+      // Fetch due questions, filtered by material if provided
       const { data, error } = await (supabase.rpc as any)(
         "get_due_questions_for_play",
         {
           p_user_id: user.id,
+          p_material_id: materialId || null,
         },
       );
 
       if (error) {
-        console.error("Error loading due questions:", error);
+        console.error("Error loading questions:", error);
       } else if (data) {
-        // Transform the data to match Question format
+        // Transform the data
         const transformedQuestions = data.map((item: any) => ({
           ...item.question_data,
-          individualQuestionId: item.individual_question_id,
-          questionSetId: item.question_set_id,
+          id: item.id,
           materialId: item.material_id,
-          fsrs: {
-            stability: item.stability,
-            difficulty: item.difficulty,
-            next_due_at: item.next_due_at,
-          },
         }));
+
         setQuestions(transformedQuestions);
       }
 
       setLoading(false);
     };
 
-    loadDueQuestions();
+    loadQuestions();
     loadUserStats();
-  }, [user?.id]);
+  }, [user?.id, materialId]);
 
   useEffect(() => {
     setQuestionStartTime(Date.now());
@@ -111,31 +111,18 @@ export default function PlayPage() {
 
     if (user?.id && currentQuestion) {
       const supabase = getSupabaseClient();
-      const individualQId = (currentQuestion as any).individualQuestionId;
-
-      // Record answer with FSRS update enabled (p_update_fsrs defaults to true)
       await (supabase.rpc as any)("record_answer", {
         p_user_id: user.id,
-        p_question_id: individualQId,
+        p_question_id: currentQuestion.id,
         p_is_correct: correct,
         p_response_time_ms: responseTime,
-        p_update_fsrs: true, // Enable FSRS updates for play mode
       });
     }
 
-    // Reload user stats to get updated streak from database
-    const oldStreak = currentStreak;
-    const newStreak = await loadUserStats();
+    // Refresh streak count
+    await loadUserStats();
 
-    // Show streak toast if streak increased and not already shown
-    if (!hasShownStreakToast && newStreak > oldStreak) {
-      setHasShownStreakToast(true);
-      setTimeout(() => {
-        toast.streak(newStreak);
-      }, 600); // Show after feedback starts
-    }
-
-    setTimeout(handleNext, 1200);
+    setTimeout(handleNext, 800);
   };
 
   const handleNext = () => {

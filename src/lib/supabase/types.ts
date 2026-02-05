@@ -7,110 +7,89 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "13.0.4"
   }
   public: {
     Tables: {
-      individual_questions: {
-        Row: {
-          created_at: string | null
-          id: string
-          question_data: Json
-          question_set_id: string
-          question_type: string
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          question_data: Json
-          question_set_id: string
-          question_type: string
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          question_data?: Json
-          question_set_id?: string
-          question_type?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "individual_questions_question_set_id_fkey"
-            columns: ["question_set_id"]
-            isOneToOne: false
-            referencedRelation: "questions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       materials: {
         Row: {
           created_at: string | null
-          extracted_text: string
-          file_type: string
+          extracted_text: string | null
+          file_type: string | null
           file_url: string | null
           id: string
           title: string
           updated_at: string | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string | null
-          extracted_text: string
-          file_type: string
+          extracted_text?: string | null
+          file_type?: string | null
           file_url?: string | null
           id?: string
           title: string
           updated_at?: string | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string | null
-          extracted_text?: string
-          file_type?: string
+          extracted_text?: string | null
+          file_type?: string | null
           file_url?: string | null
           id?: string
           title?: string
           updated_at?: string | null
-          user_id?: string
+          user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "materials_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       orders: {
         Row: {
           created_at: string | null
-          currency: string
+          currency: string | null
           id: string
-          order_id: string
-          status: string
-          total: number
-          user_id: string
+          order_id: string | null
+          status: string | null
+          total: number | null
+          user_id: string | null
         }
         Insert: {
           created_at?: string | null
-          currency: string
+          currency?: string | null
           id?: string
-          order_id: string
-          status: string
-          total: number
-          user_id: string
+          order_id?: string | null
+          status?: string | null
+          total?: number | null
+          user_id?: string | null
         }
         Update: {
           created_at?: string | null
-          currency?: string
+          currency?: string | null
           id?: string
-          order_id?: string
-          status?: string
-          total?: number
-          user_id?: string
+          order_id?: string | null
+          status?: string | null
+          total?: number | null
+          user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "orders_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -143,48 +122,12 @@ export type Database = {
           upload_count?: number | null
           username?: string | null
         }
-        Relationships: []
-      }
-      question_fsrs_state: {
-        Row: {
-          created_at: string | null
-          difficulty: number | null
-          id: string
-          last_reviewed_at: string | null
-          next_due_at: string | null
-          question_id: string
-          stability: number | null
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          difficulty?: number | null
-          id?: string
-          last_reviewed_at?: string | null
-          next_due_at?: string | null
-          question_id: string
-          stability?: number | null
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          difficulty?: number | null
-          id?: string
-          last_reviewed_at?: string | null
-          next_due_at?: string | null
-          question_id?: string
-          stability?: number | null
-          updated_at?: string | null
-          user_id?: string
-        }
         Relationships: [
           {
-            foreignKeyName: "question_fsrs_state_question_id_fkey"
-            columns: ["question_id"]
-            isOneToOne: false
-            referencedRelation: "individual_questions"
+            foreignKeyName: "profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -192,27 +135,42 @@ export type Database = {
       questions: {
         Row: {
           created_at: string | null
+          difficulty: number | null
           id: string
+          last_reviewed_at: string | null
           material_id: string | null
-          question_count: number | null
+          next_due_at: string | null
           question_data: Json
-          user_id: string
+          question_type: string | null
+          stability: number | null
+          updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           created_at?: string | null
+          difficulty?: number | null
           id?: string
+          last_reviewed_at?: string | null
           material_id?: string | null
-          question_count?: number | null
+          next_due_at?: string | null
           question_data: Json
-          user_id: string
+          question_type?: string | null
+          stability?: number | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           created_at?: string | null
+          difficulty?: number | null
           id?: string
+          last_reviewed_at?: string | null
           material_id?: string | null
-          question_count?: number | null
+          next_due_at?: string | null
           question_data?: Json
-          user_id?: string
+          question_type?: string | null
+          stability?: number | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -222,6 +180,13 @@ export type Database = {
             referencedRelation: "materials"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "questions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
         ]
       }
       subscriptions: {
@@ -229,77 +194,89 @@ export type Database = {
           created_at: string | null
           ends_at: string | null
           id: string
-          product_id: string
+          product_id: string | null
           renews_at: string | null
-          status: string
-          subscription_id: string
+          status: string | null
+          subscription_id: string | null
           trial_ends_at: string | null
           updated_at: string | null
-          user_id: string
-          variant_id: string
+          user_id: string | null
+          variant_id: string | null
         }
         Insert: {
           created_at?: string | null
           ends_at?: string | null
           id?: string
-          product_id: string
+          product_id?: string | null
           renews_at?: string | null
-          status: string
-          subscription_id: string
+          status?: string | null
+          subscription_id?: string | null
           trial_ends_at?: string | null
           updated_at?: string | null
-          user_id: string
-          variant_id: string
+          user_id?: string | null
+          variant_id?: string | null
         }
         Update: {
           created_at?: string | null
           ends_at?: string | null
           id?: string
-          product_id?: string
+          product_id?: string | null
           renews_at?: string | null
-          status?: string
-          subscription_id?: string
+          status?: string | null
+          subscription_id?: string | null
           trial_ends_at?: string | null
           updated_at?: string | null
-          user_id?: string
-          variant_id?: string
+          user_id?: string | null
+          variant_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_progress: {
         Row: {
-          attempts: number | null
           completed_at: string | null
           id: string
           is_correct: boolean | null
-          question_id: string
+          question_id: string | null
           response_time_ms: number | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
-          attempts?: number | null
           completed_at?: string | null
           id?: string
           is_correct?: boolean | null
-          question_id: string
+          question_id?: string | null
           response_time_ms?: number | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
-          attempts?: number | null
           completed_at?: string | null
           id?: string
           is_correct?: boolean | null
-          question_id?: string
+          question_id?: string | null
           response_time_ms?: number | null
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "user_progress_question_id_fkey"
             columns: ["question_id"]
             isOneToOne: false
-            referencedRelation: "individual_questions"
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_progress_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -313,7 +290,7 @@ export type Database = {
           longest_streak: number | null
           total_recalls: number | null
           updated_at: string | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string | null
@@ -323,7 +300,7 @@ export type Database = {
           longest_streak?: number | null
           total_recalls?: number | null
           updated_at?: string | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string | null
@@ -333,81 +310,86 @@ export type Database = {
           longest_streak?: number | null
           total_recalls?: number | null
           updated_at?: string | null
-          user_id?: string
+          user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_stats_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      backfill_user_stats: { Args: never; Returns: undefined }
-      delete_material: {
-        Args: { p_material_id: string; p_user_id: string }
-        Returns: Json
+      get_due_question_count: {
+        Args: {
+          p_user_id: string
+        }
+        Returns: number
       }
-      get_due_question_count: { Args: { p_user_id: string }; Returns: number }
       get_due_questions_for_play: {
-        Args: { p_limit?: number; p_user_id: string }
+        Args: {
+          p_user_id: string
+          p_limit?: number
+        }
         Returns: {
-          difficulty: number
           id: string
-          individual_question_id: string
           material_id: string
-          next_due_at: string
           question_data: Json
-          question_set_id: string
           question_type: string
+          difficulty: number
           stability: number
+          next_due_at: string
         }[]
       }
       get_questions_for_material: {
-        Args: { p_material_id: string; p_user_id: string }
+        Args: {
+          p_material_id: string
+          p_user_id: string
+        }
         Returns: {
           id: string
-          individual_question_id: string
           material_id: string
           question_data: Json
-          question_set_id: string
-          question_set_id_ref: string
           question_type: string
+          difficulty: number
+          stability: number
+          next_due_at: string
         }[]
       }
-      get_user_questions: {
-        Args: { user_uuid: string }
+      get_user_stats: {
+        Args: {
+          p_user_id: string
+        }
         Returns: {
-          created_at: string | null
-          id: string
-          material_id: string | null
-          question_count: number | null
-          question_data: Json
-          user_id: string
-        }[]
-        SetofOptions: {
-          from: "*"
-          to: "questions"
-          isOneToOne: false
-          isSetofReturn: true
+          current_streak: number
+          longest_streak: number
+          total_recalls: number
+          last_activity_date: string
         }
       }
-      get_user_stats: { Args: { p_user_id: string }; Returns: Json }
       record_answer: {
         Args: {
-          p_is_correct: boolean
+          p_user_id: string
           p_question_id: string
+          p_is_correct: boolean
           p_response_time_ms: number
           p_update_fsrs?: boolean
-          p_user_id: string
         }
         Returns: Json
       }
       save_questions: {
         Args: {
-          p_material_id: string
-          p_question_count: number
-          p_question_data: Json
           p_user_id: string
+          p_material_id: string
+          p_question_data: Json
+          p_question_count: number
         }
         Returns: Json
       }
@@ -427,116 +409,116 @@ type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+  ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+  : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
-    ? R
-    : never
+  ? R
+  : never
   : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
-      }
-      ? R
-      : never
-    : never
+    DefaultSchema["Views"])
+  ? (DefaultSchema["Tables"] &
+    DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+      Row: infer R
+    }
+  ? R
+  : never
+  : never
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema["Tables"]
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+  : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
-    }
-    ? I
-    : never
+    Insert: infer I
+  }
+  ? I
+  : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
-      }
-      ? I
-      : never
-    : never
+  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+    Insert: infer I
+  }
+  ? I
+  : never
+  : never
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema["Tables"]
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+  : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
-    }
-    ? U
-    : never
+    Update: infer U
+  }
+  ? U
+  : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
-      }
-      ? U
-      : never
-    : never
+  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+    Update: infer U
+  }
+  ? U
+  : never
+  : never
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema["Enums"]
+  | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+  ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+  : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
+  ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+  : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema["CompositeTypes"]
+  | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+  ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+  : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+  ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  : never
 
 export const Constants = {
   public: {

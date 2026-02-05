@@ -5,8 +5,6 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useConfirmationStore } from '@/lib/utils/confirmationUtils';
 import { 
-  LayoutDashboard, 
-  BookOpen, 
   PlusCircle, 
   User, 
   LogOut,
@@ -31,8 +29,7 @@ export function SideNav({ onItemClick }: { onItemClick?: () => void }) {
   };
 
   const navItems = [
-    { name: 'Home', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Library', href: '/materials', icon: BookOpen },
+    { name: 'Study Hub', href: '/dashboard', icon: Sparkles },
     { name: 'Upload', href: '/materials/upload', icon: PlusCircle },
     { name: 'Profile', href: '/profile', icon: User },
   ];
