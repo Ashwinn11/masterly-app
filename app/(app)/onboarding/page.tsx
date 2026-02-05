@@ -10,6 +10,34 @@ import { markOnboardingCompleted } from '@/lib/onboarding';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 
+interface BlockerOption {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  agitation: string;
+}
+
+const BLOCKER_OPTIONS: BlockerOption[] = [
+  { 
+    id: "social", 
+    label: "Social Media Distraction", 
+    icon: <Users className="w-6 h-6" />, 
+    agitation: "Digital noise is a focus-thief. You lose 20m of flow per check. Masterly built-in recall helps your brain snap back into 'Deep Study' mode." 
+  },
+  { 
+    id: "memory", 
+    label: "Forgetting Everything", 
+    icon: <Brain className="w-6 h-6" />, 
+    agitation: "You forget 80% of what you read within 24 hours. Passive reading is a leak. Masterly's active recall makes memories stick for life." 
+  },
+  { 
+    id: "procrastinate", 
+    label: "Procrastination", 
+    icon: <PartyPopper className="w-6 h-6" />, 
+    agitation: "Starting is the hardest part. Masterly breaks your study into 5-minute interactive games that make starting feel effortless." 
+  },
+];
+
 interface OnboardingStep {
   id: number;
   title: string;
@@ -26,33 +54,29 @@ interface OnboardingStep {
 const STEPS: OnboardingStep[] = [
   {
     id: 1,
-    title: "You're Studying Wrong",
-    titleHighlight: "Wrong",
-    description: "Re-reading notes? Highlighting textbooks? You'll forget 80% by next week. Your brain needs active recall, not passive reading.",
-    descriptionHighlights: ["80%", "active recall"],
-    icon: <Brain className="w-16 h-16" />,
-    color: "text-red-600",
-    bgColor: "bg-red-50",
-    socialProof: "Join 10,000+ students who stopped wasting time",
+    title: "Focus is Power",
+    titleHighlight: "Power",
+    description: "What is your #1 study blocker right now?",
+    icon: <Star className="w-16 h-16" />,
+    color: "text-primary",
+    bgColor: "bg-primary/10",
   },
   {
     id: 2,
-    title: "The Real Problem",
-    titleHighlight: "Problem",
-    description: "Traditional studying is boring and ineffective. Your brain shuts down. You cram for hours but blank out on exams. Sound familiar?",
-    descriptionHighlights: ["boring", "blank out"],
-    icon: <Flame className="w-16 h-16" />,
+    title: "The Hard Truth",
+    titleHighlight: "Truth",
+    description: "", // Tailored
+    icon: <Sparkles className="w-16 h-16" />,
     color: "text-orange-600",
     bgColor: "bg-orange-50",
     badge: "Most common student complaint",
   },
   {
     id: 3,
-    title: "Here's the Solution",
-    titleHighlight: "Solution",
-    description: "Masterly turns studying into a game. 5 interactive modes make your brain work. Swipe, match, quiz—memories stick when learning is fun.",
-    descriptionHighlights: ["game", "5 interactive modes", "fun"],
-    icon: <Sparkles className="w-16 h-16" />,
+    title: "The Science of Recall",
+    titleHighlight: "Recall",
+    description: "Traditional studying is a leak. Masterly uses Spaced Repetition to ensure you only study what you're about to forget. Maximum results, minimum time.",
+    icon: <Brain className="w-16 h-16" />,
     color: "text-green-600",
     bgColor: "bg-green-50",
     badge: "4.8★ Rating",
@@ -61,17 +85,16 @@ const STEPS: OnboardingStep[] = [
     id: 4,
     title: "Start Free Today",
     titleHighlight: "Free",
-    description: "3 free uploads. No credit card. See results in 5 minutes. Most students upgrade after their first session.",
-    descriptionHighlights: ["3 free uploads", "5 minutes"],
+    description: "3 free uploads. No credit card. See results in 5 minutes. Join 10,000+ students reclaiming their focus.",
     icon: <Star className="w-16 h-16" />,
     color: "text-primary",
     bgColor: "bg-primary/10",
-    socialProof: "Join 10,000+ students improving their grades",
   },
 ];
 
 export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(0);
+  const [selectedBlocker, setSelectedBlocker] = useState<string | null>(null);
   const [isFinishing, setIsFinishing] = useState(false);
   const router = useRouter();
   const { user, refreshProfile } = useAuth();
@@ -79,6 +102,8 @@ export default function OnboardingPage() {
   const isLastStep = currentStep === STEPS.length - 1;
 
   const handleNext = async () => {
+    if (currentStep === 0 && !selectedBlocker) return;
+
     if (currentStep < STEPS.length - 1) {
       setCurrentStep(prev => prev + 1);
     } else {
@@ -167,9 +192,12 @@ export default function OnboardingPage() {
                 )}
                 <div className={cn("h-1 w-2/3 mx-auto mt-2 rounded-full", step.bgColor.replace('/10', '/30'))} />
               </h1>
-              
-              <p className="text-lg md:text-xl font-medium leading-relaxed px-4">
-                {step.descriptionHighlights && step.descriptionHighlights.length > 0 ? (
+                            <p className="text-lg md:text-xl font-medium leading-relaxed px-4">
+                {currentStep === 1 ? (
+                  <span className="text-muted-foreground">
+                    {BLOCKER_OPTIONS.find(b => b.id === selectedBlocker)?.agitation || step.description}
+                  </span>
+                ) : step.descriptionHighlights && step.descriptionHighlights.length > 0 ? (
                   <>
                     {(() => {
                       let remaining = step.description;
@@ -206,6 +234,37 @@ export default function OnboardingPage() {
               </p>
             </div>
 
+            {/* Quiz Options for Step 1 */}
+            {currentStep === 0 && (
+              <div className="w-full grid grid-cols-1 gap-3 px-4 max-w-sm">
+                {BLOCKER_OPTIONS.map((option) => (
+                  <button
+                    key={option.id}
+                    onClick={() => setSelectedBlocker(option.id)}
+                    className={cn(
+                      "flex items-center gap-4 p-4 rounded-2xl border-[3px] transition-all text-left group",
+                      selectedBlocker === option.id 
+                        ? "bg-primary/5 border-primary shadow-none translate-y-[2px]" 
+                        : "bg-card border-foreground/10 hover:border-foreground/30 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.05)]"
+                    )}
+                  >
+                    <div className={cn(
+                      "p-2 rounded-xl border-2 transition-colors",
+                      selectedBlocker === option.id ? "bg-primary border-primary text-primary-foreground" : "bg-muted border-foreground/10 text-muted-foreground group-hover:bg-muted-foreground/10"
+                    )}>
+                      {option.icon}
+                    </div>
+                    <span className={cn(
+                      "font-handwritten text-xl font-black",
+                      selectedBlocker === option.id ? "text-primary" : "text-foreground/70"
+                    )}>
+                      {option.label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+
             {/* Social Proof */}
             {step.socialProof && (
               <motion.div
@@ -239,13 +298,15 @@ export default function OnboardingPage() {
               <Button
                 onClick={handleNext}
                 size="lg"
-                disabled={isFinishing}
+                disabled={isFinishing || (currentStep === 0 && !selectedBlocker)}
                 className="w-full text-lg py-7 rounded-2xl border-[3px] border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none transition-all"
               >
                 {isFinishing ? (
                   <>Loading...</>
                 ) : isLastStep ? (
                   <>Start Free <ArrowRight className="ml-2 w-5 h-5" /></>
+                ) : currentStep === 0 ? (
+                  <>{selectedBlocker ? "Fix this blocker" : "Choose One"} <ArrowRight className="ml-2 w-5 h-5" /></>
                 ) : (
                   <>Next <ArrowRight className="ml-2 w-5 h-5" /></>
                 )}
