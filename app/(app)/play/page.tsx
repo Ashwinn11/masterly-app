@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { getSupabaseClient } from "@/lib/supabase/client";
@@ -17,7 +17,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { toast } from "@/components/ui/toast";
 
-export default function PlayPage() {
+function PlayContent() {
   const router = useRouter();
   const { user } = useAuth();
 
@@ -325,5 +325,20 @@ export default function PlayPage() {
         </div>
       )}
     </ScreenLayout>
+  );
+}
+
+export default function PlayPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-col items-center justify-center min-h-screen bg-background text-info">
+          <Loader2 className="w-12 h-12 animate-spin mb-4" />
+          <p className="text-xl font-handwritten font-bold">Loading review...</p>
+        </div>
+      }
+    >
+      <PlayContent />
+    </Suspense>
   );
 }

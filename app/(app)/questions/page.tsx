@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
-export default function QuestionsRedirect() {
+function QuestionsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -22,5 +22,18 @@ export default function QuestionsRedirect() {
       <Loader2 className="w-12 h-12 animate-spin mb-4" />
       <p className="text-xl font-handwritten font-bold">Redirecting to Play Hub...</p>
     </div>
+  );
+}
+
+export default function QuestionsRedirect() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col items-center justify-center min-h-screen bg-background text-info">
+        <Loader2 className="w-12 h-12 animate-spin mb-4" />
+        <p className="text-xl font-handwritten font-bold">Loading...</p>
+      </div>
+    }>
+      <QuestionsContent />
+    </Suspense>
   );
 }
