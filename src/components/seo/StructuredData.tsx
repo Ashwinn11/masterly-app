@@ -202,6 +202,20 @@ export const schemas = {
       },
     }),
   }),
+
+  definedTerm: (config: {
+    name: string;
+    description: string;
+  }) => ({
+    '@context': 'https://schema.org',
+    '@type': 'DefinedTerm',
+    name: config.name,
+    description: config.description,
+    inDefinedTermSet: {
+      '@type': 'DefinedTermSet',
+      name: 'Masterly Study Glossary',
+    },
+  }),
 };
 
 /**

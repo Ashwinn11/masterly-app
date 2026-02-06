@@ -50,10 +50,23 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
     <>
       <StructuredData
         data={[
-          schemas.product({
-            name: data.title,
-            description: data.description,
-          }),
+          // Conditional schema: Use DefinedTerm for Glossary, Product for everything else
+          data.slug.startsWith('what-is-') 
+            ? [
+                schemas.definedTerm({
+                  name: data.title,
+                  description: data.description,
+                }),
+                schemas.article({
+                  title: data.title,
+                  description: data.description,
+                  url: `/${data.slug}`,
+                })
+              ]
+            : schemas.product({
+                name: data.title,
+                description: data.description,
+              }),
           schemas.faqPage(data.faqs),
           schemas.howTo({
             title: `How to use ${data.title}`,
@@ -61,7 +74,7 @@ const SEOTemplate = ({ data }: SEOTemplateProps) => {
             steps: data.steps.map(s => ({ name: s.title, text: s.description })),
           }),
           schemas.breadcrumb(breadcrumbItems.map(item => ({ name: item.name, url: item.href }))),
-        ]}
+        ].flat()}
       />
 
       <main className="min-h-screen bg-paper-texture selection:bg-primary/20 selection:text-primary pt-20 relative">

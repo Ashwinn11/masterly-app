@@ -44,6 +44,31 @@ export const Footer = () => {
             </div>
           </div>
 
+          {/* Resources Column */}
+          <div className="space-y-8">
+            <h4 className="font-black text-3xl text-foreground relative inline-block">
+              Resources
+              <div className="absolute -bottom-2 left-0 w-full h-1 bg-accent rotate-[-1deg] width-[110%]" />
+            </h4>
+            <ul className="space-y-6 text-2xl font-bold text-info italic">
+              <li>
+                <Link href="/resources" className="hover:text-primary hover:translate-x-2 transition-all inline-block">
+                  Study Library
+                </Link>
+              </li>
+              <li>
+                <Link href="/resources" className="hover:text-primary hover:translate-x-2 transition-all inline-block">
+                  Comparisons
+                </Link>
+              </li>
+              <li>
+                <Link href="/resources" className="hover:text-primary hover:translate-x-2 transition-all inline-block">
+                  Glossary
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           {/* Navigation Column */}
           <div className="space-y-8">
             <h4 className="font-black text-3xl text-foreground relative inline-block">

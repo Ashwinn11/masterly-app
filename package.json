@@ -12,7 +12,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "seo:audit": "tsx scripts/seo-audit.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
